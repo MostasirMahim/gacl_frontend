@@ -503,7 +503,7 @@ export default function MembershipDetailsStep() {
                   </p>
                 )}
               </div>
-              <div className="border-2 border-dashed border-gray-300 rounded-lg p-4">
+              <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 bg-background">
                 <input
                   ref={imgRef}
                   type="file"
@@ -558,7 +558,7 @@ export default function MembershipDetailsStep() {
                   <Button
                     variant="outline"
                     className={cn(
-                      "w-full justify-start text-left font-normal",
+                      "w-full justify-start text-left font-normal bg-background border-2 border-border",
                       !formik.values.date_of_birth && "text-muted-foreground"
                     )}
                   >
@@ -672,7 +672,7 @@ export default function MembershipDetailsStep() {
                   <Button
                     variant="outline"
                     className={cn(
-                      "w-full justify-start text-left font-normal",
+                      "w-full justify-start text-left font-normal bg-background border-2 border-border",
                       !formik.values.anniversary_date && "text-muted-foreground"
                     )}
                   >
