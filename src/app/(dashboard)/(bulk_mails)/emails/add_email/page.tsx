@@ -21,14 +21,19 @@ async function AddEmailToGroupPage() {
   }
 
   return (
-    <div className="shadow-md rounded-md p-4 border">
-      <div className="mb-4">
-        <h4 className="text-center text-4xl font-bold">
-          Add emails to a specific group
-        </h4>
-      </div>
+    <div className="w-full h-full space-y-4">
+        <div className="mb-8">
+          <h1 className="text-3xl font-bold tracking-tight">
+            Add Email to Group
+          </h1>
+          <p className="mt-2 text-muted-foreground">
+            Add an email to a group
+          </p>
+        </div>
 
-      <EmailAddToGroupForm data={responseData} />
+      <div>
+        <EmailAddToGroupForm data={responseData} />
+      </div>
     </div>
   );
 }

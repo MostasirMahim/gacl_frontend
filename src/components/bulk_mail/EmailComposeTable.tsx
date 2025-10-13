@@ -64,6 +64,8 @@ const EmailComposeTable = ({ data }: Props) => {
       toast.error(error?.response?.data?.message || "Something went wrong");
     }
   };
+
+  //TODO: Table Body Scrollable.
   return (
     <div>
       <AlertDialog open={openDeleteAlert} onOpenChange={setOpenDeleteAlert}>
@@ -91,8 +93,8 @@ const EmailComposeTable = ({ data }: Props) => {
       <div className="mb-4">
         <div className="flex justify-between items-center">
           <div>
-            <h4 className=" text-4xl font-bold">Composes List</h4>
-            <p className="">
+            <h4 className="text-3xl font-bold">Composes List</h4>
+            <p className="text-muted-foreground">
               All composes set by the software are listed here.
             </p>
           </div>
@@ -102,19 +104,19 @@ const EmailComposeTable = ({ data }: Props) => {
       <Table>
         <TableCaption>Composes</TableCaption>
         <TableHeader>
-          <TableRow>
-            <TableHead className="">Id</TableHead>
-            <TableHead className="">Subject</TableHead>
-            <TableHead className="">Body</TableHead>
-            <TableHead className="">configurations</TableHead>
-            <TableHead className="">Send</TableHead>
-            <TableHead className="">Delete</TableHead>
-            <TableHead className="">Update</TableHead>
+         <TableRow className="text-center  bg-primary/20 border-b-2 border-primary dark:bg-accent">
+            <TableHead className="text-center">Id</TableHead>
+            <TableHead className="text-center">Subject</TableHead>
+            <TableHead className="text-center">Body</TableHead>
+            <TableHead className="text-center">configurations</TableHead>
+            <TableHead className="text-center">Send</TableHead>
+            <TableHead className="text-center">Delete</TableHead>
+            <TableHead className="text-center">Update</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {configData.map((config: any) => (
-            <TableRow key={config.id}>
+            <TableRow key={config.id} className="text-center bg-background">
               <TableCell className="">{config.id}</TableCell>
               <TableCell className="">{config.subject}</TableCell>
               <TableCell>{config.body.substring(0, 50)}....</TableCell>

@@ -159,8 +159,6 @@ export default function EmailAddToGroupForm({ data }: Props) {
               name="button-0"
               render={({ field }) => (
                 <FormItem className="col-span-4 col-start-auto flex self-end flex-col gap-2 space-y-0 items-start">
-                  <FormLabel className="hidden shrink-0">Button</FormLabel>
-
                   <div className="w-full">
                     <FormControl>
                       <Button
@@ -190,7 +188,7 @@ export default function EmailAddToGroupForm({ data }: Props) {
                 <FormItem className="col-span-12 col-start-auto flex self-end flex-col gap-2 space-y-0 items-start">
                   <FormLabel className="flex shrink-0">Group</FormLabel>
 
-                  <div className="w-full">
+                  <div className="w-full space-y-2">
                     <FormControl>
                       <Select
                         key="group"
@@ -211,36 +209,32 @@ export default function EmailAddToGroupForm({ data }: Props) {
                       </Select>
                     </FormControl>
                     <FormDescription>
-                      Select a group that you want to add those emails
+                      <p className="text-muted-foreground pl-2">Select a group that you want to add those emails</p>
                     </FormDescription>
                     <FormMessage />
                   </div>
                 </FormItem>
               )}
             />
-            <FormField
+           <div className="w-full flex justify-start items-center gap-4">
+             <FormField
               control={form.control}
               name="reset-button-0"
               render={({ field }) => (
-                <FormItem className="col-span-6 col-start-auto flex self-end flex-col gap-2 space-y-0 items-start">
-                  <FormLabel className="hidden shrink-0">Reset</FormLabel>
-
-                  <div className="w-full">
+                <FormItem className="">
                     <FormControl>
                       <Button
                         key="reset-button-0"
                         id="reset-button-0"
                         name=""
-                        className="w-full"
                         type="reset"
                         variant="outline"
+                        size={"default"}
                       >
                         Reset
                       </Button>
                     </FormControl>
-
                     <FormMessage />
-                  </div>
                 </FormItem>
               )}
             />
@@ -248,28 +242,24 @@ export default function EmailAddToGroupForm({ data }: Props) {
               control={form.control}
               name="submit-button-0"
               render={({ field }) => (
-                <FormItem className="col-span-6 col-start-auto flex self-end flex-col gap-2 space-y-0 items-start">
-                  <FormLabel className="hidden shrink-0">Submit</FormLabel>
-
-                  <div className="w-full">
+                <FormItem className="">
                     <FormControl>
                       <Button
                         key="submit-button-0"
                         id="submit-button-0"
                         name=""
-                        className="w-full"
                         type="submit"
                         variant="default"
+                        size={"default"}
                       >
                         Submit
                       </Button>
                     </FormControl>
-
                     <FormMessage />
-                  </div>
                 </FormItem>
               )}
             />
+           </div>
           </div>
         </form>
       </Form>
@@ -282,12 +272,12 @@ export default function EmailAddToGroupForm({ data }: Props) {
             {addedEmails.map((email: any, index: number) => (
               <li
                 key={index}
-                className="flex justify-between items-center bg-muted px-3 py-1 rounded"
+                className="flex justify-between items-center bg-background px-3 py-1 rounded"
               >
                 <span>{email}</span>
                 <Button
                   size="sm"
-                  variant="ghost"
+                  variant="destructive"
                   onClick={() =>
                     setAddedEmails(
                       addedEmails.filter((e: string) => e !== email)

@@ -4,24 +4,13 @@ import {
   TableBody,
   TableCaption,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
 
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
 import { Button } from "../ui/button";
-import { Ban, RotateCcw } from "lucide-react";
-import { useRouter } from "next/navigation";
+import { Ban, MailCheck, MailsIcon, RotateCcw } from "lucide-react";
 import { toast } from "react-toastify";
 import axiosInstance from "@/lib/axiosInstance";
 import { SmartPagination } from "../utils/SmartPagination";
@@ -47,12 +36,14 @@ const OutboxTable = ({ data }: Props) => {
     }
   };
 
+  //TODO: Need to added scrool table body.
+
   return (
     <div>
       <div className="mb-4">
         <div className="flex justify-between items-center">
           <div>
-            <h4 className=" text-4xl font-bold">Outbox List</h4>
+            <h4 className=" text-3xl font-bold">Outbox List</h4>
             <p className="">
               All emails sent from the software are listed here.
             </p>
@@ -71,29 +62,29 @@ const OutboxTable = ({ data }: Props) => {
       <Table>
         <TableCaption>Outbox</TableCaption>
         <TableHeader>
-          <TableRow>
+          <TableRow className="text-center font-semibold h-14 bg-primary/20 border-b-2 border-primary dark:bg-accent">
             <TableHead className="">Id</TableHead>
             <TableHead className="">Email Address</TableHead>
             <TableHead className="">Status</TableHead>
             <TableHead className="">Email Compose</TableHead>
             <TableHead className="">Is from template</TableHead>
-            <TableHead className="">Failed Reason</TableHead>
+            <TableHead className="text-center">Failed Reason</TableHead>
             <TableHead className="">Created at</TableHead>
             <TableHead className="">Updated at</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
           {outboxData.map((outbox: any) => (
-            <TableRow key={outbox.id}>
+            <TableRow key={outbox.id} className="text-center bg-background">
               <TableCell className="">{outbox.id}</TableCell>
               <TableCell className="">{outbox.email_address}</TableCell>
-              <TableCell>{outbox.status}</TableCell>
+              <TableCell>{outbox.status== 'failed' ? <p className="text-red-500">FAILED</p> : <p className="text-green-500">{outbox.status?.toString().toUpperCase()}</p>}</TableCell>
               <TableCell>{outbox.email_compose}</TableCell>
               <TableCell className="">
                 {outbox.is_from_template ? "Yes" : "No"}
               </TableCell>
-              <TableCell className="">
-                {outbox.failed_reason ? outbox.failed_reason : <Ban />}
+              <TableCell className="flex justify-center">
+                <p className="line-clamp-3 tracking-tight text-center text-red-500">{outbox.failed_reason ? outbox.failed_reason : <MailCheck className="text-green-500"/>}</p>
               </TableCell>
               <TableCell className="">
                 {new Date(outbox.created_at).toLocaleString("en-BD", {

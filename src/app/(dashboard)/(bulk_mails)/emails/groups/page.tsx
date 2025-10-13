@@ -29,13 +29,13 @@ async function EmailGroupsPage() {
     <div>
       <div className="flex flex-wrap gap-3 justify-between items-center mb-4">
         <div>
-          <h2 className="font-bold text-4xl">Groups List</h2>
+          <h2 className="font-bold text-3xl">Groups List</h2>
         </div>
         <div className="flex flex-wrap gap-2">
           <div>
             <RefreshButton />
           </div>
-          <Button variant="outline" size="lg">
+          <Button variant="outline">
             <Link href="/emails/groups/add/">
               <span className="flex items-center justify-center gap-1">
                 <CirclePlus /> Add Group

@@ -101,7 +101,7 @@ function EmailGroupsTable({ data }: Props) {
           </div>
         </TableCaption>
         <TableHeader>
-          <TableRow className="bg-gray-200 dark:bg-gray-800">
+          <TableRow className="bg-primary/20 dark:bg-accent">
             <TableHead className="text-center">ID</TableHead>
             <TableHead className="text-center">Name</TableHead>
             <TableHead className="text-center">Description</TableHead>
