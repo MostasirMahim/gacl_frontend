@@ -178,7 +178,7 @@ function RecycleBin() {
       <div className="rounded-md border my-2 font-secondary">
         <Table>
           <TableHeader>
-            <TableRow className="text-center font-bold h-14 bg-background border-b-2 border-primary dark:bg-accent">
+            <TableRow className="text-center font-bold h-14 bg-primary/20 border-b-2 border-primary dark:bg-accent">
               <TableHead className="font-bold text-center">ID</TableHead>
               <TableHead className="font-bold">Member</TableHead>
               <TableHead className="font-bold">Type</TableHead>
