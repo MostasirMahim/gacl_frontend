@@ -74,7 +74,7 @@ function page() {
       <div className="rounded-md border my-2 font-secondary">
         <Table className="">
           <TableHeader>
-            <TableRow className=" text-center font-bold h-14 bg-background border-b-2 border-primary dark:bg-accent">
+            <TableRow className=" text-center font-bold h-14 bg-primary/20 border-b-2 border-primary dark:bg-accent">
               <TableHead className="font-bold  text-center">ID</TableHead>
               <TableHead className="font-bold">Username</TableHead>
               <TableHead className="font-bold">First Name</TableHead>
