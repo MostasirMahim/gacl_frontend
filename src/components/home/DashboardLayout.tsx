@@ -602,7 +602,9 @@ function DashboardLayout({ children }: { children: React.ReactNode }) {
 
         <div className="flex-1 flex flex-col min-w-0">
           <Navbar userData={userData} onLogout={() => logOutFunc()} onMenuClick={() => setIsMobileOpen(true)} />
-          <main className="flex-1 overflow-y-auto overflow-x-hidden p-4 sm:p-6 lg:p-8 bg-background">{children}</main>
+          <main className="flex-1 overflow-y-auto overflow-x-hidden p-2 sm:p-3 lg:p-4">
+          <div className="bg-primary/5 w-full h-full p-2 sm:p-3 lg:p-4 rounded-xl shadow-lg border border-border">
+            {children}</div></main>
         </div>
       </div>
     </SidebarProvider>
