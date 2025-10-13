@@ -56,7 +56,7 @@ export async function DashBoardActivityLog() {
           <div className="">
             {logs?.map((log: any) => (
               <div key={log.id} className="flex flex-col space-y-1">
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center space-x-2 my-1">
                   <Badge variant="default">{log.user}</Badge>
                   <p className="text-sm text-foreground">
                     <span className="font-semibold">{log.verb}</span>:{" "}

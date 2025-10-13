@@ -25,15 +25,15 @@ async function Home({ searchParams }: Props) {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+    <div className="flex flex-col gap-5 font-primary">
+      <div className="flex items-center justify-between gap-2">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
-          <p className="text-muted-foreground">
+          <p className="text-muted-foreground text-sm sm:text-base">
             Welcome back, Here's what's happening with your club.
           </p>
         </div>
-        <div className="flex gap-2">
+        <div className="flex gap-2 justify-end sm:justify-start">
           <DashboardFilterButton />
         </div>
       </div>
@@ -46,8 +46,9 @@ async function Home({ searchParams }: Props) {
       {/* charts */}
       <div className="shadow p-4 rounded-lg border border-border">
         <h4 className="text-xl font-bold mb-4">Analytical data</h4>
+
         <div className="flex flex-col md:flex-row gap-4">
-          <div className="flex-1">
+          <div className="flex-1 md:border-r-2 border-primary">
             <Suspense fallback={<DashboardLoader />}>
               <MemberPieChartSSR />
             </Suspense>
@@ -72,7 +73,7 @@ async function Home({ searchParams }: Props) {
             <DashBoardActivityLog />
           </Suspense>
         </div>
-        <div className="flex-1 border-border">
+        <div className="flex-1 border-border w-full">
           <DashBoardInfo />
         </div>
       </div>

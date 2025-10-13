@@ -1,6 +1,7 @@
 import axiosInstance from "@/lib/axiosInstance";
 import { cookies } from "next/headers";
 import MemberPieChart from "./MemberPieChart";
+import { ChartColumn, ChartColumnIncreasing } from "lucide-react";
 
 async function MemberPieChartSSR() {
   const cookieStore = cookies();
@@ -26,11 +27,12 @@ async function MemberPieChartSSR() {
   }
 
   return (
-    <div className="w-full overflow-x-auto">
-      <div>
-        <h4 className="text-center">
+    <div className="w-full overflow-x-auto space-y-3">
+        <div className="flex items-start gap-2 ">
+        <ChartColumnIncreasing  className="text-primary"/>
+        <p className="font-medium">
           Membership types and its active and pending members are shown
-        </h4>
+        </p>
       </div>
       <div className="h-[500px] min-w-[500px]">
         <MemberPieChart chartData={chartData} />

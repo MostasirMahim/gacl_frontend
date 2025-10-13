@@ -14,7 +14,7 @@ export function DashBoardInfo() {
         <CardTitle>System Status</CardTitle>
         <CardDescription>Overview of key system components.</CardDescription>
       </CardHeader>
-      <CardContent className="space-y-4 text-sm">
+      <CardContent className="space-y-4 text-sm w-full">
         <div className="flex items-center justify-between">
           <span>API Version:</span>
           <Badge variant="outline" className="text-green-500">

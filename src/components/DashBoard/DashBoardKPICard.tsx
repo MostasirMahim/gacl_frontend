@@ -30,50 +30,50 @@ export async function KPICards() {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 h-full">
       <Card className="shadow-md rounded-lg overflow-hidden">
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 bg-gray-50 p-4">
-          <CardTitle className="text-sm font-semibold text-gray-800 flex items-center space-x-2">
-            <Users className="w-4 h-4 text-indigo-500" />
+        <CardHeader className="flex flex-row items-center justify-between bg-primary-foreground border-b border-primary space-y-0 pb-2 p-4">
+          <CardTitle className="text-sm font-semibold flex items-center space-x-2">
+            <Users className="w-4 h-4 " />
             <span>Total Users</span>
           </CardTitle>
           {/* Optional: Add a small indicator or status */}
         </CardHeader>
         <CardContent className="p-4">
-          <div className="text-2xl font-bold text-indigo-600 mb-1">
+          <div className="text-2xl font-bold  mb-1">
             {kpis.user_count}
           </div>
-          <p className="text-sm text-gray-500">
+          <p className="text-sm ">
             Total onboard users in the club
           </p>
         </CardContent>
       </Card>
       <Card className=" shadow-md rounded-lg overflow-hidden">
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 bg-gray-50 p-4">
-          <CardTitle className="text-sm font-semibold text-gray-800 flex items-center space-x-2">
-            <Layers className="w-4 h-4 text-indigo-500" />
+        <CardHeader className="flex flex-row items-center justify-between bg-primary-foreground border-b border-primary space-y-0 pb-2 p-4">
+          <CardTitle className="text-sm font-semibold  flex items-center space-x-2">
+            <Layers className="w-4 h-4 " />
             <span>Total Groups</span>
           </CardTitle>
           {/* Optional: Add a small indicator or status */}
         </CardHeader>
         <CardContent className="p-4">
-          <div className="text-2xl font-bold text-indigo-600 mb-1">
+          <div className="text-2xl font-bold mb-1">
             {kpis.group_count}
           </div>
-          <p className="text-sm text-gray-500">Total created groups</p>
+          <p className="text-sm ">Total created groups</p>
         </CardContent>
       </Card>
       <Card className=" shadow-md rounded-lg overflow-hidden">
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2 bg-gray-50 p-4">
-          <CardTitle className="text-sm font-semibold text-gray-800 flex items-center space-x-2">
-            <Activity className="w-4 h-4 text-indigo-500" />
+        <CardHeader className="flex flex-row items-center justify-between bg-primary-foreground border-b border-primary space-y-0 pb-2  p-4">
+          <CardTitle className="text-sm font-semibold flex items-center space-x-2">
+            <Activity className="w-4 h-4 " />
             <span>Active users today</span>
           </CardTitle>
           {/* Optional: Add a small indicator or status */}
         </CardHeader>
         <CardContent className="p-4">
-          <div className="text-2xl font-bold text-indigo-600 mb-1">
+          <div className="text-2xl font-bold  mb-1">
             {kpis.active_user_today}
           </div>
-          <p className="text-sm text-gray-500">Active users of today</p>
+          <p className="text-sm">Active users of today</p>
         </CardContent>
       </Card>
     </div>

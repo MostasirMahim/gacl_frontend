@@ -1,6 +1,7 @@
 import axiosInstance from "@/lib/axiosInstance";
 import { cookies } from "next/headers";
 import MemberPieChart2 from "./MemberPieChart2";
+import { ChartColumn } from "lucide-react";
 
 async function MemberPieChartSSR2() {
   const cookieStore = cookies();
@@ -25,9 +26,10 @@ async function MemberPieChartSSR2() {
     throw new Error(errorMsg);
   }
   return (
-    <div className="w-full overflow-x-auto ">
-      <div>
-        <h4 className="text-center">
+    <div className="w-full overflow-x-auto space-y-3">
+      <div className="flex items-start gap-2 ">
+        <ChartColumn className="text-primary"/>
+        <h4 className="w-full font-[500]">
           Membership types and its percentage of member are shown
         </h4>
       </div>
