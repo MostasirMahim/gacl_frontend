@@ -12,7 +12,7 @@ function ActivityLog({ data }: { data: any }) {
       <div className="flex-1 overflow-x-auto overflow-y-hidden rounded-md border bg-background">
         <div className="min-w-max h-full flex flex-col">
           <Table className="w-full">
-            <TableHeader className="sticky top-0 z-10 bg-background">
+            <TableHeader className="sticky top-0 z-10 bg-primary/90 border-b-2 border-primary">
               <TableRow className="bg-muted/50 hover:bg-muted/50">
                 <TableHead className="text-center font-bold text-foreground min-w-[100px]">User</TableHead>
                 <TableHead className="text-center font-bold text-foreground min-w-[140px]">Timestamp</TableHead>
