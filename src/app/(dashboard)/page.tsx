@@ -48,12 +48,12 @@ async function Home({ searchParams }: Props) {
         <h4 className="text-xl font-bold mb-4">Analytical data</h4>
 
         <div className="flex flex-col md:flex-row gap-4">
-          <div className="flex-1 md:border-r-2 border-primary">
+          <div className="flex-1 w-full md:w-1/2 md:border-r-2 border-primary">
             <Suspense fallback={<DashboardLoader />}>
               <MemberPieChartSSR />
             </Suspense>
           </div>
-          <div className="flex-1">
+          <div className="w-full md:w-1/2">
             <Suspense fallback={<DashboardLoader />}>
               <MemberPieChartSSR2 />
             </Suspense>

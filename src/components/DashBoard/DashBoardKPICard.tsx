@@ -30,7 +30,7 @@ export async function KPICards() {
   return (
     <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 h-full">
       <Card className="shadow-md rounded-lg overflow-hidden">
-        <CardHeader className="flex flex-row items-center justify-between bg-primary-foreground border-b border-primary space-y-0 pb-2 p-4">
+        <CardHeader className="flex flex-row items-center justify-between bg-primary/20 border-b border-primary space-y-0 pb-2 p-4">
           <CardTitle className="text-sm font-semibold flex items-center space-x-2">
             <Users className="w-4 h-4 " />
             <span>Total Users</span>
@@ -47,7 +47,7 @@ export async function KPICards() {
         </CardContent>
       </Card>
       <Card className=" shadow-md rounded-lg overflow-hidden">
-        <CardHeader className="flex flex-row items-center justify-between bg-primary-foreground border-b border-primary space-y-0 pb-2 p-4">
+        <CardHeader className="flex flex-row items-center justify-between bg-primary/20 border-b border-primary space-y-0 pb-2 p-4">
           <CardTitle className="text-sm font-semibold  flex items-center space-x-2">
             <Layers className="w-4 h-4 " />
             <span>Total Groups</span>
@@ -62,7 +62,7 @@ export async function KPICards() {
         </CardContent>
       </Card>
       <Card className=" shadow-md rounded-lg overflow-hidden">
-        <CardHeader className="flex flex-row items-center justify-between bg-primary-foreground border-b border-primary space-y-0 pb-2  p-4">
+        <CardHeader className="flex flex-row items-center justify-between bg-primary/20 border-b border-primary space-y-0 pb-2  p-4">
           <CardTitle className="text-sm font-semibold flex items-center space-x-2">
             <Activity className="w-4 h-4 " />
             <span>Active users today</span>

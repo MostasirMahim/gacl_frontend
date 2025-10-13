@@ -34,7 +34,7 @@ async function MemberPieChartSSR2() {
         </h4>
       </div>
 
-      <div>
+      <div className="w-full mx-auto">
         <MemberPieChart2 data={chartData.data} />
       </div>
     </div>

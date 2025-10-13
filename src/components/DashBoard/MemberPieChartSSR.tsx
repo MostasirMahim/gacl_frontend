@@ -34,7 +34,7 @@ async function MemberPieChartSSR() {
           Membership types and its active and pending members are shown
         </p>
       </div>
-      <div className="h-[500px] min-w-[500px]">
+      <div className="h-[500px] w-full mx-auto">
         <MemberPieChart chartData={chartData} />
       </div>
     </div>
