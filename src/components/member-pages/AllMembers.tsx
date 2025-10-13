@@ -237,7 +237,7 @@ function AllMembers() {
             <Input
               type="search"
               placeholder="Search Members..."
-              className="pl-10 focus-visible:ring-0 focus-visible:ring-offset-0 h-10"
+              className="pl-10 focus-visible:ring-0 bg-background focus-visible:ring-offset-0 h-10"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
@@ -558,7 +558,7 @@ function AllMembers() {
       <div className="rounded-md border my-2 font-secondary">
         <Table>
           <TableHeader>
-            <TableRow className=" text-center font-bold h-14 bg-background border-b-2 border-primary dark:bg-accent">
+            <TableRow className="text-center font-bold h-14 bg-primary/20 border-b-2 border-primary dark:bg-accent">
               <TableHead className="font-bold text-center">
                 ID
               </TableHead>
