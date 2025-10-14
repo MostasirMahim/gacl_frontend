@@ -93,9 +93,9 @@ const EmailComposeTable = ({ data }: Props) => {
       <div className="mb-4">
         <div className="flex justify-between items-center">
           <div>
-            <h4 className="text-3xl font-bold">Composes List</h4>
+            <h4 className="text-2xl sm:text-3xl font-bold">Composes List</h4>
             <p className="text-muted-foreground">
-              All composes set by the software are listed here.
+              All composes set by previous are listed here.
             </p>
           </div>
           <RefreshButton />

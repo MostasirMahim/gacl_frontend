@@ -43,8 +43,8 @@ const OutboxTable = ({ data }: Props) => {
       <div className="mb-4">
         <div className="flex justify-between items-center">
           <div>
-            <h4 className=" text-3xl font-bold">Outbox List</h4>
-            <p className="">
+            <h4 className="text-2xl sm:text-3xl font-bold">Outbox List</h4>
+            <p className="hidden md:block text-muted-foreground">
               All emails sent from the software are listed here.
             </p>
           </div>
