@@ -29,8 +29,11 @@ async function Home({ searchParams }: Props) {
       <div className="flex items-center justify-between gap-2">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Dashboard</h1>
-          <p className="text-muted-foreground text-sm sm:text-base">
+          <p className="hidden sm:block text-muted-foreground text-sm sm:text-base">
             Welcome back, Here's what's happening with your club.
+          </p>
+          <p className="sm:hidden text-muted-foreground text-sm sm:text-base">
+            Welcome to your dashboard...
           </p>
         </div>
         <div className="flex gap-2 justify-end sm:justify-start">
