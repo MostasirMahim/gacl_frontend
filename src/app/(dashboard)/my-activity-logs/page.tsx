@@ -36,11 +36,14 @@ async function ActivityLogPage({ searchParams }: Props) {
     <div className="w-full space-y-6">
       <div className="flex flex-row items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
             My Activity Logs
           </h1>
-          <p className="text-muted-foreground">
+           <p className="hidden sm:block text-muted-foreground">
             A list of all my activity logs in the system.
+          </p>
+          <p className="sm:hidden text-muted-foreground">
+           List of all my activity logs.
           </p>
         </div>
         <div>
