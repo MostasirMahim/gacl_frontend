@@ -116,7 +116,8 @@ export default function AddMember() {
       <div className="mx-auto">
         <div className="mb-8">
           <div className="flex items-center justify-between mb-4">
-            <h1 className="text-2xl font-bold">
+            <div>
+              <h1 className="text-2xl font-bold">
               {isUpdatePage ? (
                 <p>
                   Update Member{" "}
@@ -133,6 +134,18 @@ export default function AddMember() {
                 </p>
               )}
             </h1>
+  
+              {isUpdatePage ? (
+                <p className="text-muted-foreground">
+                 Update Member Informations.
+                </p>
+              ) : (
+                <p className="text-muted-foreground">
+                 Add New Member Informations.
+                </p>
+              )}
+  
+            </div>
             <Badge variant="default" className="text-sm">
               Step {currentStep + 1} of {totalSteps}
             </Badge>

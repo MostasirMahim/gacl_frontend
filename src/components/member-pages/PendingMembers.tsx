@@ -12,6 +12,7 @@ import {
   Users,
   UserRoundSearch,
   RefreshCcwIcon,
+  Settings2,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -207,15 +208,17 @@ function PendingMembers() {
     router.push(`/member/transferID/${member_ID}`);
   };
 
-
   if (user_isLoading) return <LoadingDots />;
   return (
     <div className="space-y-6 ">
       <div className="flex flex-row items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Pending Members</h1>
-          <p className="text-muted-foreground">
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Pending Members</h1>
+          <p className="hidden sm:block text-muted-foreground">
             A list of all of the pending members in the system.
+          </p>
+          <p className="sm:hidden text-muted-foreground">
+            All pending members list.
           </p>
         </div>
 
@@ -231,8 +234,8 @@ function PendingMembers() {
           isFilterOpen ? "shadow-lg border rounded-lg" : ""
         }`}
       >
-        <div className="flex gap-2 ">
-          <div className="relative flex-1">
+        <div className="flex md:hidden flex-row items-center justify-between gap-4 my-4">
+           <div className="relative flex-1">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
               type="search"
@@ -250,6 +253,27 @@ function PendingMembers() {
             <RefreshCcwIcon
              className={`h-4 w-4 ${isFetching && "animate-spin"}`}
             />
+          </Button>
+        </div>
+        <div className="flex flex-row items-center justify-end gap-4">
+          <div className="hidden md:block relative flex-1">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              type="search"
+              placeholder="Search Members..."
+              className="pl-10 bg-background focus-visible:ring-0 focus-visible:ring-offset-0 h-10"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+          <Button
+            variant="outline"
+            onClick={() => refetch()}
+            className="hidden md:flex gap-2 h-10 hover:bg-primary hover:text-primary-foreground focus-visible:ring-0 focus-visible:ring-offset-0"
+          >
+            <RefreshCcwIcon
+             className={`h-4 w-4 ${isFetching && "animate-spin"}`}
+            />
             Refresh
           </Button>
           <Button
@@ -258,7 +282,7 @@ function PendingMembers() {
               setIsFilterOpen(!isFilterOpen);
               if (!isFilterOpen) setIsUserFilterOpen(false);
             }}
-            className="gap-2 h-10 hover:bg-primary hover:text-primary-foreground focus-visible:ring-0 focus-visible:ring-offset-0"
+            className="w-full md:w-auto gap-2 h-10 hover:bg-primary hover:text-primary-foreground focus-visible:ring-0 focus-visible:ring-offset-0"
           >
             <Filter className="h-4 w-4" />
             Filter
@@ -269,7 +293,7 @@ function PendingMembers() {
               setIsUserFilterOpen(!isUserFilterOpen);
               if (!isUserFilterOpen) setIsFilterOpen(false);
             }}
-            className="gap-2 h-10 hover:bg-primary hover:text-primary-foreground focus-visible:ring-0 focus-visible:ring-offset-0"
+            className="w-full md:w-auto gap-2 h-10 hover:bg-primary hover:text-primary-foreground focus-visible:ring-0 focus-visible:ring-offset-0"
           >
             <UserRoundSearch className="h-4 w-4" />
             Query
@@ -447,7 +471,7 @@ function PendingMembers() {
                   </SelectContent>
                 </Select>
               </div>
-              <div className=" flex items-center justify-center gap-2">
+              <div className="flex flex-col md:flex-row items-center justify-center gap-2">
                 <Button className="mt-4" onClick={() => refetch()}>
                   <Filter className="h-4 w-4" />
                   {isFetching ? "Filtering..." : "Apply"}
@@ -457,6 +481,7 @@ function PendingMembers() {
                   variant="destructive"
                   onClick={() => resetFilters()}
                 >
+                  <Settings2 className="h-4 w-4" />
                   Reset
                 </Button>
               </div>
@@ -532,16 +557,16 @@ function PendingMembers() {
                 </Select>
               </div>
 
-              <div className=" flex items-center justify-center gap-2">
-                <Button className="mt-4" onClick={() => refetch()}>
+              <div className="flex flex-col items-center justify-center gap-2">
+                <Button onClick={() => refetch()}>
                   <Filter className="h-4 w-4" />
                   {isFetching ? "Filtering..." : "Apply"}
                 </Button>
                 <Button
-                  className="mt-4"
                   variant="destructive"
                   onClick={() => resetFilters()}
                 >
+                  <Settings2 className="h-4 w-4" />
                   Reset
                 </Button>
               </div>

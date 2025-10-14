@@ -136,9 +136,12 @@ function RecycleBin() {
     <div className={`space-y-6 ${bulkDialogOpen ? "bg-gradient-to-b from-red-300 to-red-200 rounded-lg p-2 animate-pulse" : ""}`}>
       <div className="flex flex-row items-center justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Recycle Bin</h1>
-          <p className="text-muted-foreground">
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Recycle Bin</h1>
+          <p className="hidden sm:block text-muted-foreground">
             A list of all of the recycled members in the system.
+          </p>
+          <p className="sm:hidden text-muted-foreground">
+            A list of the recycled members.
           </p>
         </div>
 
