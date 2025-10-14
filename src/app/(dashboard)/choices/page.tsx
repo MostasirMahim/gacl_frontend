@@ -154,7 +154,7 @@ export default function ManageChoicesPage() {
     <div className="min-h-screen">
       <div className="mx-auto max-w-7xl">
         <div className="mb-8 ">
-          <h1 className="text-3xl font-bold tracking-tight">
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">
             Manage All Choices
           </h1>
           <p className="mt-2 text-muted-foreground">
