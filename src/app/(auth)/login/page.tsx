@@ -62,7 +62,7 @@ export default function page() {
         Object.entries(errors).forEach(([field, messages]) => {
           formik.setFieldError(
             field,
-            Array.isArray(messages) ? messages[0] : messages
+            Array.isArray(messages) ? messages[0] : messages,
           );
         });
       } else if (message) {
@@ -92,16 +92,18 @@ export default function page() {
       <Card className="w-full max-w-sm rounded-lg shadow-lg">
         <CardContent className="p-8 space-y-6">
           <div className="flex flex-col items-center space-y-4">
-            <Image
+            {/* <Image
               src="/assets/logo.png"
               alt="Modernize Logo"
               width={48}
               height={48}
               className="h-16 w-16"
-            />
+            /> */}
             <div className="text-center space-y-1">
               <h1 className="text-2xl font-bold text-primary">Gagorian Club</h1>
-              <p className="text-sm text-muted-foreground">Your Social Campaigns</p>
+              <p className="text-sm text-muted-foreground">
+                Your Social Campaigns
+              </p>
             </div>
           </div>
           <form onSubmit={formik.handleSubmit} className="space-y-4">
@@ -170,11 +172,7 @@ export default function page() {
                 Forgot Password ?
               </Link>
             </div>
-            <Button
-              className="w-full"
-              type="submit"
-              disabled={isPending}
-            >
+            <Button className="w-full" type="submit" disabled={isPending}>
               {isPending ? "Signing In..." : "Sign In"}
             </Button>
           </form>
