@@ -43,6 +43,9 @@ import {
   MapPinHouse,
   ImageIcon,
   UserCheck,
+  ChefHat,
+  GlassWater,
+  CalendarClock,
   Plus,
   Eye,
   Logs,
@@ -215,7 +218,42 @@ const navigation_sidebar_links = [
         label: "View cart",
         href: "/restaurants/checkout",
       },
+      {
+        icon: <ChefHat className="h-4 w-4" />,
+        label: "Kitchen & Orders",
+        href: "/restaurant-orders",
+      },
     ],
+  },
+  {
+    icon: <UserCheck className="h-5 w-5" />,
+    label: "Attendance",
+    href: "/attendance",
+  },
+  {
+    icon: <GlassWater className="h-5 w-5" />,
+    label: "Outlets (Bar/Lounge)",
+    href: "/outlets",
+  },
+  {
+    icon: <CalendarClock className="h-5 w-5" />,
+    label: "Reservations",
+    href: "/reservations",
+  },
+  {
+    icon: <HandCoins className="h-5 w-5" />,
+    label: "Payroll",
+    href: "/payroll",
+  },
+  {
+    icon: <Component className="h-5 w-5" />,
+    label: "Vendor Management",
+    href: "/vendors",
+  },
+  {
+    icon: <FileChartColumn className="h-5 w-5" />,
+    label: "Finance & Reports",
+    href: "/finance",
   },
   {
     icon: <Package className="h-5 w-5" />,
