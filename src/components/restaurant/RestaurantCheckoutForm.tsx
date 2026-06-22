@@ -18,7 +18,7 @@ import axiosInstance from "@/lib/axiosInstance";
 import { toast } from "react-toastify";
 import { Checkbox } from "../ui/checkbox";
 import { ScrollArea } from "../ui/scroll-area";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Label } from "../ui/label";
 import {
   Card,
@@ -48,6 +48,10 @@ function RestaurantCheckoutForm({ memberData, promoCodeData }: Props) {
   const restaurant = useRestaurantCartStore((state) => state.restaurant);
   const removeItem = useRestaurantCartStore((state) => state.removeItem);
   const [searchMember, setSearchMember] = useState("");
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
   const members = memberData.data;
   const promoCodes = promoCodeData.data;
 
@@ -122,7 +126,9 @@ function RestaurantCheckoutForm({ memberData, promoCodeData }: Props) {
         <h2 className="text-xl font-bold border-b pb-2">🛒 Selected Items</h2>
 
         <div className="space-y-3">
-          {cart.length > 0 ? (
+          {!mounted ? (
+            <p className="text-gray-500 italic">Loading cart...</p>
+          ) : cart.length > 0 ? (
             cart.map((item: any) => (
               <div
                 key={item.id}

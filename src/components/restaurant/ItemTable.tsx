@@ -129,10 +129,13 @@ function ItemTable({ itemsData, restaurantId }: Props) {
   );
   const clearCart = useRestaurantCartStore((state) => state.clearCart);
   const setRestaurant = useRestaurantCartStore((state) => state.setRestaurant);
-  setRestaurant(restaurantId);
-  if (restaurantId !== restaurant) {
-    clearCart();
-  }
+  useEffect(() => {
+    if (restaurantId !== restaurant) {
+      clearCart();
+      setRestaurant(restaurantId);
+    }
+  }, [restaurantId, restaurant, clearCart, setRestaurant]);
+
 
   const items = itemsData.data;
   const paginationData = itemsData.pagination;
@@ -204,7 +207,7 @@ function ItemTable({ itemsData, restaurantId }: Props) {
         </div>
         <div>
           {cart.length > 0 && (
-            <Link href="/restaurants/checkout/">
+            <Link href="/restaurants/checkout">
               <Button>
                 <ShoppingCart />
                 Checkout ({cart.length})

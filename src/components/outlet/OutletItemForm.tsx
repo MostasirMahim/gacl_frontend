@@ -24,13 +24,11 @@ import axiosInstance from "@/lib/axiosInstance";
 import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import useGetOutlets from "@/hooks/data/useGetOutlets";
+import useGetOutletCategories from "@/hooks/data/useGetOutletCategories";
 
-interface Props {
-  categoriesData?: any;
-}
-
-function OutletItemForm({ categoriesData }: Props) {
+function OutletItemForm() {
   const { data: outletsData } = useGetOutlets();
+  const { data: categoriesData } = useGetOutletCategories();
   const outlets = outletsData?.data || [];
   const categories = categoriesData?.data || [];
   const [loading, setLoading] = useState(false);
