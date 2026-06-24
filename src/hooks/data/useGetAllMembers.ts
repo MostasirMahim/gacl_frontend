@@ -20,7 +20,7 @@ type Filters = {
 function useGetAllMembers(
   page: number = 1,
   filters: Filters = {},
-  routes: number = 1
+  routes: number = 1,
 ) {
   return useQuery({
     queryKey: ["getAllMembers", page, routes],
@@ -38,7 +38,7 @@ function useGetAllMembers(
         });
 
         const res = await axiosInstance.get(
-          `/api/member/v1/members/list/?${params.toString()}`
+          `/api/member/v1/members/list/?${params.toString()}`,
         );
         if (res?.data?.status == "success") {
           return res.data;
@@ -47,11 +47,8 @@ function useGetAllMembers(
           return [];
         }
       } catch (error: any) {
-        console.error("Error fetching Choices stats:", error);
-        toast(
-          "Error",
-          error?.response?.data?.message || "Failed to fetch Members"
-        );
+        console.error("Error fetching:", error);
+        toast(error?.response?.data?.message || "Failed to fetch Members");
         return [];
       }
     },
@@ -60,7 +57,7 @@ function useGetAllMembers(
 
 export async function exportMembersExcel(
   page: number = 1,
-  filters: Filters = {}
+  filters: Filters = {},
 ) {
   try {
     const params = new URLSearchParams();
@@ -78,7 +75,7 @@ export async function exportMembersExcel(
 
     const res = await axiosInstance.get(
       `/api/member/v1/members/list/?${params.toString()}`,
-      { responseType: "blob" }
+      { responseType: "blob" },
     );
     const blob = new Blob([res.data], {
       type: res.headers["content-type"],
