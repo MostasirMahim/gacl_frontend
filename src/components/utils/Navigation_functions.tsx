@@ -440,6 +440,13 @@ export const navigationPermissions: Record<string, string | null> = {
   "Member financial": "member_financial_management",
   "Upload sales": "member_financial_management",
   "Facility management": "facility_management",
+  "Attendance": "attendance_management",
+  "Outlets (Bar/Lounge)": "outlet_management",
+  "Reservations": "reservation_management",
+  "Payroll": "payroll_management",
+  "Vendor Management": "vendor_management",
+  "Finance & Reports": "member_financial_management",
+  "Event Management": "event_management",
 };
 
 // lib/navigation-permissions.ts
