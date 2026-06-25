@@ -54,7 +54,16 @@ function CrossOrderingRules() {
       toast.success("Rule saved");
       queryClient.invalidateQueries({ queryKey: ["getCrossRules"] });
     } catch (error: any) {
-      toast.error(error?.response?.data?.message || "Failed to save rule");
+      const data = error?.response?.data;
+      let msg = data?.message || "Failed to save rule";
+      // surface field-level errors (e.g. invalid source/target) in the toast
+      if (data?.errors && typeof data.errors === "object") {
+        const firstKey = Object.keys(data.errors)[0];
+        const val = data.errors[firstKey];
+        if (Array.isArray(val) && val.length) msg = `${firstKey}: ${val[0]}`;
+        else if (typeof val === "string") msg = val;
+      }
+      toast.error(msg);
     } finally {
       setSaving(false);
     }

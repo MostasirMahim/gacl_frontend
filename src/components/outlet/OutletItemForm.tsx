@@ -39,8 +39,8 @@ function OutletItemForm() {
       name: "",
       description: "",
       unit: "",
-      unit_cost: 0,
-      selling_price: 0,
+      unit_cost: "" as any,
+      selling_price: "" as any,
       availability: true,
       spicy_selectable: false,
       is_public_show: false,
@@ -53,7 +53,13 @@ function OutletItemForm() {
   async function onSubmit(values: any) {
     try {
       setLoading(true);
-      const res = await axiosInstance.post("/api/outlet/v1/outlets/items/", values);
+      const payload = {
+        ...values,
+        unit_cost: values.unit_cost === "" ? 0 : Number(values.unit_cost),
+        selling_price:
+          values.selling_price === "" ? 0 : Number(values.selling_price),
+      };
+      const res = await axiosInstance.post("/api/outlet/v1/outlets/items/", payload);
       if (res.status === 201) {
         toast.success("Item posted");
         form.reset();
@@ -120,8 +126,9 @@ function OutletItemForm() {
                 <FormItem>
                   <FormLabel>Unit Cost</FormLabel>
                   <FormControl>
-                    <Input type="number" {...field}
-                      onChange={(e) => field.onChange(Number(e.target.value))} />
+                    <Input type="number" min={0} placeholder="0" {...field}
+                      value={field.value ?? ""}
+                      onChange={(e) => field.onChange(e.target.value)} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -135,8 +142,9 @@ function OutletItemForm() {
                 <FormItem>
                   <FormLabel>Selling Price *</FormLabel>
                   <FormControl>
-                    <Input type="number" {...field}
-                      onChange={(e) => field.onChange(Number(e.target.value))} />
+                    <Input type="number" min={0} placeholder="0" {...field}
+                      value={field.value ?? ""}
+                      onChange={(e) => field.onChange(e.target.value)} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

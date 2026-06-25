@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import {
@@ -15,7 +15,7 @@ import useGetSalaryComponents from "@/hooks/data/useGetSalaryComponents";
 interface LineDraft {
   component: string;
   componentName: string;
-  value: number;
+  value: string;
 }
 
 function SalaryStructureForm() {
@@ -26,12 +26,60 @@ function SalaryStructureForm() {
   const components = componentsData?.data || [];
 
   const [staffId, setStaffId] = useState("");
-  const [basic, setBasic] = useState(0);
+  const [basic, setBasic] = useState<string>("");
   const [effectiveFrom, setEffectiveFrom] = useState("");
   const [lines, setLines] = useState<LineDraft[]>([]);
   const [pickComponent, setPickComponent] = useState("");
-  const [pickValue, setPickValue] = useState(0);
+  const [pickValue, setPickValue] = useState<string>("");
   const [loading, setLoading] = useState(false);
+  // update mode: if the selected staff already has a structure
+  const [existingId, setExistingId] = useState<number | null>(null);
+  const [checking, setChecking] = useState(false);
+
+  // When staff changes, check for an existing current structure to update.
+  useEffect(() => {
+    if (!staffId) {
+      setExistingId(null);
+      return;
+    }
+    let active = true;
+    (async () => {
+      setChecking(true);
+      try {
+        const res = await axiosInstance.get(
+          `/api/payroll/v1/payroll/structures/?staff_id=${staffId}`
+        );
+        const structures = res?.data?.data || [];
+        const current =
+          structures.find((s: any) => s.is_current) || structures[0];
+        if (active && current) {
+          setExistingId(current.id);
+          setBasic(String(current.basic_salary ?? ""));
+          setEffectiveFrom(current.effective_from || "");
+          setLines(
+            (current.lines || []).map((l: any) => ({
+              component: String(l.component),
+              componentName: l.component_name || "",
+              value: String(l.value),
+            }))
+          );
+          toast.info("Existing structure loaded — you can update it.");
+        } else if (active) {
+          setExistingId(null);
+          setBasic("");
+          setEffectiveFrom("");
+          setLines([]);
+        }
+      } catch {
+        if (active) setExistingId(null);
+      } finally {
+        if (active) setChecking(false);
+      }
+    })();
+    return () => {
+      active = false;
+    };
+  }, [staffId]);
 
   function addLine() {
     if (!pickComponent) {
@@ -45,10 +93,10 @@ function SalaryStructureForm() {
     }
     setLines([
       ...lines,
-      { component: pickComponent, componentName: comp?.name || "", value: pickValue },
+      { component: pickComponent, componentName: comp?.name || "", value: pickValue || "0" },
     ]);
     setPickComponent("");
-    setPickValue(0);
+    setPickValue("");
   }
 
   function removeLine(component: string) {
@@ -62,33 +110,50 @@ function SalaryStructureForm() {
     }
     try {
       setLoading(true);
-      // 1) create the structure
-      const res = await axiosInstance.post(
-        "/api/payroll/v1/payroll/structures/",
-        {
-          staff: Number(staffId),
-          basic_salary: basic,
-          effective_from: effectiveFrom,
-          is_current: true,
+      if (existingId) {
+        // UPDATE existing structure (Bug 6.2)
+        await axiosInstance.patch(
+          `/api/payroll/v1/payroll/structures/${existingId}/`,
+          {
+            basic_salary: Number(basic),
+            effective_from: effectiveFrom,
+            is_current: true,
+            lines: lines.map((l) => ({
+              component: Number(l.component),
+              value: Number(l.value),
+            })),
+          }
+        );
+        toast.success("Salary structure updated");
+      } else {
+        // CREATE new structure
+        const res = await axiosInstance.post(
+          "/api/payroll/v1/payroll/structures/",
+          {
+            staff: Number(staffId),
+            basic_salary: Number(basic),
+            effective_from: effectiveFrom,
+            is_current: true,
+          }
+        );
+        const structureId = res?.data?.data?.id;
+        for (const l of lines) {
+          await axiosInstance.post("/api/payroll/v1/payroll/structures/lines/", {
+            structure: structureId,
+            component: Number(l.component),
+            value: Number(l.value),
+          });
         }
-      );
-      const structureId = res?.data?.data?.id;
-      // 2) add each component line
-      for (const l of lines) {
-        await axiosInstance.post("/api/payroll/v1/payroll/structures/lines/", {
-          structure: structureId,
-          component: Number(l.component),
-          value: l.value,
-        });
+        toast.success("Salary structure created");
       }
-      toast.success("Salary structure created");
       setStaffId("");
-      setBasic(0);
+      setBasic("");
       setEffectiveFrom("");
       setLines([]);
-      queryClient.invalidateQueries({ queryKey: ["getResources"] });
+      setExistingId(null);
+      queryClient.invalidateQueries({ queryKey: ["getPayrollRuns"] });
     } catch (error: any) {
-      toast.error(error?.response?.data?.message || "Failed to create structure");
+      toast.error(error?.response?.data?.message || "Failed to save structure");
     } finally {
       setLoading(false);
     }
@@ -96,7 +161,13 @@ function SalaryStructureForm() {
 
   return (
     <div className="max-w-2xl mx-auto p-6 bg-card rounded-xl border border-border/50 shadow-sm">
-      <h2 className="text-xl font-semibold mb-4">Build Salary Structure</h2>
+      <h2 className="text-xl font-semibold mb-1">
+        {existingId ? "Update Salary Structure" : "Build Salary Structure"}
+      </h2>
+      <p className="text-sm text-muted-foreground mb-4">
+        Select a staff member. If they already have a salary structure, it loads
+        for editing; otherwise a new one is created.
+      </p>
       <div className="space-y-4">
         <div>
           <label className="text-sm font-medium">Staff</label>
@@ -105,17 +176,27 @@ function SalaryStructureForm() {
             <SelectContent>
               {staff.map((s: any) => (
                 <SelectItem key={s.id} value={String(s.id)}>
-                  {s.staff_ID} — {s.designation}
+                  {s.staff_ID} — {s.full_name || s.designation}
                 </SelectItem>
               ))}
             </SelectContent>
           </Select>
+          {checking && (
+            <p className="text-xs text-muted-foreground mt-1">
+              Checking for existing structure…
+            </p>
+          )}
+          {existingId && (
+            <Badge variant="outline" className="mt-2">
+              Editing existing structure #{existingId}
+            </Badge>
+          )}
         </div>
         <div className="grid grid-cols-2 gap-4">
           <div>
             <label className="text-sm font-medium">Basic Salary</label>
-            <Input type="number" value={basic}
-              onChange={(e) => setBasic(Number(e.target.value))} />
+            <Input type="number" min={0} value={basic}
+              onChange={(e) => setBasic(e.target.value)} />
           </div>
           <div>
             <label className="text-sm font-medium">Effective From</label>
@@ -141,7 +222,7 @@ function SalaryStructureForm() {
             </div>
             <div className="w-32">
               <Input type="number" placeholder="value / %" value={pickValue}
-                onChange={(e) => setPickValue(Number(e.target.value))} />
+                onChange={(e) => setPickValue(e.target.value)} />
             </div>
             <Button type="button" variant="outline" onClick={addLine}>Add</Button>
           </div>
@@ -159,7 +240,11 @@ function SalaryStructureForm() {
         </div>
 
         <Button onClick={submit} disabled={loading} className="w-full">
-          {loading ? "Saving..." : "Create Structure"}
+          {loading
+            ? "Saving..."
+            : existingId
+            ? "Update Structure"
+            : "Create Structure"}
         </Button>
       </div>
     </div>

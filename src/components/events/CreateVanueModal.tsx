@@ -13,21 +13,43 @@ import {
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { Plus } from "lucide-react";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import axiosInstance from "@/lib/axiosInstance";
 import { toast } from "react-toastify";
 
 const venueSchema = Yup.object({
-  street_address: Yup.string().required("Street address is required"),
-  city: Yup.string().required("City is required"),
+  street_address: Yup.string()
+    .min(5, "Street address must be at least 5 characters")
+    .required("Street address is required"),
+  city: Yup.string()
+    .min(3, "City name is too short")
+    .required("City is required"),
   state_province: Yup.string().required("State/Province is required"),
-  postal_code: Yup.string().required("Postal code is required"),
+  postal_code: Yup.string()
+    .min(4, "Postal code must be at least 4 characters")
+    .required("Postal code is required"),
   country: Yup.string().required("Country is required"),
 });
 
 export function CreateVenueModal() {
   const [open, setOpen] = useState(false);
+
+  const { data: countriesData } = useQuery({
+    queryKey: ["eventCountries"],
+    queryFn: async () => {
+      const res = await axiosInstance.get("/api/event/v1/events/countries/");
+      return res?.data;
+    },
+  });
+  const countries = countriesData?.data || [];
 
   const queryClient = useQueryClient();
   const { mutate: createVenues, isPending } = useMutation({
@@ -161,14 +183,21 @@ export function CreateVenueModal() {
 
           <div className="space-y-2">
             <Label htmlFor="country">Country</Label>
-            <Input
-              id="country"
-              name="country"
+            <Select
               value={formik.values.country}
-              onChange={formik.handleChange}
-              onBlur={formik.handleBlur}
-              placeholder="US"
-            />
+              onValueChange={(v) => formik.setFieldValue("country", v)}
+            >
+              <SelectTrigger id="country">
+                <SelectValue placeholder="Select country" />
+              </SelectTrigger>
+              <SelectContent className="max-h-72">
+                {countries.map((c: any) => (
+                  <SelectItem key={c.code} value={c.code}>
+                    {c.name}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
             {formik.touched.country && formik.errors.country && (
               <p className="text-sm text-destructive">
                 {formik.errors.country}

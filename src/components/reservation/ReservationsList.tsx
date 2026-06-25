@@ -6,6 +6,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger,
 } from "@/components/ui/dialog";
@@ -73,7 +74,12 @@ function PayDialog({ reservation }: { reservation: any }) {
 
 function ReservationsList() {
   const [status, setStatus] = useState("");
-  const { data, isLoading } = useGetReservations(status ? `?status=${status}` : "");
+  const [search, setSearch] = useState("");
+  const params = new URLSearchParams();
+  if (status) params.append("status", status);
+  if (search) params.append("search", search);
+  const qs = params.toString() ? `?${params.toString()}` : "";
+  const { data, isLoading } = useGetReservations(qs);
   const queryClient = useQueryClient();
   const reservations = data?.data || data?.results || [];
 
@@ -89,18 +95,29 @@ function ReservationsList() {
 
   return (
     <div className="p-6 bg-card rounded-xl border border-border/50 shadow-sm">
-      <div className="flex items-center justify-between mb-4">
+      <div className="flex flex-wrap items-end justify-between gap-3 mb-4">
         <h2 className="text-xl font-semibold">Reservations</h2>
-        <Select value={status || "all"} onValueChange={(v) => setStatus(v === "all" ? "" : v)}>
-          <SelectTrigger className="w-48"><SelectValue placeholder="Filter status" /></SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All</SelectItem>
-            <SelectItem value="pending_payment">Pending Payment</SelectItem>
-            <SelectItem value="confirmed">Confirmed</SelectItem>
-            <SelectItem value="cancelled">Cancelled</SelectItem>
-            <SelectItem value="completed">Completed</SelectItem>
-          </SelectContent>
-        </Select>
+        <div className="flex flex-wrap items-end gap-3">
+          <div>
+            <label className="text-xs text-muted-foreground">Search</label>
+            <Input
+              placeholder="Member name / ID / resource..."
+              className="w-60"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
+          <Select value={status || "all"} onValueChange={(v) => setStatus(v === "all" ? "" : v)}>
+            <SelectTrigger className="w-48"><SelectValue placeholder="Filter status" /></SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">All</SelectItem>
+              <SelectItem value="pending_payment">Pending Payment</SelectItem>
+              <SelectItem value="confirmed">Confirmed</SelectItem>
+              <SelectItem value="cancelled">Cancelled</SelectItem>
+              <SelectItem value="completed">Completed</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
       </div>
       {isLoading ? (
         <LoadingDots />
@@ -108,20 +125,37 @@ function ReservationsList() {
         <Table>
           <TableHeader>
             <TableRow>
+              <TableHead>#</TableHead>
               <TableHead>Reservation #</TableHead>
+              <TableHead>Member</TableHead>
               <TableHead>Resource</TableHead>
               <TableHead>Start</TableHead>
+              <TableHead>Created</TableHead>
               <TableHead>Status</TableHead>
               <TableHead>Advance</TableHead>
               <TableHead>Action</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
-            {reservations.map((r: any) => (
+            {reservations.map((r: any, idx: number) => (
               <TableRow key={r.id}>
+                <TableCell>{idx + 1}</TableCell>
                 <TableCell className="font-mono">{r.reservation_number}</TableCell>
+                <TableCell>
+                  {r.member_ID ? (
+                    <span>
+                      <span className="font-medium">{r.member_ID}</span>
+                      <span className="text-muted-foreground"> — {r.member_name}</span>
+                    </span>
+                  ) : (
+                    "—"
+                  )}
+                </TableCell>
                 <TableCell>{r.resource_name}</TableCell>
                 <TableCell>{new Date(r.start_time).toLocaleString()}</TableCell>
+                <TableCell>
+                  {r.created_at ? new Date(r.created_at).toLocaleString() : "—"}
+                </TableCell>
                 <TableCell>
                   <Badge variant={STATUS_VARIANT[r.status] || "default"}>{r.status}</Badge>
                 </TableCell>
@@ -138,7 +172,7 @@ function ReservationsList() {
             ))}
             {reservations.length === 0 && (
               <TableRow>
-                <TableCell colSpan={6} className="text-center text-muted-foreground">
+                <TableCell colSpan={9} className="text-center text-muted-foreground">
                   No reservations found
                 </TableCell>
               </TableRow>

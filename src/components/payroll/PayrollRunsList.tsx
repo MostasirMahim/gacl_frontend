@@ -1,10 +1,18 @@
 "use client";
+import { useState } from "react";
 import useGetPayrollRuns from "@/hooks/data/useGetPayrollRuns";
 import {
   Table, TableBody, TableCell, TableHead, TableHeader, TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import {
+  Select, SelectTrigger, SelectContent, SelectItem, SelectValue,
+} from "@/components/ui/select";
+import {
+  Dialog, DialogContent, DialogHeader, DialogTitle,
+} from "@/components/ui/dialog";
 import {
   Accordion, AccordionContent, AccordionItem, AccordionTrigger,
 } from "@/components/ui/accordion";
@@ -21,6 +29,13 @@ function PayrollRunsList() {
   const queryClient = useQueryClient();
   const runs = data?.data || data?.results || [];
 
+  const [adjustPayslip, setAdjustPayslip] = useState<any>(null);
+  const [adj, setAdj] = useState<any>({
+    component_name: "",
+    component_type: "deduction",
+    amount: "",
+  });
+
   async function payslipPay(payslipId: number) {
     try {
       await axiosInstance.post(
@@ -31,6 +46,29 @@ function PayrollRunsList() {
       queryClient.invalidateQueries({ queryKey: ["getPayrollRuns"] });
     } catch (error: any) {
       toast.error(error?.response?.data?.message || "Payment failed");
+    }
+  }
+
+  async function saveAdjust() {
+    if (!adj.component_name.trim() || !adj.amount) {
+      toast.error("Enter a label and amount");
+      return;
+    }
+    try {
+      await axiosInstance.post(
+        `/api/payroll/v1/payroll/payslips/${adjustPayslip.id}/adjust/`,
+        {
+          component_name: adj.component_name,
+          component_type: adj.component_type,
+          amount: Number(adj.amount),
+        }
+      );
+      toast.success("Payslip adjusted");
+      setAdjustPayslip(null);
+      setAdj({ component_name: "", component_type: "deduction", amount: "" });
+      queryClient.invalidateQueries({ queryKey: ["getPayrollRuns"] });
+    } catch (error: any) {
+      toast.error(error?.response?.data?.message || "Adjustment failed");
     }
   }
 
@@ -78,11 +116,20 @@ function PayrollRunsList() {
                           {p.status}
                         </Badge>
                       </TableCell>
-                      <TableCell>
+                      <TableCell className="space-x-2">
                         {p.status === "generated" && (
-                          <Button size="sm" onClick={() => payslipPay(p.id)}>
-                            Pay
-                          </Button>
+                          <>
+                            <Button size="sm" onClick={() => payslipPay(p.id)}>
+                              Pay
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => setAdjustPayslip(p)}
+                            >
+                              Adjust
+                            </Button>
+                          </>
                         )}
                       </TableCell>
                     </TableRow>
@@ -96,6 +143,54 @@ function PayrollRunsList() {
           <p className="text-center text-muted-foreground py-6">No payroll runs yet.</p>
         )}
       </Accordion>
+
+      <Dialog open={!!adjustPayslip} onOpenChange={(o) => !o && setAdjustPayslip(null)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>
+              Adjust Payslip — {adjustPayslip?.staff_ID}
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-3">
+            <div>
+              <label className="text-xs text-muted-foreground">Type</label>
+              <Select
+                value={adj.component_type}
+                onValueChange={(v) => setAdj({ ...adj, component_type: v })}
+              >
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="deduction">Deduction</SelectItem>
+                  <SelectItem value="earning">Earning</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+            <div>
+              <label className="text-xs text-muted-foreground">Label</label>
+              <Input
+                placeholder="e.g. Late fine"
+                value={adj.component_name}
+                onChange={(e) => setAdj({ ...adj, component_name: e.target.value })}
+              />
+            </div>
+            <div>
+              <label className="text-xs text-muted-foreground">Amount</label>
+              <Input
+                type="number"
+                min={0}
+                placeholder="e.g. 100"
+                value={adj.amount}
+                onChange={(e) => setAdj({ ...adj, amount: e.target.value })}
+              />
+            </div>
+            <Button onClick={saveAdjust} className="w-full">
+              Apply Adjustment
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }

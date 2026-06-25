@@ -1,4 +1,4 @@
-import RestaurantCheckoutForm from "@/components/restaurant/RestaurantCheckoutForm";
+import CheckoutTabs from "@/components/restaurant/CheckoutTabs";
 import axiosInstance from "@/lib/axiosInstance";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
@@ -44,7 +44,7 @@ async function RestaurantItemCheckoutPage({ searchParams }: Props) {
 
   return (
     <div>
-      <RestaurantCheckoutForm
+      <CheckoutTabs
         memberData={memberData}
         promoCodeData={promoCodeData}
       />

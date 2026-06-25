@@ -11,6 +11,7 @@ import axiosInstance from "@/lib/axiosInstance";
 import { useQueryClient } from "@tanstack/react-query";
 import useGetResources from "@/hooks/data/useGetResources";
 import useGetAllMembers from "@/hooks/data/useGetAllMembers";
+import MemberSelectModal from "@/components/shared/MemberSelectModal";
 import { CalendarClock } from "lucide-react";
 
 function BookingForm() {
@@ -22,6 +23,7 @@ function BookingForm() {
 
   const [resourceId, setResourceId] = useState("");
   const [memberId, setMemberId] = useState("");
+  const [selectedMember, setSelectedMember] = useState<any>(null);
   const [start, setStart] = useState("");
   const [end, setEnd] = useState("");
   const [partySize, setPartySize] = useState(1);
@@ -108,16 +110,18 @@ function BookingForm() {
         </div>
         <div>
           <label className="text-sm font-medium">Member</label>
-          <Select value={memberId} onValueChange={setMemberId}>
-            <SelectTrigger><SelectValue placeholder="Select member" /></SelectTrigger>
-            <SelectContent>
-              {members.map((m: any) => (
-                <SelectItem key={m.id} value={String(m.id)}>
-                  {m.first_name || m.member_ID || `Member ${m.id}`}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+          <MemberSelectModal
+            value={
+              selectedMember
+                ? { member_ID: selectedMember.member_ID, name: selectedMember.name }
+                : null
+            }
+            onSelect={(m) => {
+              setSelectedMember(m);
+              setMemberId(String(m.id));
+            }}
+            triggerLabel="Search & select member"
+          />
         </div>
         <div className="grid grid-cols-2 gap-4">
           <div>

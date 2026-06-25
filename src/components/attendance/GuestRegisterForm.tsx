@@ -21,6 +21,7 @@ import { toast } from "react-toastify";
 import axiosInstance from "@/lib/axiosInstance";
 import { useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
+import MemberSelectModal from "@/components/shared/MemberSelectModal";
 
 interface Props {
   membersData?: any;
@@ -31,6 +32,7 @@ function GuestRegisterForm({ membersData, staffData }: Props) {
   const members = membersData?.data || [];
   const staff = staffData?.data || [];
   const [loading, setLoading] = useState(false);
+  const [selectedHostMember, setSelectedHostMember] = useState<any>(null);
   const queryClient = useQueryClient();
 
   const form = useForm({
@@ -165,20 +167,23 @@ function GuestRegisterForm({ membersData, staffData }: Props) {
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Host Member</FormLabel>
-                  <Select onValueChange={field.onChange} value={field.value}>
-                    <FormControl>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select member" />
-                      </SelectTrigger>
-                    </FormControl>
-                    <SelectContent>
-                      {members.map((m: any) => (
-                        <SelectItem key={m.id} value={String(m.id)}>
-                          {m.first_name || m.member_ID || `Member ${m.id}`}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
+                  <FormControl>
+                    <MemberSelectModal
+                      value={
+                        selectedHostMember
+                          ? {
+                              member_ID: selectedHostMember.member_ID,
+                              name: selectedHostMember.name,
+                            }
+                          : null
+                      }
+                      onSelect={(m) => {
+                        setSelectedHostMember(m);
+                        field.onChange(String(m.id));
+                      }}
+                      triggerLabel="Search & select host member"
+                    />
+                  </FormControl>
                   <FormMessage />
                 </FormItem>
               )}

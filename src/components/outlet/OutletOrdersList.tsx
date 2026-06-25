@@ -6,6 +6,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger,
 } from "@/components/ui/dialog";
@@ -65,6 +66,54 @@ function BillDialog({ order }: { order: any }) {
   );
 }
 
+function VerifyOtpButton({ order }: { order: any }) {
+  const [open, setOpen] = useState(false);
+  const [code, setCode] = useState("");
+  const [loading, setLoading] = useState(false);
+  const queryClient = useQueryClient();
+
+  async function verify() {
+    try {
+      setLoading(true);
+      await axiosInstance.post(
+        `/api/outlet/v1/outlets/orders/${order.id}/verify-otp/`,
+        { otp_code: code }
+      );
+      toast.success("Order confirmed");
+      setOpen(false);
+      queryClient.invalidateQueries({ queryKey: ["getOutletOrders"] });
+      queryClient.invalidateQueries({ queryKey: ["getOutletKitchen"] });
+    } catch (error: any) {
+      toast.error(error?.response?.data?.message || "Verification failed");
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>
+        <Button size="sm" variant="outline">
+          Verify OTP
+        </Button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Verify OTP — {order.order_number}</DialogTitle>
+        </DialogHeader>
+        <Input
+          placeholder="Enter OTP code"
+          value={code}
+          onChange={(e) => setCode(e.target.value)}
+        />
+        <Button onClick={verify} disabled={loading}>
+          {loading ? "Verifying..." : "Confirm"}
+        </Button>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
 function OutletOrdersList() {
   const [status, setStatus] = useState("");
   const { data, isLoading } = useGetOutletOrders(status ? `?status=${status}` : "");
@@ -109,6 +158,7 @@ function OutletOrdersList() {
                 <TableCell>BDT {o.total_amount}</TableCell>
                 <TableCell>
                   {(o.status === "served" || o.status === "ready") && <BillDialog order={o} />}
+                  {o.status === "pending_otp" && <VerifyOtpButton order={o} />}
                 </TableCell>
               </TableRow>
             ))}

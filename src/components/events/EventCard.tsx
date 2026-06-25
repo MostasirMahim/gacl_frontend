@@ -65,7 +65,13 @@ export function EventCard({ event }: EventCardProps) {
           <div className="flex items-center gap-2 text-sm">
             <MapPin className="h-4 w-4 text-primary" />
             <span className="text-muted-foreground">
-              {event.venue.city}, {event.venue.state_province}
+              {event.venue
+                ? `${event.venue.city || ""}${
+                    event.venue.state_province
+                      ? ", " + event.venue.state_province
+                      : ""
+                  }` || "Venue set"
+                : "No venue assigned"}
             </span>
           </div>
 

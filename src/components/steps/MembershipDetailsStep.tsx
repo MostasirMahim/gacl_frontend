@@ -46,7 +46,12 @@ const validationSchema = Yup.object({
   marital_status: Yup.string().required("Marital status is required"),
   anniversary_date: Yup.date()
     .nullable()
-    .required("Anniversary date is required"),
+    .when("marital_status", {
+      is: (val: string) =>
+        !!val && val.toString().toLowerCase().includes("married"),
+      then: (schema) => schema.required("Anniversary date is required"),
+      otherwise: (schema) => schema.nullable(),
+    }),
   profile_photo: Yup.mixed().required("Profile picture is required"),
   blood_group: Yup.string().required("Blood group is required"),
   nationality: Yup.string().required("Nationality is required"),
@@ -64,7 +69,12 @@ const validationSchemaForUpdate = Yup.object({
   marital_status: Yup.string().required("Marital status is required"),
   anniversary_date: Yup.date()
     .nullable()
-    .required("Anniversary date is required"),
+    .when("marital_status", {
+      is: (val: string) =>
+        !!val && val.toString().toLowerCase().includes("married"),
+      then: (schema) => schema.required("Anniversary date is required"),
+      otherwise: (schema) => schema.nullable(),
+    }),
   profile_photo: Yup.mixed().nullable(),
   blood_group: Yup.string().required("Blood group is required"),
   nationality: Yup.string().required("Nationality is required"),

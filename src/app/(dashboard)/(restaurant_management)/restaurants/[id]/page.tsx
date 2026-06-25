@@ -1,4 +1,5 @@
 import ItemTable from "@/components/restaurant/ItemTable";
+import RestaurantManagePanel from "@/components/restaurant/RestaurantManagePanel";
 import axiosInstance from "@/lib/axiosInstance";
 import { cookies } from "next/headers";
 
@@ -32,7 +33,8 @@ async function SpecificRestaurantView({ params, searchParams }: Props) {
     throw new Error(errorMsg);
   }
   return (
-    <div>
+    <div className="space-y-6">
+      <RestaurantManagePanel restaurantId={id} />
       <ItemTable restaurantId={id} itemsData={data} />
     </div>
   );

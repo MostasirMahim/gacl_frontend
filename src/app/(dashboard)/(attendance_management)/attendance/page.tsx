@@ -2,8 +2,10 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import CardScanCheckIn from "@/components/attendance/CardScanCheckIn";
 import GuestRegisterForm from "@/components/attendance/GuestRegisterForm";
+import GuestList from "@/components/attendance/GuestList";
 import StaffGuestToggle from "@/components/attendance/StaffGuestToggle";
 import AttendanceRecordsTable from "@/components/attendance/AttendanceRecordsTable";
+import RFIDCardManager from "@/components/attendance/RFIDCardManager";
 import useGetAllMembers from "@/hooks/data/useGetAllMembers";
 import useGetStaffProfiles from "@/hooks/data/useGetStaffProfiles";
 
@@ -15,10 +17,12 @@ export default function AttendancePage() {
     <div className="p-4 space-y-4">
       <h1 className="text-2xl font-bold">Attendance Management</h1>
       <Tabs defaultValue="scan">
-        <TabsList>
+        <TabsList className="flex-wrap h-auto">
           <TabsTrigger value="scan">Check-in</TabsTrigger>
           <TabsTrigger value="records">Records</TabsTrigger>
+          <TabsTrigger value="cards">RFID Cards</TabsTrigger>
           <TabsTrigger value="guest">Register Guest</TabsTrigger>
+          <TabsTrigger value="guestlist">Guest List</TabsTrigger>
           <TabsTrigger value="staff">Staff Permissions</TabsTrigger>
         </TabsList>
         <TabsContent value="scan" className="mt-4">
@@ -27,8 +31,14 @@ export default function AttendancePage() {
         <TabsContent value="records" className="mt-4">
           <AttendanceRecordsTable />
         </TabsContent>
+        <TabsContent value="cards" className="mt-4">
+          <RFIDCardManager />
+        </TabsContent>
         <TabsContent value="guest" className="mt-4">
           <GuestRegisterForm membersData={membersData} staffData={staffData} />
+        </TabsContent>
+        <TabsContent value="guestlist" className="mt-4">
+          <GuestList />
         </TabsContent>
         <TabsContent value="staff" className="mt-4">
           <StaffGuestToggle />

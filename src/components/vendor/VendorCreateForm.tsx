@@ -10,11 +10,14 @@ import { toast } from "react-toastify";
 import axiosInstance from "@/lib/axiosInstance";
 import { useQueryClient } from "@tanstack/react-query";
 import useGetVendors from "@/hooks/data/useGetVendors";
+import useGetVendorCategories from "@/hooks/data/useGetVendorCategories";
 
 function VendorCreateForm() {
   const { data: vendorsData } = useGetVendors();
+  const { data: categoriesData } = useGetVendorCategories();
   const queryClient = useQueryClient();
   const vendors = vendorsData?.data || [];
+  const categories = categoriesData?.data || [];
 
   // vendor fields
   const [name, setName] = useState("");
@@ -60,8 +63,9 @@ function VendorCreateForm() {
         name: categoryName,
       });
       setCreatedCategoryId(String(res?.data?.data?.id || ""));
-      toast.success("Category created — use its id in the offer below");
+      toast.success("Category created");
       setCategoryName("");
+      queryClient.invalidateQueries({ queryKey: ["getVendorCategories"] });
     } catch (error: any) {
       toast.error(error?.response?.data?.message || "Failed");
     } finally {
@@ -130,8 +134,14 @@ function VendorCreateForm() {
               ))}
             </SelectContent>
           </Select>
-          <Input placeholder="Category id" value={offerCategory}
-            onChange={(e) => setOfferCategory(e.target.value)} />
+          <Select value={offerCategory} onValueChange={setOfferCategory}>
+            <SelectTrigger><SelectValue placeholder="Select category" /></SelectTrigger>
+            <SelectContent>
+              {categories.map((c: any) => (
+                <SelectItem key={c.id} value={String(c.id)}>{c.name}</SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
           <Input placeholder="Offer title" value={offerTitle}
             onChange={(e) => setOfferTitle(e.target.value)} />
           <Input type="number" placeholder="Price" value={offerPrice}

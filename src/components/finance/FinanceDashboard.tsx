@@ -2,9 +2,13 @@
 import { useState } from "react";
 import useGetProfitLoss from "@/hooks/data/useGetProfitLoss";
 import useGetExpenseBreakdown from "@/hooks/data/useGetExpenseBreakdown";
+import useGetIncomeBreakdown from "@/hooks/data/useGetIncomeBreakdown";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import {
+  Select, SelectContent, SelectItem, SelectTrigger, SelectValue,
+} from "@/components/ui/select";
 import { LoadingDots } from "@/components/ui/loading";
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid,
@@ -31,14 +35,26 @@ function FinanceDashboard() {
   const [by, setBy] = useState<"category" | "module">("module");
 
   const { data: plData, isLoading } = useGetProfitLoss(appliedStart, appliedEnd);
-  const { data: breakdownData } = useGetExpenseBreakdown(by);
+  const { data: expenseData } = useGetExpenseBreakdown(by, appliedStart, appliedEnd);
+  const { data: incomeData } = useGetIncomeBreakdown(appliedStart, appliedEnd);
 
   const pl = plData?.data;
-  const breakdown = breakdownData?.data || [];
-  const chartData = breakdown.map((b: any) => ({
-    name: b.module || b.category,
+  const expenseBreakdown = expenseData?.data || [];
+  const incomeBreakdown = incomeData?.data || [];
+
+  const expenseChart = expenseBreakdown.map((b: any) => ({
+    name: b.module || b.category || "—",
     total: Number(b.total),
   }));
+  const incomeChart = incomeBreakdown.map((b: any) => ({
+    name: b.particular || "—",
+    total: Number(b.total),
+  }));
+
+  const fmt = (v: any) =>
+    v === undefined || v === null
+      ? "0.00"
+      : Number(v).toLocaleString(undefined, { minimumFractionDigits: 2 });
 
   return (
     <div className="space-y-6">
@@ -59,67 +75,100 @@ function FinanceDashboard() {
         >
           Apply
         </Button>
+        {(appliedStart || appliedEnd) && (
+          <Button
+            variant="ghost"
+            onClick={() => {
+              setStart("");
+              setEnd("");
+              setAppliedStart(undefined);
+              setAppliedEnd(undefined);
+            }}
+          >
+            Clear
+          </Button>
+        )}
       </div>
 
       {isLoading ? (
         <LoadingDots />
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <StatCard
-            label="Income"
-            value={pl?.income ?? "0"}
-            tone="bg-green-100 text-green-700"
-            icon={<TrendingUp className="h-6 w-6" />}
-          />
-          <StatCard
-            label="Expense"
-            value={pl?.expense ?? "0"}
-            tone="bg-red-100 text-red-700"
-            icon={<TrendingDown className="h-6 w-6" />}
-          />
-          <StatCard
-            label="Net"
-            value={pl?.net ?? "0"}
-            tone="bg-blue-100 text-blue-700"
-            icon={<Wallet className="h-6 w-6" />}
-          />
-        </div>
-      )}
-
-      <Card className="p-6">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-semibold">Expense Breakdown</h3>
-          <div className="flex gap-2">
-            <Button
-              size="sm"
-              variant={by === "module" ? "default" : "outline"}
-              onClick={() => setBy("module")}
-            >
-              By Module
-            </Button>
-            <Button
-              size="sm"
-              variant={by === "category" ? "default" : "outline"}
-              onClick={() => setBy("category")}
-            >
-              By Category
-            </Button>
+        <>
+          <div className="grid gap-4 md:grid-cols-3">
+            <StatCard
+              label="Total Income"
+              value={fmt(pl?.income)}
+              tone="bg-green-100 text-green-700"
+              icon={<TrendingUp className="w-5 h-5" />}
+            />
+            <StatCard
+              label="Total Expense"
+              value={fmt(pl?.expense)}
+              tone="bg-red-100 text-red-700"
+              icon={<TrendingDown className="w-5 h-5" />}
+            />
+            <StatCard
+              label="Net Profit / Loss"
+              value={fmt(pl?.net)}
+              tone="bg-blue-100 text-blue-700"
+              icon={<Wallet className="w-5 h-5" />}
+            />
           </div>
-        </div>
-        {chartData.length === 0 ? (
-          <p className="text-center text-muted-foreground py-8">No expense data.</p>
-        ) : (
-          <ResponsiveContainer width="100%" height={320}>
-            <BarChart data={chartData}>
-              <CartesianGrid strokeDasharray="3 3" className="stroke-muted" />
-              <XAxis dataKey="name" />
-              <YAxis />
-              <Tooltip />
-              <Bar dataKey="total" fill="hsl(var(--primary))" radius={[4, 4, 0, 0]} />
-            </BarChart>
-          </ResponsiveContainer>
-        )}
-      </Card>
+
+          <div className="grid gap-6 lg:grid-cols-2">
+            {/* Income breakdown */}
+            <Card className="p-5">
+              <h3 className="font-semibold mb-4">Income by Particular</h3>
+              {incomeChart.length === 0 ? (
+                <p className="text-sm text-muted-foreground py-12 text-center">
+                  No income in this period
+                </p>
+              ) : (
+                <ResponsiveContainer width="100%" height={280}>
+                  <BarChart data={incomeChart}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" tick={{ fontSize: 11 }} />
+                    <YAxis tick={{ fontSize: 11 }} />
+                    <Tooltip />
+                    <Bar dataKey="total" fill="#16a34a" radius={[4, 4, 0, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              )}
+            </Card>
+
+            {/* Expense breakdown */}
+            <Card className="p-5">
+              <div className="flex items-center justify-between mb-4">
+                <h3 className="font-semibold">Expense Breakdown</h3>
+                <Select value={by} onValueChange={(v: any) => setBy(v)}>
+                  <SelectTrigger className="w-36">
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="module">By Module</SelectItem>
+                    <SelectItem value="category">By Category</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              {expenseChart.length === 0 ? (
+                <p className="text-sm text-muted-foreground py-12 text-center">
+                  No expense in this period
+                </p>
+              ) : (
+                <ResponsiveContainer width="100%" height={280}>
+                  <BarChart data={expenseChart}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="name" tick={{ fontSize: 11 }} />
+                    <YAxis tick={{ fontSize: 11 }} />
+                    <Tooltip />
+                    <Bar dataKey="total" fill="#dc2626" radius={[4, 4, 0, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              )}
+            </Card>
+          </div>
+        </>
+      )}
     </div>
   );
 }

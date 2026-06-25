@@ -270,7 +270,17 @@ export default function SpecialDaysStep() {
 
 
   const handleSkip = () => {
-    nextStep();
+    // Special Days is the final step. Skipping should complete the
+    // add-member flow (or close the update flow) rather than calling
+    // nextStep(), which does nothing on the last step and leaves the
+    // user stuck with a "failed to complete" state.
+    markStepCompleted(currentStep);
+    if (isUpdateMode) {
+      toast.success("Special days skipped.");
+    } else {
+      toast.success("Member created successfully.");
+    }
+    router.push("/members/view");
   };
 
   const handleSaveAndExit = () => {

@@ -16,6 +16,7 @@ function GenerateRunForm() {
   const [name, setName] = useState("");
   const [year, setYear] = useState(now.getFullYear());
   const [month, setMonth] = useState(now.getMonth() + 1);
+  const [force, setForce] = useState(false);
   const [loading, setLoading] = useState(false);
   const queryClient = useQueryClient();
 
@@ -30,8 +31,11 @@ function GenerateRunForm() {
         name,
         period_year: year,
         period_month: month,
+        force,
       });
-      toast.success("Payroll run generated");
+      toast.success(
+        force ? "Payroll run regenerated" : "Payroll run generated"
+      );
       setName("");
       queryClient.invalidateQueries({ queryKey: ["getPayrollRuns"] });
     } catch (error: any) {
@@ -73,8 +77,24 @@ function GenerateRunForm() {
               onChange={(e) => setYear(Number(e.target.value))} />
           </div>
         </div>
+        <div className="flex items-start gap-2 rounded-md border border-border/60 p-3">
+          <input
+            id="force-regen"
+            type="checkbox"
+            className="mt-1"
+            checked={force}
+            onChange={(e) => setForce(e.target.checked)}
+          />
+          <label htmlFor="force-regen" className="text-sm">
+            Regenerate if a run already exists for this period
+            <span className="block text-xs text-muted-foreground">
+              Replaces the existing (unpaid) run so updated salary structures
+              take effect. Disabled if any payslip in the period is already paid.
+            </span>
+          </label>
+        </div>
         <Button onClick={generate} disabled={loading} className="w-full">
-          {loading ? "Generating..." : "Generate Run"}
+          {loading ? "Generating..." : force ? "Regenerate Run" : "Generate Run"}
         </Button>
       </div>
     </div>

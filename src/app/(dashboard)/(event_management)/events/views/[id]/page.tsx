@@ -171,17 +171,23 @@ export default async function EventDetailsPage({
               </CardHeader>
               <CardContent>
                 <div className="space-y-2">
-                  <p className="font-medium">{event.venue.street_address}</p>
-                  <p className="text-muted-foreground">
-                    {event.venue.city}, {event.venue.state_province}{" "}
-                    {event.venue.postal_code}
-                  </p>
-                  <p className="text-muted-foreground">{event.venue.country}</p>
+                  {event.venue ? (
+                    <>
+                      <p className="font-medium">{event.venue.street_address}</p>
+                      <p className="text-muted-foreground">
+                        {event.venue.city}, {event.venue.state_province}{" "}
+                        {event.venue.postal_code}
+                      </p>
+                      <p className="text-muted-foreground">{event.venue.country}</p>
+                    </>
+                  ) : (
+                    <p className="text-muted-foreground">No venue assigned</p>
+                  )}
                   <Badge
-                    variant={event.venue.is_active ? "default" : "secondary"}
+                    variant={event.venue?.is_active ? "default" : "secondary"}
                     className="mt-2"
                   >
-                    {event.venue.is_active ? "Active Venue" : "Inactive Venue"}
+                    {event.venue?.is_active ? "Active Venue" : "Inactive Venue"}
                   </Badge>
                 </div>
               </CardContent>
