@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
+import React, { useState } from "react";
 import { CreateEventModal } from "@/components/events/CreateEventModal";
 import { EventCard } from "@/components/events/EventCard";
 import { EventPagination } from "@/components/events/EventPagination";
 import useGetAllEvents from "@/hooks/data/useGetAllEvents";
 import { LoadingDots } from "@/components/ui/loading";
+import PermissionGuard from "@/components/common/PermissionGuard";
 
 const ITEMS_PER_PAGE = 10;
 
@@ -17,7 +18,9 @@ export default function EventsPage() {
   const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
   const endIndex = startIndex + ITEMS_PER_PAGE;
   const currentEvents = AllEvents?.data?.slice(startIndex, endIndex);
+
   if (isLoading) return <LoadingDots />;
+
   return (
     <div className="min-h-screen">
       <div className="container mx-auto">
@@ -28,7 +31,9 @@ export default function EventsPage() {
               Browse and manage all your events
             </p>
           </div>
-          <CreateEventModal />
+          <PermissionGuard permission="event:create">
+            <CreateEventModal />
+          </PermissionGuard>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">

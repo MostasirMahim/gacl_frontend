@@ -423,86 +423,161 @@ const navigation_sidebar_links = [
  * If a sub-item should be checked individually, define its permission here.
  */
 export const navigationPermissions: Record<string, string | null> = {
-  Dashboard: null, // Always show
+  Dashboard: null,
 
-  // MemberSphere - We can permission the entire section or individual sub-items.
-  MemberSphere: "member_management", // Example: A general permission for the
-  "Add Choices": "member_management", // Define permission if needed
-  "All Users": "view_all_users",
-  "All Groups": "group_permission_management",
-  Onboarding: "employee_onboarding",
-  "Activity Logs": "activity_log_management",
+  // MemberSphere
+  MemberSphere: "member_management",
+  "Pending Members": "member:view",
+  "Add Member": "member:create",
+  "View Members": "member:view",
+
+  "All Users": "user:view_list",
+  "All Groups": "group:view",
+  "Add Choices": "member_management",
+  Onboarding: "employee:onboard",
+  "Activity Logs": "activity_log:view",
   "My activity logs": null,
+
+  // Email management
   "Email management": "bulk_emails_management",
+  Configurations: "email:template_edit",
+  Groups: "email:view_logs",
+  "Add email to group": "email:send_bulk",
+  "Compose email": "email:send_single",
+  Outbox: "email:view_logs",
+  "View all composes": "email:view_logs",
+
+  // Restaurant management
   "Restaurant management": "restaurant_management",
+  Restaurants: "restaurant:view_menu",
+  "Add restaurants choices": "restaurant:menu_edit",
+  "Add restaurant item": "restaurant:menu_edit",
+  "Add item category": "restaurant:menu_edit",
+  "Upload restaurant sales": "restaurant:menu_edit",
+  "View cart": "restaurant:order_create",
+
+  // Products Management
   "Products Management": "product_management",
-  "Promo code": "promo_code_management",
-  "Member financial": "member_financial_management",
+  "Add Product": "product:create",
+  "View Products": "product:view",
+  Categories: "product:view",
+  "Add Category": "product:create",
+  "View Categories": "product:view",
+  Brands: "product:view",
+  "Add Brand": "product:create",
+  "View Brands": "product:view",
+  Media: "product:view",
+  "Add Media": "product:create",
+  "View Media": "product:view",
+  Prices: "product:view",
+  "Add Product Price": "product:create",
+  "View Product Price": "product:view",
+  "Product Buy": "product:view",
+  "Add Product Cart": "product:create",
+  "View Product Cart": "product:view",
+
+  // Promo code management
+  "Promo code management": "promo_code_management",
+  "View all promo codes": "promo_code:view",
+  "Add promo code": "promo_code:create",
+  "promo codes category": "promo_code:view",
+  "Add category": "promo_code:create",
+  "View applied promo codes": "promo_code:view",
+
+  // Member financial management
+  "Member financial management": "member_financial_management",
+  Invoices: "member_financial:view_invoices",
+  "View all invoices": "member_financial:view_invoices",
+  "Payment Invoice": "member_financial:generate_invoice",
+  Incomes: "member_financial:view_invoices",
+  "View all incomes": "member_financial:view_invoices",
+  "View Income Particulars": "member_financial:view_invoices",
+  "View Income Receiving Options": "member_financial:view_invoices",
+  "View Invoice PaymentOptions": "member_financial:view_invoices",
+  "View all Sales": "member_financial:view_invoices",
+  "View all Transactions": "member_financial:view_invoices",
+  "View all Payments": "member_financial:process_payment",
+  "View member dues": "member_financial:adjust_dues",
+  "View member accounts": "member_financial:view_invoices",
+
+  // Upload sales
   "Upload sales": "member_financial_management",
+  "upload restaurant sale": "restaurant:menu_edit",
+  "Upload lounge sale": "outlet:menu_edit",
+  "Upload others sales": "member_financial_management",
+
   "Facility management": "facility_management",
-  "Attendance": "attendance_management",
+  Attendance: "attendance_management",
   "Outlets (Bar/Lounge)": "outlet_management",
-  "Reservations": "reservation_management",
-  "Payroll": "payroll_management",
+  Reservations: "reservation_management",
+  Payroll: "payroll_management",
   "Vendor Management": "vendor_management",
-  "Finance & Reports": "member_financial_management",
   "Event Management": "event_management",
 };
 
-// lib/navigation-permissions.ts
+const sectionMasterMap: Record<string, string> = {
+  "member:": "member_management",
+  "member_financial:": "member_financial_management",
+  "restaurant:": "restaurant_management",
+  "outlet:": "outlet_management",
+  "reservation:": "reservation_management",
+  "facility:": "facility_management",
+  "event:": "event_management",
+  "attendance:": "attendance_management",
+  "payroll:": "payroll_management",
+  "vendor:": "vendor_management",
+  "activity_log:": "activity_log_management",
+  "group:": "group_permission_management",
+  "employee:": "employee_onboarding",
+  "user:": "view_all_users",
+  "email:": "bulk_emails_management",
+  "product:": "product_management",
+  "promo_code:": "promo_code_management",
+};
 
-// ... (previous code)
-
-/**
- * Recursively filters the navigation array based on user permissions.
- * @param navArray The navigation array to filter
- * @param userPermissions Array of permission names the user has
- * @param isAdmin Whether the user is an admin (sees everything)
- * @returns Filtered navigation array
- */
 export const filterNavigationByPermissions = (
   navArray: any[],
   userPermissions: string[],
   isAdmin: boolean
 ): any[] => {
-  // If user is admin, return the entire navigation tree without filtering.
   if (isAdmin) {
     return navArray;
   }
 
   return navArray.filter((item) => {
-    // Get the required permission for this specific item by its label
     const requiredPermission = navigationPermissions[item.label];
 
-    // Check if the user has the required permission for this item.
-    // If requiredPermission is null, the item is always shown.
-    const hasPermissionForItem =
-      requiredPermission === null ||
-      userPermissions.includes(requiredPermission);
+    let hasPermissionForItem = false;
 
-    // If the item has sub-items, we need to filter them first.
+    if (requiredPermission === null) {
+      hasPermissionForItem = true;
+    } else if (requiredPermission) {
+      if (userPermissions.includes(requiredPermission)) {
+        hasPermissionForItem = true;
+      } else {
+        for (const [prefix, masterPerm] of Object.entries(sectionMasterMap)) {
+          if (requiredPermission.startsWith(prefix) && userPermissions.includes(masterPerm)) {
+            hasPermissionForItem = true;
+            break;
+          }
+        }
+      }
+    }
+
     if (item.subItems && item.subItems.length > 0) {
-      // Recursively filter the sub-items
       const filteredSubItems = filterNavigationByPermissions(
         item.subItems,
         userPermissions,
         isAdmin
       );
 
-      // After filtering the children, check two things:
-      // 1. Does the user have permission to see this parent item?
-      // 2. OR are there any remaining (allowed) sub-items?
-      // If either is true, we keep the parent item, but with the filtered sub-items.
       if (hasPermissionForItem || filteredSubItems.length > 0) {
-        // Return a copy of the item with the filtered sub-items
         return { ...item, subItems: filteredSubItems };
       }
 
-      // If the user has no permission for the parent AND no children are left, hide the entire item.
       return false;
     }
 
-    // If it's a simple item with no sub-items, just check its permission.
     return hasPermissionForItem;
   });
 };

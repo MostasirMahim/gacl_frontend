@@ -199,3 +199,42 @@ To plug the internal operational applications into the outside world via payment
 3. Type: `from finance_core.tasks import send_monthly_due_reminders` and press Enter.
 4. Type: `send_monthly_due_reminders()` and press Enter.
 5. The console will output `Monthly due reminders sent: X`, verifying that the script successfully scanned for overdue members and triggered the SMS adapter!
+
+---
+
+## 6. Part 6: Production-Grade Frontend Granular Action Sub-Permissions & UI Visibility Controls
+
+**Feature Overview & Goal:**  
+To provide enterprise-grade access control by dynamically hiding or showing specific UI elements (like "Add Member" forms, "Delete" buttons, "Export" tools, or specific sub-navigation items) based on fine-grained action sub-permissions (e.g., `member:create`, `restaurant:order_create`, `activity_log:export`). This ensures staff users see a clean, customized UI strictly matching their exact operational role.
+
+### Backend Changes
+- **Permission Model Extended:** Seeded over 40 granular action sub-permissions in `PermissonModel`.
+- **Hybrid Permission Class (`HasCustomPermission`):** Upgraded base permission checker in `account/permissions.py` to evaluate method-based action scopes (`GET` $\rightarrow$ `view`, `POST` $\rightarrow$ `create`, etc.) with automatic master section fallback.
+- **Seeding Script (`seed_staff_permissions.py`):** Structured 10 departmental section groups (`member_services`, `restaurant_kitchen`, `finance_accounts`, etc.) and assigned specific sub-permissions to staff profiles.
+
+### Frontend Changes
+- **Central Registry (`src/lib/component_permissions.ts`):** Defined sub-route protection mappings and constants (`UI_ACTION_PERMISSIONS`).
+- **Custom React Hook (`src/hooks/usePermissions.ts`):** Exposed `hasPermission(permissionName)` helper checking exact sub-permissions, section fallbacks, and superadmin status.
+- **Declarative Guard Component (`src/components/common/PermissionGuard.tsx`):** Added `<PermissionGuard permission="...">` wrapper for conditionally rendering buttons, forms, and tables.
+- **Navigation Sub-Item Filtering (`src/components/utils/Navigation_functions.tsx`):** Extended `navigationPermissions` and `filterNavigationByPermissions` so sub-links (e.g. "Add Member", "Add restaurant item") evaluate exact sub-permissions and cleanly hide empty sections.
+
+### 🧪 Elaborate Testing Scenario
+
+**Step 1: Test Full Superadmin Access**
+1. Log in to the frontend as `admin` (password: `admin1234`).
+2. Verify that all sidebar section links and sub-items (e.g., "MemberSphere", "Add Member", "View Members", "Upload restaurant sale") are 100% visible.
+
+**Step 2: Test Departmental Staff Role (Waiter)**
+1. Log out and log in as `waiter1` (password: `staff1234`).
+2. Examine the left sidebar. Notice that administrative sections (like "Payroll", "Vendor Management", "Onboarding", "All Groups") are automatically hidden.
+3. Under **Restaurant management**, verify that `waiter1` can see **View cart** (order placement), but administrative items for which they lack sub-permissions (like "Add restaurant item" or "Upload restaurant sales") are hidden.
+
+**Step 3: Test Departmental Staff Role (Receptionist vs Member Relations Manager)**
+1. Log out and log in as `receptionist1` (password: `staff1234`).
+2. Go to **MemberSphere**. Verify that `receptionist1` can see **View Members** (`member:view`), but cannot see restricted options or administrative tabs.
+3. Log out and log in as `exec_manager` (password: `staff1234`). Notice that executive staff enjoy full cross-departmental visibility matching their role scope.
+
+**Step 4: Verify Backend Authorization Enforcement**
+1. Open an API client (or browser dev tools console) logged in as `waiter1`.
+2. Try triggering a `DELETE` or `POST` request to an administrative endpoint (e.g. `/api/payroll/` or `/api/vendor/`).
+3. The backend `HasCustomPermission` class will immediately evaluate their group permissions, fail the check, and safely return an HTTP `403 Forbidden` error response.
