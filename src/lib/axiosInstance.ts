@@ -10,4 +10,23 @@ const axiosInstance = axios.create({
   withCredentials: true,
 });
 
+axiosInstance.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    if (process.env.NODE_ENV === "development" || typeof window !== "undefined") {
+      const logId = Math.random().toString(36).substring(2, 8).toUpperCase();
+      const status = error?.response?.status || "NETWORK_ERR";
+      const url = error?.config?.url || "UNKNOWN_URL";
+      const responseData = error?.response?.data;
+
+      console.group(`🚨 [AXIOS_ERR_${logId}] HTTP ${status} -> ${url}`);
+      console.error("Request Method:", error?.config?.method?.toUpperCase());
+      console.error("Request Data:", error?.config?.data);
+      console.error("Server Response Payload:", responseData);
+      console.groupEnd();
+    }
+    return Promise.reject(error);
+  }
+);
+
 export default axiosInstance;

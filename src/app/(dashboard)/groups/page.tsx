@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Plus, Eye, Trash2, Shield, User, ShieldCheckIcon } from "lucide-react";
+import { Plus, Eye, Trash2, Shield, User, ShieldCheckIcon, Crown, UserCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -29,7 +29,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { CreateGroupForm } from "@/components/groups/CreateGroupForms";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axiosInstance from "@/lib/axiosInstance";
 
 import useGetGroups from "@/hooks/data/useGetGroups";
@@ -40,6 +40,7 @@ type GroupType = {
   id: number;
   name: string;
 };
+
 export default function GroupsPage() {
   const router = useRouter();
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
@@ -55,9 +56,9 @@ export default function GroupsPage() {
       );
       return res.data;
     },
-    onSuccess: async(data) => {
+    onSuccess: async (data) => {
       if (data?.status === "success") {
-      await  queryClient.invalidateQueries({ queryKey: ["getGroups"] });
+        await queryClient.invalidateQueries({ queryKey: ["getGroups"] });
         toast.success("Group Removed Successfully");
         setDeleteDialogOpen(false);
         setSelectedGroup(null);
@@ -65,12 +66,12 @@ export default function GroupsPage() {
     },
     onError: (error: any) => {
       console.log("error", error?.response);
-      const { message, errors, detail } = error?.response.data;
+      const { message, errors, detail } = error?.response?.data || {};
       if (errors) {
         const allErrors = Object.values(errors).flat().join("\n");
-        toast.error(allErrors || "Group Removed Failed");
+        toast.error(allErrors || "Group Removal Failed");
       } else {
-        toast.error(detail || message || "Group Removed Failed");
+        toast.error(detail || message || "Group Removal Failed");
       }
     },
   });
@@ -80,6 +81,12 @@ export default function GroupsPage() {
   };
 
   const handleDeleteClick = (group: any) => {
+    if (group.name === "super_admin" || group.name === "club_member") {
+      toast.warning(
+        `Sensitive system group '${group.name}' cannot be deleted from the UI as it is required for core system stability.`
+      );
+      return;
+    }
     setSelectedGroup(group);
     setDeleteDialogOpen(true);
   };
@@ -90,10 +97,20 @@ export default function GroupsPage() {
     }
   };
 
+  const getGroupIcon = (groupName: string) => {
+    if (groupName === "super_admin") {
+      return <Crown className="w-6 h-6 text-amber-500 animate-pulse" />;
+    }
+    if (groupName === "club_member") {
+      return <UserCheck className="w-6 h-6 text-emerald-500" />;
+    }
+    return <Shield className="w-5 h-5 text-muted-foreground" />;
+  };
+
   if (isLoading || removePending) return <LoadingDots />;
 
   return (
-    <div className=" mx-auto space-y-6">
+    <div className="mx-auto space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">View All Groups</h1>
@@ -102,7 +119,7 @@ export default function GroupsPage() {
           </p>
         </div>
         <Button onClick={() => setCreateDialogOpen(true)} className="w-fit">
-          <Plus className="w-4 h-4" />
+          <Plus className="w-4 h-4 mr-2" />
           Create Group
         </Button>
       </div>
@@ -112,10 +129,10 @@ export default function GroupsPage() {
           <Card key={group.id} className="hover:shadow-lg transition-shadow">
             <CardHeader className="pb-3">
               <div className="flex items-center justify-between">
-                <CardTitle className="text-lg font-semibold">
+                <CardTitle className="text-lg font-semibold flex items-center gap-2">
                   {group.name}
                 </CardTitle>
-                <Shield className="w-5 h-5 text-muted-foreground" />
+                {getGroupIcon(group.name)}
               </div>
               <Badge variant="secondary" className="w-fit">
                 ID: {group.id}

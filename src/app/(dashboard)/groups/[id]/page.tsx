@@ -9,6 +9,8 @@ import {
   UserPlus,
   KeyRound,
   SquarePen,
+  UserCheck,
+  ShieldAlert,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -65,20 +67,24 @@ export default function GroupDetailPage() {
         const res = await axiosInstance.get(
           `/api/account/v1/authorization/groups/${id}/`
         );
-        if (res?.data?.status == "success") {
+        if (res?.data?.status === "success") {
           return res.data.data;
         } else {
-          console.error("Failed to fetch groups:", res.data.message);
+          console.error("Failed to fetch group:", res.data.message);
           toast.error(res?.data?.message);
-          return [];
+          return null;
         }
       } catch (error: any) {
-        console.error("Error fetching user stats:", error);
+        console.error("Error fetching group stats:", error);
         toast.error(error?.response?.data?.message);
-        return [];
+        return null;
       }
     },
   });
+
+  const groupName = GROUP?.group?.name || "";
+  const isSystemGroup = groupName === "super_admin" || groupName === "club_member";
+  const isClubMemberGroup = groupName === "club_member";
 
   const { mutate: updateGroup, isPending } = useMutation({
     mutationFn: async (userData: any) => {
@@ -88,9 +94,9 @@ export default function GroupDetailPage() {
       );
       return res.data;
     },
-    onSuccess: async(data) => {
+    onSuccess: async (data) => {
       if (data?.status === "success") {
-      await  Promise.all([
+        await Promise.all([
           queryClient.invalidateQueries({ queryKey: ["getGroup", id] }),
           queryClient.invalidateQueries({ queryKey: ["getGroups"] }),
         ]);
@@ -103,9 +109,9 @@ export default function GroupDetailPage() {
     },
     onError: (error: any) => {
       console.log("error", error?.response);
-      const { message, errors, detail } = error?.response.data;
+      const { message, errors, detail } = error?.response?.data || {};
       if (errors) {
-         Object.entries(errors).forEach(([field, messages]) => {
+        Object.entries(errors).forEach(([field, messages]) => {
           formik.setFieldError(
             field,
             Array.isArray(messages) ? messages[0] : messages
@@ -121,17 +127,21 @@ export default function GroupDetailPage() {
 
   const formik = useFormik({
     initialValues: {
-      name: GROUP?.group?.name || "",
+      name: groupName,
     },
+    enableReinitialize: true,
     validate: (values) => {
       const errors: { name?: string } = {};
-
       if (!values.name.trim()) {
         errors.name = "Group name is required";
       }
       return errors;
     },
     onSubmit: (values) => {
+      if (isSystemGroup) {
+        toast.warning("System group names cannot be renamed as they are required by backend permission checks.");
+        return;
+      }
       updateGroup(values);
     },
   });
@@ -146,7 +156,7 @@ export default function GroupDetailPage() {
     },
     onSuccess: async (data) => {
       if (data?.status === "success") {
-       await queryClient.invalidateQueries({ queryKey: ["getGroup"] });
+        await queryClient.invalidateQueries({ queryKey: ["getGroup", id] });
         toast.success("Users Removed Successfully");
         setDeleteDialogOpen(false);
         setDeleteTarget(null);
@@ -154,12 +164,12 @@ export default function GroupDetailPage() {
     },
     onError: (error: any) => {
       console.log("error", error?.response);
-      const { message, errors, detail } = error?.response.data;
+      const { message, errors, detail } = error?.response?.data || {};
       if (errors) {
         const allErrors = Object.values(errors).flat().join("\n");
-        toast.error(allErrors || "Users Removed Failed");
+        toast.error(allErrors || "Users Removal Failed");
       } else {
-        toast.error(detail || message || "Users Removed Failed");
+        toast.error(detail || message || "Users Removal Failed");
       }
     },
   });
@@ -172,9 +182,9 @@ export default function GroupDetailPage() {
       );
       return res.data;
     },
-    onSuccess: async(data) => {
+    onSuccess: async (data) => {
       if (data?.status === "success") {
-        await queryClient.invalidateQueries({ queryKey: ["getGroup"] });
+        await queryClient.invalidateQueries({ queryKey: ["getGroup", id] });
         toast.success("Permission Removed Successfully");
         setDeleteDialogOpen(false);
         setDeleteTarget(null);
@@ -182,12 +192,12 @@ export default function GroupDetailPage() {
     },
     onError: (error: any) => {
       console.log("error", error?.response);
-      const { message, errors, detail } = error?.response.data;
+      const { message, errors, detail } = error?.response?.data || {};
       if (errors) {
         const allErrors = Object.values(errors).flat().join("\n");
-        toast.error(allErrors || "Permission Removed Failed");
+        toast.error(allErrors || "Permission Removal Failed");
       } else {
-        toast.error(detail || message || "Permission Removed Failed");
+        toast.error(detail || message || "Permission Removal Failed");
       }
     },
   });
@@ -217,6 +227,14 @@ export default function GroupDetailPage() {
     }
   };
 
+  const handleEditClick = () => {
+    if (isSystemGroup) {
+      toast.warning(`System group '${groupName}' cannot be renamed as it is tied to system permission rules.`);
+      return;
+    }
+    setUpdateDialogOpen(true);
+  };
+
   if (isLoading || removePending || removePermitPending) return <LoadingDots />;
 
   if (!GROUP) {
@@ -237,80 +255,122 @@ export default function GroupDetailPage() {
   }
 
   return (
-    <div className=" mx-auto space-y-4">
+    <div className="mx-auto space-y-4">
       <div className="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
         <div className="flex items-center gap-4">
-          <div className="flex justify-start items-start gap-1">
+          <div className="flex justify-start items-center gap-2">
             <h1 className="text-3xl font-bold tracking-tight">
-              {GROUP?.group?.name || "Group Name"}
+              {groupName || "Group Name"}
             </h1>
-            <SquarePen
-              onClick={() => setUpdateDialogOpen(true)}
-              className="h-4 w-4 cursor-pointer hover:text-primary hover:scale-110 hover:-translate-y-1 transition-transform duration-200 delay-50"
-            />
+            {!isSystemGroup ? (
+              <SquarePen
+                onClick={handleEditClick}
+                className="h-4 w-4 cursor-pointer hover:text-primary hover:scale-110 hover:-translate-y-1 transition-transform duration-200"
+              />
+            ) : (
+              <Badge variant="outline" className="text-xs border-amber-500/50 text-amber-500 bg-amber-500/10">
+                System Protected Group
+              </Badge>
+            )}
           </div>
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <Card className="h-fit ">
-          <CardHeader>
-            <div className="flex items-center justify-between">
-              <CardTitle className="flex items-center gap-2">
-                <Users className="w-5 h-5" />
-                Users: {GROUP?.users?.length}
+        {/* Left Card: Special Info Notice Card for club_member vs standard Users card */}
+        {isClubMemberGroup ? (
+          <Card className="h-fit border-emerald-500/30 bg-emerald-500/5 shadow-sm">
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2 text-emerald-600 dark:text-emerald-400">
+                <UserCheck className="w-6 h-6" />
+                Member Authorization Policy Card
               </CardTitle>
-              <Button size="sm" onClick={() => setAddMemberDialogOpen(true)}>
-                <UserPlus className="w-4 h-4 " />
-                Add User
-              </Button>
-            </div>
-          </CardHeader>
-          <CardContent className="space-y-3 max-h-[450px] overflow-y-auto">
-            {GROUP?.users?.length === 0 ? (
-              <div className="text-center py-8 text-muted-foreground">
-                <Users className="w-8 h-8 mx-auto mb-2 opacity-50" />
-                <p>No members in this group</p>
+            </CardHeader>
+            <CardContent className="space-y-4 text-sm leading-relaxed text-muted-foreground">
+              <div className="p-3 rounded-lg bg-background/80 border border-emerald-500/20 text-foreground space-y-2">
+                <p className="font-semibold text-emerald-600 dark:text-emerald-400 flex items-center gap-1.5">
+                  <ShieldAlert className="w-4 h-4" /> Dedicated Member Permission Group
+                </p>
+                <p>
+                  All registered, non-staff club members automatically inherit the self-service capabilities assigned to this group by default.
+                </p>
               </div>
-            ) : (
-              GROUP?.users?.map((member: any) => (
-                <div
-                  key={member.id}
-                  className="flex items-center justify-between p-3 border rounded-lg"
-                >
-                  <div className="flex-1 space-y-1">
-                    <div className="font-medium">
-                      {member.first_name + " " + member.last_name}{" "}
-                      <span className="font-normal text-sm italic">
-                        {member.username}
-                      </span>
-                    </div>
-                    <div className="text-sm text-muted-foreground">
-                      {member.email}
-                    </div>
-                    <div className="flex items-center gap-2">
-                      <Badge variant="outline" className="text-xs mt-1">
-                        {member.is_active ? "Active" : "Inactive"}
-                      </Badge>
-                      <Badge variant="outline" className="text-xs ">
-                        {member.is_staff ? "Staff" : "User"}
-                      </Badge>
-                    </div>
-                  </div>
-                  <Button
-                    variant="destructive"
-                    size="sm"
-                    onClick={() => handleDeleteMember(member)}
-                  >
-                    Remove
-                  </Button>
+              <div className="space-y-2">
+                <h4 className="font-semibold text-foreground">Member Portal Capabilities Included:</h4>
+                <ul className="list-disc list-inside space-y-1 text-xs font-medium text-foreground/80">
+                  <li>Member Profile View (<code className="bg-muted px-1 py-0.5 rounded">member:view</code>)</li>
+                  <li>Invoices & Payment Processing (<code className="bg-muted px-1 py-0.5 rounded">member_financial:view_invoices</code>)</li>
+                  <li>Restaurant Menu & Ordering (<code className="bg-muted px-1 py-0.5 rounded">restaurant:order_create</code>)</li>
+                  <li>Beverage Outlet Orders (<code className="bg-muted px-1 py-0.5 rounded">outlet:order_create</code>)</li>
+                  <li>Resource & Court Reservations (<code className="bg-muted px-1 py-0.5 rounded">reservation:create</code>)</li>
+                  <li>Club Events & Check-in Logs (<code className="bg-muted px-1 py-0.5 rounded">event:view</code>)</li>
+                </ul>
+              </div>
+              <p className="text-xs text-amber-600 dark:text-amber-400 font-medium pt-2 border-t border-emerald-500/20">
+                ⚠️ Be cautious when updating permissions in this right-hand list. Modifications directly control what all active club members can browse and perform across the application.
+              </p>
+            </CardContent>
+          </Card>
+        ) : (
+          <Card className="h-fit">
+            <CardHeader>
+              <div className="flex items-center justify-between">
+                <CardTitle className="flex items-center gap-2">
+                  <Users className="w-5 h-5" />
+                  Users: {GROUP?.users?.length}
+                </CardTitle>
+                <Button size="sm" onClick={() => setAddMemberDialogOpen(true)}>
+                  <UserPlus className="w-4 h-4 mr-2" />
+                  Add User
+                </Button>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-3 max-h-[450px] overflow-y-auto">
+              {GROUP?.users?.length === 0 ? (
+                <div className="text-center py-8 text-muted-foreground">
+                  <Users className="w-8 h-8 mx-auto mb-2 opacity-50" />
+                  <p>No members in this group</p>
                 </div>
-              ))
-            )}
-          </CardContent>
-        </Card>
+              ) : (
+                GROUP?.users?.map((member: any) => (
+                  <div
+                    key={member.id}
+                    className="flex items-center justify-between p-3 border rounded-lg"
+                  >
+                    <div className="flex-1 space-y-1">
+                      <div className="font-medium">
+                        {member.first_name + " " + member.last_name}{" "}
+                        <span className="font-normal text-sm italic">
+                          {member.username}
+                        </span>
+                      </div>
+                      <div className="text-sm text-muted-foreground">
+                        {member.email}
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <Badge variant="outline" className="text-xs mt-1">
+                          {member.is_active ? "Active" : "Inactive"}
+                        </Badge>
+                        <Badge variant="outline" className="text-xs">
+                          {member.is_staff ? "Staff" : "User"}
+                        </Badge>
+                      </div>
+                    </div>
+                    <Button
+                      variant="destructive"
+                      size="sm"
+                      onClick={() => handleDeleteMember(member)}
+                    >
+                      Remove
+                    </Button>
+                  </div>
+                ))
+              )}
+            </CardContent>
+          </Card>
+        )}
 
-        <Card className="h-fit ">
+        <Card className="h-fit">
           <CardHeader>
             <div className="flex items-center justify-between">
               <CardTitle className="flex items-center gap-2">
@@ -321,7 +381,7 @@ export default function GroupDetailPage() {
                 size="sm"
                 onClick={() => setAddPermissionDialogOpen(true)}
               >
-                <Plus className="w-4 h-4" />
+                <Plus className="w-4 h-4 mr-2" />
                 Add Permission
               </Button>
             </div>
@@ -336,7 +396,7 @@ export default function GroupDetailPage() {
               GROUP?.permissions?.map((permission: any) => (
                 <div
                   key={permission.id}
-                  className="flex items-center justify-between p-3 border rounded-lg "
+                  className="flex items-center justify-between p-3 border rounded-lg"
                 >
                   <div className="font-mono text-sm">{permission.name}</div>
                   <Button
@@ -380,7 +440,7 @@ export default function GroupDetailPage() {
         <DialogContent className="sm:max-w-[600px] h-fit">
           <DialogHeader>
             <DialogTitle>
-              Add users to {GROUP?.group?.name || "Group"}
+              Add users to {groupName || "Group"}
             </DialogTitle>
           </DialogHeader>
           <AddMemberForm
@@ -423,6 +483,7 @@ export default function GroupDetailPage() {
                 value={formik.values.name}
                 onChange={formik.handleChange}
                 onBlur={formik.handleBlur}
+                disabled={isSystemGroup}
                 placeholder="Enter group name"
                 className={
                   formik.touched.name && formik.errors.name
@@ -430,6 +491,11 @@ export default function GroupDetailPage() {
                     : ""
                 }
               />
+              {isSystemGroup && (
+                <p className="text-xs text-amber-600 dark:text-amber-400">
+                  System protected group names cannot be modified.
+                </p>
+              )}
               {formik.touched.name && formik.errors.name && (
                 <p className="text-sm text-red-500">
                   {formik.errors.name as string}
@@ -441,7 +507,8 @@ export default function GroupDetailPage() {
                 type="button"
                 variant="outline"
                 onClick={() => {
-                  formik.resetForm(), setUpdateDialogOpen(false);
+                  formik.resetForm();
+                  setUpdateDialogOpen(false);
                 }}
                 className="w-full sm:w-auto bg-transparent"
               >
@@ -449,7 +516,7 @@ export default function GroupDetailPage() {
               </Button>
               <Button
                 type="submit"
-                disabled={isPending}
+                disabled={isPending || isSystemGroup}
                 className="w-full sm:w-auto"
               >
                 {isPending ? "Updating..." : "Update Group"}

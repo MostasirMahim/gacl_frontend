@@ -26,7 +26,11 @@ import {
 import MemberSelectModal from "@/components/shared/MemberSelectModal";
 import { Plus, Trash2 } from "lucide-react";
 
-export default function OutletOrderCreate() {
+interface OutletOrderCreateProps {
+  onSuccess?: () => void;
+}
+
+export default function OutletOrderCreate({ onSuccess }: OutletOrderCreateProps = {}) {
   const queryClient = useQueryClient();
   const { data: outletsData } = useGetOutlets();
   const outlets = outletsData?.data || [];
@@ -49,6 +53,8 @@ export default function OutletOrderCreate() {
     if (!selItem) return toast.error("Choose an item");
     const item = items.find((i: any) => String(i.id) === selItem);
     if (!item) return;
+    const currentOutlet = outlets.find((o: any) => o.id === outletId);
+    const itemSource = currentOutlet?.outlet_type || "outlet";
     const quantity = Number(qty) || 1;
     setCart((c) => {
       const existing = c.find((x) => x.item_id === item.id);
@@ -64,7 +70,7 @@ export default function OutletOrderCreate() {
           name: item.name,
           price: item.selling_price,
           quantity,
-          source: "outlet",
+          source: itemSource,
         },
       ];
     });
@@ -110,6 +116,7 @@ export default function OutletOrderCreate() {
       setNote("");
       queryClient.invalidateQueries({ queryKey: ["getOutletOrders"] });
       queryClient.invalidateQueries({ queryKey: ["getOutletKitchen"] });
+      if (onSuccess) onSuccess();
     } catch (e: any) {
       toast.error(e?.response?.data?.message || "Failed to create order");
     } finally {

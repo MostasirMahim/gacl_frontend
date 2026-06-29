@@ -52,7 +52,7 @@ export default function OutletsPage() {
         </TabsContent>
         <TabsContent value="neworder" className="mt-4">
           <PermissionGuard permission="outlet:order_create" fallback={<RestrictedAccessPlaceholder featureName="New Order" requiredPermission="outlet:order_create" />}>
-            <OutletOrderCreate />
+            <OutletOrderCreate onSuccess={() => setActiveTab("kitchen")} />
           </PermissionGuard>
         </TabsContent>
         <TabsContent value="orders" className="mt-4">
