@@ -4,6 +4,8 @@ import axiosInstance from "@/lib/axiosInstance";
 import { Layers } from "lucide-react";
 import { cookies } from "next/headers";
 
+import RestrictedAccessPlaceholder from "@/components/common/RestrictedAccessPlaceholder";
+
 interface Props {
   searchParams: any;
 }
@@ -26,7 +28,16 @@ async function PayMemberDue({ searchParams }: Props) {
     responseData = data;
   } catch (error: any) {
     console.log("Error occurred");
-    console.log(error.response.data);
+    if (error.response?.status === 403) {
+      return (
+        <div className="p-6">
+          <RestrictedAccessPlaceholder
+            featureName="Member Dues"
+            requiredPermission="member_financial:view_dues"
+          />
+        </div>
+      );
+    }
     const errorMsg = error?.response?.data?.message || "Something went wrong";
     throw new Error(errorMsg);
   }

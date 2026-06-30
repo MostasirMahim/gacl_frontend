@@ -5,6 +5,8 @@ import { Layers } from "lucide-react";
 import { cookies } from "next/headers";
 import React from "react";
 
+import RestrictedAccessPlaceholder from "@/components/common/RestrictedAccessPlaceholder";
+
 interface Props {
   searchParams: any;
 }
@@ -27,7 +29,16 @@ async function ViewMemberAccountsPage({ searchParams }: Props) {
     responseData = data;
   } catch (error: any) {
     console.log("Error occurred");
-    console.log(error.response.data);
+    if (error.response?.status === 403) {
+      return (
+        <div className="p-6">
+          <RestrictedAccessPlaceholder
+            featureName="Member Accounts"
+            requiredPermission="member_financial:view_accounts"
+          />
+        </div>
+      );
+    }
     const errorMsg = error?.response?.data?.message || "Something went wrong";
     throw new Error(errorMsg);
   }

@@ -510,11 +510,10 @@ export const navigationPermissions: Record<string, string | null> = {
   "View member dues": "member_financial:view_dues",
   "View member accounts": "member_financial:view_accounts",
 
-  // Upload sales
-  "Upload sales": "member_financial:view_invoices",
+  "Upload sales": "member_financial:view_sales",
   "upload restaurant sale": "restaurant:menu_edit",
   "Upload lounge sale": "outlet:menu_edit",
-  "Upload others sales": "member_financial:view_invoices",
+  "Upload others sales": "member_financial:view_sales",
 
   "Facility management": "facility:view",
   Attendance: "attendance:view_records",
@@ -523,6 +522,11 @@ export const navigationPermissions: Record<string, string | null> = {
   Payroll: "payroll:view_structures",
   "Vendor Management": "vendor:view",
   "Event Management": "event:view",
+  "Events": "event:view",
+  "Venues": "event:edit",
+  "Tickets": "event:view",
+  "Fees": "event:edit",
+  "Event Management > Media": "event:edit",
 };
 
 const sectionMasterMap: Record<string, string> = {
@@ -548,7 +552,8 @@ const sectionMasterMap: Record<string, string> = {
 export const filterNavigationByPermissions = (
   navArray: any[],
   userPermissions: string[],
-  isAdmin: boolean
+  isAdmin: boolean,
+  parentLabel?: string
 ): any[] => {
   if (isAdmin) {
     return navArray;
@@ -557,7 +562,11 @@ export const filterNavigationByPermissions = (
   const result: any[] = [];
 
   for (const item of navArray) {
-    const requiredPermission = navigationPermissions[item.label];
+    const lookupKey = parentLabel ? `${parentLabel} > ${item.label}` : item.label;
+    const requiredPermission =
+      navigationPermissions[lookupKey] !== undefined
+        ? navigationPermissions[lookupKey]
+        : navigationPermissions[item.label];
     let hasPermissionForItem = false;
 
     if (requiredPermission === null) {
@@ -579,7 +588,8 @@ export const filterNavigationByPermissions = (
       const filteredSubItems = filterNavigationByPermissions(
         item.subItems,
         userPermissions,
-        isAdmin
+        isAdmin,
+        item.label
       );
 
       if (hasPermissionForItem || filteredSubItems.length > 0) {
