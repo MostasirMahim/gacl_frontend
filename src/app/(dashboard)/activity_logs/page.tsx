@@ -5,6 +5,8 @@ import RefreshButton from "@/components/utils/RefreshButton";
 import axiosInstance from "@/lib/axiosInstance";
 import { cookies } from "next/headers";
 
+import RestrictedAccessPlaceholder from "@/components/common/RestrictedAccessPlaceholder";
+
 interface Props {
   searchParams: Promise<{ page?: string }>;
 }
@@ -27,7 +29,16 @@ async function ActivityLogPage({ searchParams }: Props) {
     responseData = data;
   } catch (error: any) {
     console.log("Error occurred");
-    console.log(error.response.data);
+    if (error.response?.status === 403) {
+      return (
+        <div className="p-6">
+          <RestrictedAccessPlaceholder
+            featureName="System Activity Logs"
+            requiredPermission="activity_log:view"
+          />
+        </div>
+      );
+    }
     const errorMsg = error?.response?.data?.message || "Something went wrong";
     throw new Error(errorMsg);
   }

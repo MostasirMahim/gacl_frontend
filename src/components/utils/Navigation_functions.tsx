@@ -103,7 +103,7 @@ const navigation_sidebar_links = [
   {
     icon: <Logs className="h-5 w-5" />,
     label: "My activity logs",
-    href: "/activity_logs/my",
+    href: "/my-activity-logs",
   },
   ,
   {
@@ -426,20 +426,22 @@ export const navigationPermissions: Record<string, string | null> = {
   Dashboard: null,
 
   // MemberSphere
-  MemberSphere: "member_management",
-  "Pending Members": "member:view",
+  MemberSphere: "member:view",
+  "Pending Members": "member:edit",
   "Add Member": "member:create",
   "View Members": "member:view",
+  "Transfer History": "member:history",
+  "Recycle Bin": "member:delete",
 
   "All Users": "user:view_list",
   "All Groups": "group:view",
-  "Add Choices": "member_management",
+  "Add Choices": "member:view",
   Onboarding: "employee:onboard",
   "Activity Logs": "activity_log:view",
   "My activity logs": null,
 
   // Email management
-  "Email management": "bulk_emails_management",
+  "Email management": "email:view_logs",
   Configurations: "email:template_edit",
   Groups: "email:view_logs",
   "Add email to group": "email:send_bulk",
@@ -448,7 +450,7 @@ export const navigationPermissions: Record<string, string | null> = {
   "View all composes": "email:view_logs",
 
   // Restaurant management
-  "Restaurant management": "restaurant_management",
+  "Restaurant management": "restaurant:view_menu",
   Restaurants: "restaurant:view_menu",
   "Add restaurants choices": "restaurant:menu_edit",
   "Add restaurant item": "restaurant:menu_edit",
@@ -457,7 +459,7 @@ export const navigationPermissions: Record<string, string | null> = {
   "View cart": "restaurant:order_create",
 
   // Products Management
-  "Products Management": "product_management",
+  "Products Management": "product:view",
   "Add Product": "product:create",
   "View Products": "product:view",
   Categories: "product:view",
@@ -477,42 +479,50 @@ export const navigationPermissions: Record<string, string | null> = {
   "View Product Cart": "product:view",
 
   // Promo code management
-  "Promo code management": "promo_code_management",
+  "Promo code": "promo_code:view",
+  "Promo code management": "promo_code:view",
+  "All promo codes": "promo_code:view",
   "View all promo codes": "promo_code:view",
   "Add promo code": "promo_code:create",
+  "Promo codes category": "promo_code:view",
   "promo codes category": "promo_code:view",
   "Add category": "promo_code:create",
+  "Applied promo codes": "promo_code:view",
   "View applied promo codes": "promo_code:view",
 
   // Member financial management
-  "Member financial management": "member_financial_management",
+  "Member financial": "member_financial:view_invoices",
+  "Member financial management": "member_financial:view_invoices",
   Invoices: "member_financial:view_invoices",
   "View all invoices": "member_financial:view_invoices",
   "Payment Invoice": "member_financial:generate_invoice",
-  Incomes: "member_financial:view_invoices",
-  "View all incomes": "member_financial:view_invoices",
-  "View Income Particulars": "member_financial:view_invoices",
-  "View Income Receiving Options": "member_financial:view_invoices",
-  "View Invoice PaymentOptions": "member_financial:view_invoices",
-  "View all Sales": "member_financial:view_invoices",
-  "View all Transactions": "member_financial:view_invoices",
-  "View all Payments": "member_financial:process_payment",
-  "View member dues": "member_financial:adjust_dues",
-  "View member accounts": "member_financial:view_invoices",
+  Incomes: "member_financial:view_incomes",
+  "View all incomes": "member_financial:view_incomes",
+  "Income Particulars": "member_financial:view_incomes",
+  "View Income Particulars": "member_financial:view_incomes",
+  "Receiving Options": "member_financial:view_incomes",
+  "View Income Receiving Options": "member_financial:view_incomes",
+  "Invoice Payment Options": "member_financial:adjust_dues",
+  "View Invoice PaymentOptions": "member_financial:adjust_dues",
+  "View all Sales": "member_financial:view_sales",
+  "View all Transactions": "member_financial:view_transactions",
+  "View all Payments": "member_financial:view_payments",
+  "View member dues": "member_financial:view_dues",
+  "View member accounts": "member_financial:view_accounts",
 
   // Upload sales
-  "Upload sales": "member_financial_management",
+  "Upload sales": "member_financial:view_invoices",
   "upload restaurant sale": "restaurant:menu_edit",
   "Upload lounge sale": "outlet:menu_edit",
-  "Upload others sales": "member_financial_management",
+  "Upload others sales": "member_financial:view_invoices",
 
-  "Facility management": "facility_management",
-  Attendance: "attendance_management",
-  "Outlets (Bar/Lounge)": "outlet_management",
-  Reservations: "reservation_management",
-  Payroll: "payroll_management",
-  "Vendor Management": "vendor_management",
-  "Event Management": "event_management",
+  "Facility management": "facility:view",
+  Attendance: "attendance:view_records",
+  "Outlets (Bar/Lounge)": "outlet:view_menu",
+  Reservations: "reservation:view",
+  Payroll: "payroll:view_structures",
+  "Vendor Management": "vendor:view",
+  "Event Management": "event:view",
 };
 
 const sectionMasterMap: Record<string, string> = {
@@ -544,9 +554,10 @@ export const filterNavigationByPermissions = (
     return navArray;
   }
 
-  return navArray.filter((item) => {
-    const requiredPermission = navigationPermissions[item.label];
+  const result: any[] = [];
 
+  for (const item of navArray) {
+    const requiredPermission = navigationPermissions[item.label];
     let hasPermissionForItem = false;
 
     if (requiredPermission === null) {
@@ -572,12 +583,12 @@ export const filterNavigationByPermissions = (
       );
 
       if (hasPermissionForItem || filteredSubItems.length > 0) {
-        return { ...item, subItems: filteredSubItems };
+        result.push({ ...item, subItems: filteredSubItems });
       }
-
-      return false;
+    } else if (hasPermissionForItem) {
+      result.push({ ...item });
     }
+  }
 
-    return hasPermissionForItem;
-  });
+  return result;
 };
