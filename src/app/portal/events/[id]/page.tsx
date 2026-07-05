@@ -103,8 +103,8 @@ export default function PortalEventDetailsPage({
                 {event.event_type}
               </span>
               <span className={`text-xs font-semibold px-2.5 py-1 rounded-md ${
-                event.status === "scheduled" ? "bg-green-100 text-green-700" :
-                event.status === "cancelled" ? "bg-red-100 text-red-700" :
+                ["planned", "ongoing"].includes(event.status?.toLowerCase()) ? "bg-green-100 text-green-700" :
+                event.status?.toLowerCase() === "cancelled" ? "bg-red-100 text-red-700" :
                 "bg-amber-100 text-amber-700"
               }`}>
                 {event.status?.toUpperCase() || "UNKNOWN"}
@@ -181,9 +181,11 @@ export default function PortalEventDetailsPage({
         <div>
           <Card className="p-6 sticky top-24">
             <h2 className="text-xl font-bold mb-4">Book Ticket</h2>
-            {event.status !== "scheduled" ? (
+            {(!["planned", "ongoing"].includes(event.status?.toLowerCase()) || (event.registration_deadline && new Date() > new Date(event.registration_deadline))) ? (
               <div className="p-4 bg-amber-50 text-amber-800 rounded-lg border border-amber-200 text-sm">
-                This event is currently {event.status}. Booking is not available.
+                {event.registration_deadline && new Date() > new Date(event.registration_deadline) 
+                  ? "Registration for this event has closed." 
+                  : `This event is currently ${event.status}. Booking is not available.`}
               </div>
             ) : tickets.length === 0 ? (
               <div className="p-4 bg-muted text-muted-foreground rounded-lg text-sm text-center">
