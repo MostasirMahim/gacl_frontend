@@ -8,6 +8,7 @@ import { FileText, Printer } from "lucide-react";
 import { useRef } from "react";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
+import { BRAND_CONFIG } from "@/config/brand";
 import { toast } from "react-toastify";
 
 interface MemberAccountStatementProps {
@@ -145,7 +146,7 @@ export function MemberAccountStatement({ data }: MemberAccountStatementProps) {
         <CardHeader className="pb-3 border-b border-border print:border-b-foreground/20">
           <div className="flex justify-between items-start">
             <div>
-              <h1 className="text-2xl font-bold text-foreground">GACL</h1>
+              <h1 className="text-2xl font-bold text-foreground">{BRAND_CONFIG.brandAbbreviation}</h1>
               <p className="text-sm text-muted-foreground">
                 Member Account Summary
               </p>

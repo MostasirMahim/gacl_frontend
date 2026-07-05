@@ -6,6 +6,8 @@ import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from "@/providers/ThemeProviders";
 import "react-toastify/ReactToastify.css";
 import { Bounce, ToastContainer } from "react-toastify";
+import { BRAND_CONFIG } from "@/config/brand";
+
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
   variable: "--font-geist-sans",
@@ -18,8 +20,8 @@ const geistMono = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "Member management system",
-  description: "Member management system || developed by PEOPOLTEK",
+  title: BRAND_CONFIG.appName,
+  description: BRAND_CONFIG.description,
 };
 
 export default function RootLayout({

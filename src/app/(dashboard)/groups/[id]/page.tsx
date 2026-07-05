@@ -39,7 +39,9 @@ import { LoadingDots } from "@/components/ui/loading";
 import { useFormik } from "formik";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { format } from "date-fns";
 import { toast } from "react-toastify";
+import { BRAND_CONFIG } from "@/config/brand";
 
 export default function GroupDetailPage() {
   const params = useParams();
@@ -296,7 +298,7 @@ export default function GroupDetailPage() {
                 </p>
               </div>
               <div className="space-y-2">
-                <h4 className="font-semibold text-foreground">Member Portal Capabilities Included:</h4>
+                <h4 className="font-semibold text-foreground">{BRAND_CONFIG.portalName} Capabilities Included:</h4>
                 <ul className="list-disc list-inside space-y-1 text-xs font-medium text-foreground/80">
                   <li>Member Profile View (<code className="bg-muted px-1 py-0.5 rounded">member:view</code>)</li>
                   <li>Invoices & Payment Processing (<code className="bg-muted px-1 py-0.5 rounded">member_financial:view_invoices</code>)</li>

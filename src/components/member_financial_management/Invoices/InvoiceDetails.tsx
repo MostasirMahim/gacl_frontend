@@ -6,10 +6,19 @@ import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
-import { DollarSignIcon, FileText, Printer } from "lucide-react";
+import {
+  DollarSignIcon,
+  FileText,
+  Printer,
+  Download,
+  ChevronLeft,
+  CalendarClock,
+} from "lucide-react";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 import { toast } from "react-toastify";
+import { BRAND_CONFIG } from "@/config/brand";
 import Link from "next/link";
 
 interface InvoiceItem {
@@ -102,53 +111,138 @@ export default function InvoiceComponent({ data }: Props2) {
   };
 
   const handleDownloadPDF = async () => {
-    if (!pdfRef.current) return;
+    if (!data) return;
 
     try {
-      const canvas = await html2canvas(pdfRef.current, {
-        scale: 2,
-        useCORS: true,
-        logging: false,
+      const doc = new jsPDF();
+
+      // Add Company Info (Top Left)
+      doc.setFontSize(20);
+      doc.setFont("helvetica", "bold");
+      doc.text(BRAND_CONFIG.companyName, 14, 22);
+
+      doc.setFontSize(10);
+      doc.setFont("helvetica", "normal");
+      doc.text(BRAND_CONFIG.addressLine1, 14, 30);
+      doc.text(BRAND_CONFIG.contactEmail, 14, 35);
+
+      // Add Invoice Title (Top Right)
+      doc.setFontSize(20);
+      doc.setFont("helvetica", "bold");
+      doc.text("INVOICE", 195, 22, { align: "right" });
+
+      doc.setFontSize(12);
+      doc.setFont("helvetica", "normal");
+      doc.text(`#${data.invoice_number}`, 195, 30, { align: "right" });
+
+      // Billed To & Details
+      doc.setFontSize(10);
+      doc.setFont("helvetica", "bold");
+      doc.text("BILLED TO", 14, 50);
+      doc.setFont("helvetica", "normal");
+      doc.text(data.member || "Member", 14, 55);
+
+      doc.setFont("helvetica", "bold");
+      doc.text("INVOICE DETAILS", 195, 50, { align: "right" });
+      doc.setFont("helvetica", "normal");
+      doc.text(`Type: ${data.invoice_type}`, 195, 55, { align: "right" });
+      doc.text(`Issue Date: ${formatDate(data.issue_date)}`, 195, 60, {
+        align: "right",
       });
+      doc.text(`Due Date: ${formatDate(data.due_date)}`, 195, 65, {
+        align: "right",
+      });
+      const statusText = data.is_full_paid ? "PAID" : "UNPAID";
+      doc.text(`Status: ${statusText}`, 195, 70, { align: "right" });
 
-      const imgData = canvas.toDataURL("image/png");
-      const imgWidth = 210;
-      const pageHeight = 297;
-      const imgHeight = (canvas.height * imgWidth) / canvas.width;
-      let heightLeft = imgHeight;
+      // Table
+      const tableColumn = ["Item Details", "Total Amount"];
+      const tableRows: any[] = [];
 
-      const pdf = new jsPDF("p", "mm", "a4");
-      let position = 0;
-
-      pdf.addImage(
-        imgData,
-        "PNG",
-        0,
-        position,
-        imgWidth,
-        imgHeight,
-        undefined,
-        "FAST"
-      );
-      heightLeft -= pageHeight;
-
-      while (heightLeft >= 0) {
-        position = heightLeft - imgHeight;
-        pdf.addPage();
-        pdf.addImage(
-          imgData,
-          "PNG",
-          0,
-          position,
-          imgWidth,
-          imgHeight,
-          undefined,
-          "FAST"
-        );
-        heightLeft -= pageHeight;
+      if (hasItems) {
+        data.invoice_items.forEach((item: any) => {
+          let details = "";
+          if (item.restaurant_items && item.restaurant_items.length > 0) {
+            details +=
+              "Restaurant: " +
+              item.restaurant_items.map((r: any) => r.name).join(", ") +
+              "\n";
+          }
+          if (item.products && item.products.length > 0) {
+            details +=
+              "Products: " +
+              item.products.map((p: any) => p.name).join(", ") +
+              "\n";
+          }
+          if (item.facility && item.facility.length > 0) {
+            details +=
+              "Facility: " +
+              item.facility.map((f: any) => f.name).join(", ") +
+              "\n";
+          }
+          if (item.event_tickets && item.event_tickets.length > 0) {
+            details +=
+              "Events: " +
+              item.event_tickets.map((e: any) => e.name).join(", ") +
+              "\n";
+          }
+          if (!details) {
+            details = "General Item";
+          }
+          tableRows.push([
+            details.trim(),
+            item.total_amount ? `BDT ${item.total_amount}` : "",
+          ]);
+        });
+      } else {
+        tableRows.push(["No items found on this invoice", ""]);
       }
 
-      pdf.save(`Invoice-${data.id}-Receipt.pdf`);
+      autoTable(doc, {
+        startY: 80,
+        head: [tableColumn],
+        body: tableRows,
+        theme: "striped",
+        headStyles: { fillColor: [41, 128, 185] },
+      });
+
+      // Footer Totals
+      const finalY = (doc as any).lastAutoTable.finalY || 80;
+
+      doc.setFont("helvetica", "bold");
+      doc.text("Total Amount:", 140, finalY + 10);
+      doc.text(`BDT ${data.total_amount}`, 195, finalY + 10, {
+        align: "right",
+      });
+
+      if (Number(data.discount) > 0) {
+        doc.text("Discount:", 140, finalY + 16);
+        doc.text(`- BDT ${data.discount}`, 195, finalY + 16, {
+          align: "right",
+        });
+
+        doc.text("Paid Amount:", 140, finalY + 22);
+        doc.text(`BDT ${data.paid_amount || "0.00"}`, 195, finalY + 22, {
+          align: "right",
+        });
+
+        doc.text("Balance Due:", 140, finalY + 30);
+        doc.text(`BDT ${data.balance_due}`, 195, finalY + 30, {
+          align: "right",
+        });
+      } else {
+        doc.text("Paid Amount:", 140, finalY + 16);
+        doc.text(`BDT ${data.paid_amount || "0.00"}`, 195, finalY + 16, {
+          align: "right",
+        });
+
+        doc.text("Balance Due:", 140, finalY + 24);
+        doc.text(`BDT ${data.balance_due}`, 195, finalY + 24, {
+          align: "right",
+        });
+      }
+
+      doc.save(`Invoice-${data.invoice_number}.pdf`);
       toast.success("PDF downloaded successfully!");
     } catch (error) {
       console.error("Error generating PDF:", error);
@@ -168,7 +262,9 @@ export default function InvoiceComponent({ data }: Props2) {
         <CardHeader className="pb-4 border-b border-border print:border-b-foreground/20">
           <div className="flex justify-between items-start">
             <div>
-              <h1 className="text-2xl font-bold text-foreground">GACL</h1>
+              <h1 className="text-2xl font-bold text-foreground">
+                {BRAND_CONFIG.brandAbbreviation}
+              </h1>
               <p className="text-sm text-muted-foreground">Official Invoice</p>
             </div>
             <div className="text-right">
@@ -435,14 +531,12 @@ export default function InvoiceComponent({ data }: Props2) {
               Print
             </Button>
 
-              <Link
-                href={`/mfm/payment_invoice?id=${data.id}`}
-              >
-                <Button  size="sm" className="gap-1">
-                  <DollarSignIcon />
-                  Pay Invoice
-                </Button>
-              </Link>
+            <Link href={`/mfm/payment_invoice?id=${data.id}`}>
+              <Button size="sm" className="gap-1">
+                <DollarSignIcon />
+                Pay Invoice
+              </Button>
+            </Link>
           </div>
         </CardContent>
       </Card>

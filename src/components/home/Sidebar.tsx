@@ -10,6 +10,7 @@ import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/component
 import { ScrollArea } from "@/components/ui/scroll-area"
 import { cn } from "@/lib/utils"
 import { useSidebar } from "@/context/SidebarContext"
+import { BRAND_CONFIG } from "@/config/brand"
 
 interface SubItem {
   icon: React.ReactNode
@@ -138,7 +139,7 @@ const Sidebar = ({ navigation }: { navigation: NavItemProps[] }) => {
   return (
     <div className="flex flex-col max-h-screen overflow-y-auto font-primary">
       <div className="p-4 flex items-center justify-center border-b border-border/50">
-        <img src="/assets/logo.png" alt="" className="object-contain rounded-full h-[120px] w-[120px] shadow-lg" />
+        <img src={BRAND_CONFIG.logoUrl} alt={BRAND_CONFIG.companyName} className="object-contain rounded-full h-[120px] w-[120px] shadow-lg" />
       </div>
       <ScrollArea className="flex-1 overflow-y-auto no-scrollbar">
         <nav className="space-y-1 px-2 mx-auto py-4">

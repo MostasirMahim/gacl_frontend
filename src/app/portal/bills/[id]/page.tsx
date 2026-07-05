@@ -5,15 +5,24 @@ import axiosInstance from "@/lib/axiosInstance";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { LoadingDots } from "@/components/ui/loading";
-import { Printer, ArrowLeft, Receipt } from "lucide-react";
+import { ArrowLeft, Receipt, Printer, Download } from "lucide-react";
 import Link from "next/link";
 import { format } from "date-fns";
+import { BRAND_CONFIG } from "@/config/brand";
+import html2canvas from "html2canvas";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+import { toast } from "react-toastify";
+import { useRef } from "react";
+import { useParams } from "next/navigation";
 
 export default function PortalInvoiceDetailPage({
   params,
 }: {
   params: { id: string };
 }) {
+  const pdfRef = useRef<HTMLDivElement>(null);
+
   const { data: invoice, isLoading } = useQuery({
     queryKey: ["portalInvoiceDetail", params.id],
     queryFn: async () => {
@@ -82,18 +91,120 @@ export default function PortalInvoiceDetailPage({
     });
   }
 
+  const handleDownloadPDF = async () => {
+    if (!invoice) return;
+
+    try {
+      const doc = new jsPDF();
+      
+      // Add Company Info (Top Left)
+      doc.setFontSize(20);
+      doc.setFont("helvetica", "bold");
+      doc.text(BRAND_CONFIG.companyName, 14, 22);
+      
+      doc.setFontSize(10);
+      doc.setFont("helvetica", "normal");
+      doc.text(BRAND_CONFIG.addressLine1, 14, 30);
+      doc.text(BRAND_CONFIG.contactEmail, 14, 35);
+      
+      // Add Invoice Title (Top Right)
+      doc.setFontSize(20);
+      doc.setFont("helvetica", "bold");
+      doc.text("INVOICE", 195, 22, { align: "right" });
+      
+      doc.setFontSize(12);
+      doc.setFont("helvetica", "normal");
+      doc.text(`#${invoice.invoice_number}`, 195, 30, { align: "right" });
+      
+      // Billed To & Details
+      doc.setFontSize(10);
+      doc.setFont("helvetica", "bold");
+      doc.text("BILLED TO", 14, 50);
+      doc.setFont("helvetica", "normal");
+      doc.text(invoice.member || "Member", 14, 55);
+      
+      doc.setFont("helvetica", "bold");
+      doc.text("INVOICE DETAILS", 195, 50, { align: "right" });
+      doc.setFont("helvetica", "normal");
+      doc.text(`Type: ${invoice.invoice_type}`, 195, 55, { align: "right" });
+      doc.text(`Date: ${invoice.issue_date ? format(new Date(invoice.issue_date), "MMM d, yyyy") : "N/A"}`, 195, 60, { align: "right" });
+      const statusText = invoice.is_full_paid ? "PAID" : "UNPAID";
+      doc.text(`Status: ${statusText}`, 195, 65, { align: "right" });
+      
+      // Table
+      const tableColumn = ["Item Description", "Qty", "Unit Price", "Total"];
+      const tableRows: any[] = [];
+      
+      if (allItems.length > 0) {
+        allItems.forEach(item => {
+          tableRows.push([
+            item.name,
+            item.quantity,
+            item.price,
+            item.total
+          ]);
+        });
+      } else {
+        tableRows.push(["No items found for this invoice", "", "", ""]);
+      }
+      
+      autoTable(doc, {
+        startY: 75,
+        head: [tableColumn],
+        body: tableRows,
+        theme: 'striped',
+        headStyles: { fillColor: [41, 128, 185] },
+      });
+      
+      // Footer Totals
+      const finalY = (doc as any).lastAutoTable.finalY || 75;
+      
+      doc.setFont("helvetica", "bold");
+      doc.text("Subtotal:", 140, finalY + 10);
+      doc.text(`BDT ${invoice.total_amount}`, 195, finalY + 10, { align: "right" });
+      
+      if (Number(invoice.discount) > 0) {
+        doc.text("Discount:", 140, finalY + 16);
+        doc.text(`- BDT ${invoice.discount}`, 195, finalY + 16, { align: "right" });
+        
+        doc.text("Paid Amount:", 140, finalY + 22);
+        doc.text(`BDT ${invoice.paid_amount || "0.00"}`, 195, finalY + 22, { align: "right" });
+        
+        doc.text("Balance Due:", 140, finalY + 30);
+        doc.text(`BDT ${invoice.balance_due}`, 195, finalY + 30, { align: "right" });
+      } else {
+        doc.text("Paid Amount:", 140, finalY + 16);
+        doc.text(`BDT ${invoice.paid_amount || "0.00"}`, 195, finalY + 16, { align: "right" });
+        
+        doc.text("Balance Due:", 140, finalY + 24);
+        doc.text(`BDT ${invoice.balance_due}`, 195, finalY + 24, { align: "right" });
+      }
+      
+      doc.save(`Invoice-${invoice.invoice_number}.pdf`);
+      toast.success("PDF downloaded successfully!");
+    } catch (error) {
+      console.error("Error generating PDF:", error);
+      toast.error("There was an error generating the PDF. Please try again.");
+    }
+  };
+
   return (
     <div className="space-y-6 max-w-4xl mx-auto">
-      <div className="flex items-center justify-between print:hidden">
-        <Link href="/portal/bills" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 print:hidden">
+        <Link href="/portal/bills" className="flex items-center gap-2 text-sm text-muted-foreground hover:text-foreground transition-colors w-fit whitespace-nowrap">
           <ArrowLeft className="w-4 h-4" /> Back to Bills
         </Link>
-        <Button variant="outline" className="gap-2" onClick={() => window.print()}>
-          <Printer className="w-4 h-4" /> Print Invoice
-        </Button>
+        <div className="flex items-center gap-2 sm:gap-3 w-full sm:w-auto">
+          <Button variant="outline" className="gap-2 flex-1 sm:flex-none" onClick={() => window.print()}>
+            <Printer className="w-4 h-4" /> Print
+          </Button>
+          <Button onClick={handleDownloadPDF} className="gap-2 flex-1 sm:flex-none">
+            <Download className="w-4 h-4" /> Download PDF
+          </Button>
+        </div>
       </div>
 
-      <Card className="p-8 md:p-12 print:shadow-none print:border-none print:p-0 bg-card">
+      <Card ref={pdfRef} className="p-8 md:p-12 print:shadow-none print:border-none print:p-0 bg-card">
         <div className="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-border/60 pb-8 mb-8 gap-6">
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 rounded-xl bg-primary/10 text-primary flex items-center justify-center font-bold">
@@ -105,21 +216,21 @@ export default function PortalInvoiceDetailPage({
             </div>
           </div>
           <div className="text-left md:text-right">
-            <h3 className="font-semibold text-lg">Saint Club</h3>
+            <h3 className="font-semibold text-lg">{BRAND_CONFIG.companyName}</h3>
             <p className="text-sm text-muted-foreground max-w-xs mt-1">
-              123 Club Avenue, City District
+              {BRAND_CONFIG.addressLine1}
               <br />
-              contact@saintclub.example.com
+              {BRAND_CONFIG.contactEmail}
             </p>
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-8 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
           <div>
             <p className="text-sm text-muted-foreground mb-1 uppercase font-semibold tracking-wider">Billed To</p>
             <p className="font-semibold text-lg">{invoice.member}</p>
           </div>
-          <div className="text-right">
+          <div className="text-left md:text-right">
             <p className="text-sm text-muted-foreground mb-1 uppercase font-semibold tracking-wider">Invoice Details</p>
             <p className="text-sm"><span className="font-medium">Type:</span> {invoice.invoice_type}</p>
             <p className="text-sm"><span className="font-medium">Date:</span> {invoice.issue_date ? format(new Date(invoice.issue_date), "MMM d, yyyy") : "N/A"}</p>
@@ -189,7 +300,7 @@ export default function PortalInvoiceDetailPage({
         </div>
 
         <div className="mt-16 pt-8 border-t border-border/60 text-center text-xs text-muted-foreground">
-          <p>Thank you for being a valued member of Saint Club.</p>
+          <p>Thank you for being a valued member of {BRAND_CONFIG.companyName}.</p>
           <p>If you have any questions about this invoice, please contact the club administration.</p>
         </div>
       </Card>

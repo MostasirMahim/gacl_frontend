@@ -8,6 +8,7 @@ import Link from "next/link";
 import { toast } from "react-toastify";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
+import { BRAND_CONFIG } from "@/config/brand";
 import { useRef } from "react";
 
 interface MemberDueStatementProps {
@@ -123,7 +124,7 @@ export function MemberDueStatement({ data }: MemberDueStatementProps) {
         <CardHeader className="pb-3 border-b border-border">
           <div className="flex justify-between items-start">
             <div>
-              <h1 className="text-2xl font-bold text-foreground">GACL</h1>
+              <h1 className="text-2xl font-bold text-foreground">{BRAND_CONFIG.brandAbbreviation}</h1>
               <p className="text-sm text-muted-foreground">
                 Member Financial Statement
               </p>

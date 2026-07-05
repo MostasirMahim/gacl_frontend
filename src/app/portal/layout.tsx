@@ -4,6 +4,7 @@ import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { usePermissions } from "@/hooks/usePermissions";
 import axiosInstance from "@/lib/axiosInstance";
+import { BRAND_CONFIG } from "@/config/brand";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
@@ -78,12 +79,12 @@ export default function PortalLayout({
                 <SheetContent side="left" className="w-[280px] p-0 flex flex-col">
                   <div className="p-4 border-b border-border/60">
                     <div className="flex items-center gap-3">
-                      <div className="w-9 h-9 rounded-lg bg-primary/10 text-primary grid place-items-center font-bold">
-                        SC
+                      <div className="w-9 h-9 rounded-lg bg-white overflow-hidden grid place-items-center">
+                        <img src={BRAND_CONFIG.logoUrl} alt={BRAND_CONFIG.shortName} className="w-full h-full object-contain" />
                       </div>
                       <div>
-                        <p className="font-semibold leading-tight">Saint Club</p>
-                        <p className="text-xs text-muted-foreground">Member Portal</p>
+                        <p className="font-semibold leading-tight">{BRAND_CONFIG.companyName}</p>
+                        <p className="text-xs text-muted-foreground">{BRAND_CONFIG.portalName}</p>
                       </div>
                     </div>
                   </div>
@@ -121,12 +122,12 @@ export default function PortalLayout({
 
             {/* Desktop & Mobile Logo (Left) */}
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-lg bg-primary/10 text-primary hidden md:grid place-items-center font-bold">
-                SC
+              <div className="w-9 h-9 rounded-lg bg-white overflow-hidden hidden md:grid place-items-center">
+                <img src={BRAND_CONFIG.logoUrl} alt={BRAND_CONFIG.shortName} className="w-full h-full object-contain" />
               </div>
               <div className="flex flex-col">
-                <p className="font-semibold leading-tight text-sm md:text-base">Saint Club</p>
-                <p className="text-[10px] md:text-xs text-muted-foreground">Member Portal</p>
+                <p className="font-semibold leading-tight text-sm md:text-base">{BRAND_CONFIG.companyName}</p>
+                <p className="text-[10px] md:text-xs text-muted-foreground">{BRAND_CONFIG.portalName}</p>
               </div>
             </div>
           </div>
@@ -175,7 +176,7 @@ export default function PortalLayout({
 
       <div className="max-w-7xl mx-auto px-4 py-6 grid gap-6 md:grid-cols-[220px_1fr]">
         {/* Side nav (Desktop only) */}
-        <nav className="hidden md:flex flex-col gap-1 h-fit sticky top-24">
+        <nav className="hidden md:flex flex-col gap-1 h-fit sticky top-24 bg-card/50 rounded-xl p-2">
           {NAV.map((item) => {
             const active = item.exact
               ? pathname === item.href

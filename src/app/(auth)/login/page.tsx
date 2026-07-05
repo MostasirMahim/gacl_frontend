@@ -16,6 +16,7 @@ import { useRouter } from "next/navigation";
 import { LoadingDots } from "@/components/ui/loading";
 import axiosInstance from "@/lib/axiosInstance";
 import { toast } from "react-toastify";
+import { BRAND_CONFIG } from "@/config/brand";
 
 const validationSchema = Yup.object({
   username: Yup.string().required("Username is required"),
@@ -100,9 +101,9 @@ export default function page() {
               className="h-16 w-16"
             /> */}
             <div className="text-center space-y-1">
-              <h1 className="text-2xl font-bold text-primary">Gagorian Club</h1>
+              <h1 className="text-2xl font-bold text-primary">{BRAND_CONFIG.loginTitle}</h1>
               <p className="text-sm text-muted-foreground">
-                Your Social Campaigns
+                {BRAND_CONFIG.loginSubtitle}
               </p>
             </div>
           </div>

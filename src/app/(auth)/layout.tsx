@@ -1,6 +1,8 @@
+import { BRAND_CONFIG } from "@/config/brand";
+
 export const metadata = {
-  title: "Gagorian Club",
-  description: "make your social campaigns with Gagorian Club",
+  title: BRAND_CONFIG.loginTitle,
+  description: BRAND_CONFIG.description,
 };
 
 export default function AuthLayout({
