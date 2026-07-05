@@ -18,11 +18,14 @@ import {
 
 const NAV = [
   { href: "/portal", label: "Dashboard", icon: LayoutDashboard, exact: true },
+  { href: "/portal/events", label: "Events", icon: CalendarClock },
   { href: "/portal/order/restaurant", label: "Order Food", icon: UtensilsCrossed },
   { href: "/portal/order/outlet", label: "Bar & Lounge", icon: Wine },
   { href: "/portal/reservations", label: "Reservations", icon: CalendarClock },
   { href: "/portal/orders", label: "My Orders", icon: ClipboardList },
   { href: "/portal/bills", label: "My Bills", icon: ReceiptText },
+  { href: "/portal/profile", label: "My Profile", icon: User },
+  { href: "/portal/activity", label: "Activity Logs", icon: ClipboardList },
 ];
 
 export default function PortalLayout({

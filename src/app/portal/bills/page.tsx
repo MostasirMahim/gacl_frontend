@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { useQueryClient } from "@tanstack/react-query";
 import axiosInstance from "@/lib/axiosInstance";
 import { toast } from "react-toastify";
@@ -129,6 +130,9 @@ export default function MyBillsPage() {
                   <Badge variant={inv.is_full_paid ? "outline" : "secondary"}>
                     {inv.is_full_paid ? "Paid" : inv.status || "Unpaid"}
                   </Badge>
+                  <Link href={`/portal/bills/${inv.id}`}>
+                    <Button variant="outline" size="sm">View</Button>
+                  </Link>
                   {!inv.is_full_paid && <PayDialog invoice={inv} />}
                 </div>
               </div>
