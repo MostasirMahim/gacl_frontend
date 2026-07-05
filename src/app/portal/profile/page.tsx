@@ -45,7 +45,6 @@ export default function PortalProfilePage() {
     },
   });
 
-
   //TODO:Need Functionality Attach to See Documents File View/GET Operation
 
   const {
@@ -66,7 +65,6 @@ export default function PortalProfilePage() {
   const primaryNumber = contact_info?.find((c: any) => c.is_primary);
   const primaryEmail = email_address?.find((e: any) => e.is_primary);
 
-
   const handleImageClick = (image: any) => {
     setSelectedImage(image);
     setIsViewerOpen(true);
@@ -77,7 +75,7 @@ export default function PortalProfilePage() {
     setSelectedImage(null);
   };
 
-  if(isLoading) return <LoadingDots />
+  if (isLoading) return <LoadingDots />;
 
   if (!member_info) {
     return (
@@ -92,14 +90,14 @@ export default function PortalProfilePage() {
       </div>
     );
   }
-    if (!responseData || Object.keys(responseData).length === 0) {
+  if (!responseData || Object.keys(responseData).length === 0) {
     return (
       <div className="w-full mx-auto space-y-6 p-4 md:p-6">
         <div className="flex flex-col items-center justify-center min-h-[400px] text-center">
           <User className="h-16 w-16 text-muted-foreground mb-4" />
           <h2 className="text-2xl font-bold mb-2">No Member Data Found</h2>
           <p className="text-muted-foreground">
-            No information available for member ID: {id}
+            No information available for member.
           </p>
         </div>
       </div>
@@ -107,7 +105,7 @@ export default function PortalProfilePage() {
   }
   return (
     <div>
-      <div className="w-full space-y-5">
+      <div className="w-full max-w-5xl mx-auto space-y-5">
         <div className="relative overflow-hidden bg-primary text-primary-foreground rounded-2xl shadow-2xl">
           <div className="absolute inset-0 opacity-20">
             <div className="absolute inset-0 bg-gradient-to-br from-white/10 via-transparent to-white/5"></div>
@@ -118,7 +116,10 @@ export default function PortalProfilePage() {
             <div className="flex flex-col md:flex-row items-center gap-6">
               <div className="relative group">
                 <div className="relative">
-                  <Avatar  onClick={() => handleImageClick(member_info?.profile_photo)} className="h-32 w-32 md:h-40 md:w-40 border-4 border-background shadow-2xl transition-transform duration-300 group-hover:scale-105">
+                  <Avatar
+                    onClick={() => handleImageClick(member_info?.profile_photo)}
+                    className="h-32 w-32 md:h-40 md:w-40 border-4 border-background shadow-2xl transition-transform duration-300 group-hover:scale-105"
+                  >
                     <AvatarImage
                       src={
                         `${
@@ -175,7 +176,11 @@ export default function PortalProfilePage() {
                       <Droplets className="h-4 w-4" />
                       <span className="text-white/80">Blood Group</span>
                     </div>
-                    <p className="font-semibold">{typeof member_info?.blood_group === 'object' ? member_info?.blood_group?.name : member_info?.blood_group}</p>
+                    <p className="font-semibold">
+                      {typeof member_info?.blood_group === "object"
+                        ? member_info?.blood_group?.name
+                        : member_info?.blood_group}
+                    </p>
                   </div>
 
                   <div className="bg-background/20 rounded-lg p-3 backdrop-blur-sm border border-background/20">
@@ -188,15 +193,19 @@ export default function PortalProfilePage() {
                 </div>
 
                 <div className="flex flex-wrap justify-center md:justify-start gap-4 text-sm">
-                  {primaryNumber?.number && <div className="flex items-center gap-2">
-                    <Phone className="h-4 w-4" />
-                    <span>{primaryNumber?.number}</span>
-                  </div>}
+                  {primaryNumber?.number && (
+                    <div className="flex items-center gap-2">
+                      <Phone className="h-4 w-4" />
+                      <span>{primaryNumber?.number}</span>
+                    </div>
+                  )}
 
-                 {primaryEmail?.email && <div className="flex items-center gap-2">
-                    <Mail className="h-4 w-4" />
-                    <span>{primaryEmail?.email}</span>
-                  </div>}
+                  {primaryEmail?.email && (
+                    <div className="flex items-center gap-2">
+                      <Mail className="h-4 w-4" />
+                      <span>{primaryEmail?.email}</span>
+                    </div>
+                  )}
                 </div>
               </div>
             </div>
@@ -288,7 +297,9 @@ export default function PortalProfilePage() {
                           Marital Status
                         </p>
                         <p className="font-semibold text-foreground">
-                          {typeof member_info?.marital_status === 'object' ? member_info?.marital_status?.name : member_info?.marital_status || "N/A"}
+                          {typeof member_info?.marital_status === "object"
+                            ? member_info?.marital_status?.name
+                            : member_info?.marital_status || "N/A"}
                         </p>
                       </div>
                       <div className="p-3 rounded-lg bg-muted/50 border border-border/50">
@@ -296,7 +307,9 @@ export default function PortalProfilePage() {
                           Gender
                         </p>
                         <p className="font-semibold text-foreground">
-                          {typeof member_info?.gender === 'object' ? member_info?.gender?.name : member_info?.gender || "N/A"}
+                          {typeof member_info?.gender === "object"
+                            ? member_info?.gender?.name
+                            : member_info?.gender || "N/A"}
                         </p>
                       </div>
                       <div className="p-3 rounded-lg bg-muted/50 border border-border/50">
@@ -304,7 +317,9 @@ export default function PortalProfilePage() {
                           Blood Group
                         </p>
                         <p className="font-semibold text-foreground">
-                          {typeof member_info?.blood_group === 'object' ? member_info?.blood_group?.name : member_info?.blood_group || "N/A"}
+                          {typeof member_info?.blood_group === "object"
+                            ? member_info?.blood_group?.name
+                            : member_info?.blood_group || "N/A"}
                         </p>
                       </div>
                       <div className="p-3 rounded-lg bg-muted/50 border border-border/50">
@@ -544,15 +559,16 @@ export default function PortalProfilePage() {
                             key={s.id}
                             className="flex items-center gap-4 p-4 rounded-lg bg-muted/50 border border-border/50"
                           >
-                            <Avatar onClick={() => handleImageClick(s?.image)} className="h-16 w-16 ring-4 ring-pink-200 dark:ring-pink-700">
+                            <Avatar
+                              onClick={() => handleImageClick(s?.image)}
+                              className="h-16 w-16 ring-4 ring-pink-200 dark:ring-pink-700"
+                            >
                               <AvatarImage
-                              src={`${
-                                      process.env.NEXT_PUBLIC_BACKEND_API_URL ||
-                                      "http://localhost:8000"
-                                    }${s?.image}`
-                                  }
+                                src={`${
+                                  process.env.NEXT_PUBLIC_BACKEND_API_URL ||
+                                  "http://localhost:8000"
+                                }${s?.image}`}
                                 alt={s?.spouse_name}
-                                
                               />
                               <AvatarFallback className="bg-pink-100 text-pink-700 dark:bg-pink-800 dark:text-pink-200">
                                 {s.spouse_name?.[0]}
@@ -603,13 +619,15 @@ export default function PortalProfilePage() {
                             key={d.id}
                             className="flex items-center gap-4 p-4 rounded-lg bg-muted/50 border border-border/50"
                           >
-                            <Avatar onClick={() => handleImageClick(d?.image)} className="h-16 w-16 ring-4 ring-indigo-200 dark:ring-indigo-700">
+                            <Avatar
+                              onClick={() => handleImageClick(d?.image)}
+                              className="h-16 w-16 ring-4 ring-indigo-200 dark:ring-indigo-700"
+                            >
                               <AvatarImage
-                                 src={`${
-                                      process.env.NEXT_PUBLIC_BACKEND_API_URL ||
-                                      "http://localhost:8000"
-                                    }${d?.image}`
-                                  }
+                                src={`${
+                                  process.env.NEXT_PUBLIC_BACKEND_API_URL ||
+                                  "http://localhost:8000"
+                                }${d?.image}`}
                                 alt={d.name}
                               />
                               <AvatarFallback className="bg-indigo-100 text-indigo-700 dark:bg-indigo-800 dark:text-indigo-200">
@@ -800,13 +818,17 @@ export default function PortalProfilePage() {
                           key={comp.id}
                           className="flex items-center gap-4 p-4 border border-violet-200 dark:border-violet-700/30 rounded-lg bg-white/60 dark:bg-violet-900/20"
                         >
-                          <Avatar onClick={() => handleImageClick(comp.companion_image)} className="h-16 w-16 ring-4 ring-violet-200 dark:ring-violet-700">
+                          <Avatar
+                            onClick={() =>
+                              handleImageClick(comp.companion_image)
+                            }
+                            className="h-16 w-16 ring-4 ring-violet-200 dark:ring-violet-700"
+                          >
                             <AvatarImage
                               src={`${
-                                    process.env.NEXT_PUBLIC_BACKEND_API_URL ||
-                                    "http://localhost:8000"
-                                  }${comp.companion_image}`
-                                }
+                                process.env.NEXT_PUBLIC_BACKEND_API_URL ||
+                                "http://localhost:8000"
+                              }${comp.companion_image}`}
                               alt={comp.companion_name}
                             />
                             <AvatarFallback className="bg-violet-100 text-violet-700 dark:bg-violet-800 dark:text-violet-200">
@@ -875,11 +897,10 @@ export default function PortalProfilePage() {
         </div>
       </div>
       <ImageViewer
-              image={selectedImage}
-              isOpen={isViewerOpen}
-              onClose={handleCloseViewer}
-            />
+        image={selectedImage}
+        isOpen={isViewerOpen}
+        onClose={handleCloseViewer}
+      />
     </div>
   );
 }
-

@@ -70,7 +70,7 @@ export default function PortalActivityLogsPage() {
                 <div className="flex items-center justify-between mb-1">
                   <h3 className="font-bold text-foreground text-sm">{log.verb}</h3>
                   <time className="text-xs text-muted-foreground font-medium">
-                    {log.created_at ? format(new Date(log.created_at), "MMM d, yyyy h:mm a") : ""}
+                    {log.timestamp ? format(new Date(log.timestamp), "MMM d, yyyy h:mm a") : ""}
                   </time>
                 </div>
                 <p className="text-sm text-muted-foreground">
