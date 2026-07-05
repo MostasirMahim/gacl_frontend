@@ -18,20 +18,28 @@ export function usePermissions() {
           );
           return {
             username: item.username,
-            isAdmin: item.is_superuser || item.username === "admin" || item.groups?.some((g: any) => g.name === "super_admin" || g.name === "executive_admin"),
+            isAdmin: item.is_superuser || item.is_admin || item.username === "admin" || item.groups?.some((g: any) => g.name === "super_admin" || g.name === "executive_admin"),
+            isMember: item.is_member === true,
+            memberId: item.member_id ?? null,
+            memberID: item.member_ID ?? null,
+            memberName: item.member_name ?? null,
             permissions: rawPerms,
           };
         }
       } catch (err) {
         console.error("Error fetching permissions:", err);
       }
-      return { username: null, isAdmin: false, permissions: [] };
+      return { username: null, isAdmin: false, isMember: false, memberId: null, memberID: null, memberName: null, permissions: [] };
     },
     staleTime: 5 * 60 * 1000,
   });
 
   const permissions = permissionData?.permissions || [];
   const isAdmin = permissionData?.isAdmin || false;
+  const isMember = permissionData?.isMember || false;
+  const memberId = permissionData?.memberId || null;
+  const memberID = permissionData?.memberID || null;
+  const memberName = permissionData?.memberName || null;
 
   const hasPermission = (permissionName: string | null): boolean => {
     if (!permissionName) return true;
@@ -49,6 +57,10 @@ export function usePermissions() {
   return {
     permissions,
     isAdmin,
+    isMember,
+    memberId,
+    memberID,
+    memberName,
     isLoading,
     hasPermission,
     hasAnyPermission,

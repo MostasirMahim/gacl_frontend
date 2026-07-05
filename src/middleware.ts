@@ -6,6 +6,8 @@ import type { NextRequest } from "next/server";
 interface PermissionCache {
   permissions: string[];
   timestamp: number;
+  isMember?: boolean;
+  isAdmin?: boolean;
 }
 
 const permissionCache = new Map<string, PermissionCache>();
@@ -36,6 +38,8 @@ export async function middleware(req: NextRequest) {
   }
 
   let user_permissions: string[] = [];
+  let is_member = false;
+  let is_admin = false;
   const cacheKey = `user_${token}`;
 
   const cachedData = permissionCache.get(cacheKey);
@@ -44,6 +48,8 @@ export async function middleware(req: NextRequest) {
 
   if (cachedData && now - cachedData.timestamp < oneMinute) {
     user_permissions = cachedData.permissions;
+    is_member = cachedData.isMember || false;
+    is_admin = cachedData.isAdmin || false;
   } else {
     try {
       const baseURL =
@@ -60,6 +66,7 @@ export async function middleware(req: NextRequest) {
       );
 
       const json = await apiRes.json();
+      console.log("Middleware auth check response:", JSON.stringify(json));
       if (json.code !== 200) {
         url.pathname = "/login";
         return NextResponse.redirect(url);
@@ -67,16 +74,40 @@ export async function middleware(req: NextRequest) {
 
       const data = json.data[0];
       user_permissions = data.permissions.map((p: any) => p.permission_name);
+      is_member = data.is_member === true;
+      is_admin = data.is_admin === true;
 
       permissionCache.set(cacheKey, {
         permissions: user_permissions,
         timestamp: now,
+        isMember: is_member,
+        isAdmin: is_admin,
       });
     } catch (err) {
-      console.log(err);
+      console.log("Middleware fetch error:", err);
       url.pathname = "/login";
       return NextResponse.redirect(url);
     }
+  }
+
+  // ---- Member portal routing ----
+  // A club member is confined to the /portal area. Any attempt to reach the
+  // admin dashboard is redirected to their portal. Conversely, staff/admin
+  // hitting /portal are sent to the admin dashboard.
+  const isPortalPath =
+    pathname === "/portal" || pathname.startsWith("/portal/");
+  if (is_member && !is_admin) {
+    if (!isPortalPath) {
+      url.pathname = "/portal";
+      return NextResponse.redirect(url);
+    }
+    // members are allowed anywhere under /portal without further perm checks
+    return NextResponse.next();
+  }
+  if (!is_member && isPortalPath) {
+    // staff/admin don't use the member portal
+    url.pathname = "/";
+    return NextResponse.redirect(url);
   }
 
   const matchedRoute = protected_routes.find(

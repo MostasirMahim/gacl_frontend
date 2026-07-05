@@ -11,7 +11,20 @@ const axiosInstance = axios.create({
 });
 
 axiosInstance.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    if (process.env.NODE_ENV === "development" || typeof window !== "undefined") {
+      const logId = Math.random().toString(36).substring(2, 8).toUpperCase();
+      const status = response.status;
+      const url = response.config.url || "UNKNOWN_URL";
+      const responseData = response.data;
+
+      console.group(`✅ [AXIOS_SUCCESS_${logId}] HTTP ${status} -> ${url}`);
+      console.log("Request Method:", response.config.method?.toUpperCase());
+      console.log("Response Data:", responseData);
+      console.groupEnd();
+    }
+    return response;
+  },
   (error) => {
     if (process.env.NODE_ENV === "development" || typeof window !== "undefined") {
       const logId = Math.random().toString(36).substring(2, 8).toUpperCase();

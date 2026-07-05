@@ -105,7 +105,6 @@ const navigation_sidebar_links = [
     label: "My activity logs",
     href: "/my-activity-logs",
   },
-  ,
   {
     icon: <Mails className="h-5 w-5" />,
     label: "Email management",
