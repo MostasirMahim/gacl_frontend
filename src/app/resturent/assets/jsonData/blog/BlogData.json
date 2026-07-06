@@ -1,0 +1,279 @@
+[
+    {
+        "id": 1,
+        "date": "12 August, 2024",
+        "day": "12",
+        "month": "Aug",
+        "category": [
+            "Burger, Food"
+        ],
+        "dateIcon": "far fa-calendar-alt",
+        "author": "john Baus",
+        "authorIcon": "far fa-user-circle",
+        "title": "Picked up a Brussels burger Sprouts.",
+        "text": "Bndulgence diminution so discovered mr apartments. Are off under folly death wrote cause her way spite. Plan upon yet way get cold spot its week. Almost do am or limits hearts. Resolve parties but why she shewing. She sang know now",
+        "btnText": "Read More",
+        "btnIcon": "fas fa-arrow-right",
+        "thumbFull": "1-full.jpg",
+        "thumb": "1.jpg",
+        "animationDelay": "300"
+    },
+    {
+        "id": 2,
+        "date": "13 August, 2024",
+        "day": "13",
+        "month": "Aug",
+        "category": [
+            "Pizza, Food"
+        ],
+        "dateIcon": "far fa-calendar-alt",
+        "author": "Admin",
+        "authorIcon": "far fa-user-circle",
+        "title": "This prefabricated passive house highly",
+        "text": "Bndulgence diminution so discovered mr apartments. Are off under folly death wrote cause her way spite. Plan upon yet way get cold spot its week. Almost do am or limits hearts. Resolve parties but why she shewing. She sang know now",
+        "btnText": "Read More",
+        "btnIcon": "fas fa-arrow-right",
+        "thumbFull": "2-full.jpg",
+        "thumb": "2.jpg",
+        "animationDelay": "500"
+    },
+    {
+        "id": 3,
+        "date": "14 August, 2024",
+        "day": "14",
+        "month": "Aug",
+        "category": [
+            "Burger, Food"
+        ],
+        "dateIcon": "far fa-calendar-alt",
+        "author": "john Baus",
+        "authorIcon": "far fa-user-circle",
+        "title": "Overcame breeding point concerns has.",
+        "text": "Bndulgence diminution so discovered mr apartments. Are off under folly death wrote cause her way spite. Plan upon yet way get cold spot its week. Almost do am or limits hearts. Resolve parties but why she shewing. She sang know now",
+        "btnText": "Read More",
+        "btnIcon": "fas fa-arrow-right",
+        "thumbFull": "3-full.jpg",
+        "thumb": "3.jpg",
+        "animationDelay": "700"
+    },
+    {
+        "id": 4,
+        "date": "12 August, 2024",
+        "day": "12",
+        "month": "Aug",
+        "category": [
+            "Pizza, Food"
+        ],
+        "dateIcon": "far fa-calendar-alt",
+        "author": "Istiak Ahmed",
+        "authorIcon": "far fa-user-circle",
+        "title": "Breeding point has terminate the hole.",
+        "text": "Bndulgence diminution so discovered mr apartments. Are off under folly death wrote cause her way spite. Plan upon yet way get cold spot its week. Almost do am or limits hearts. Resolve parties but why she shewing. She sang know now",
+        "btnText": "Read More",
+        "btnIcon": "fas fa-arrow-right",
+        "thumbFull": "4-full.jpg",
+        "thumb": "4.jpg"
+    },
+    {
+        "id": 5,
+        "date": "13 August, 2024",
+        "day": "13",
+        "month": "Aug",
+        "category": [
+            "Burger, Food"
+        ],
+        "dateIcon": "far fa-calendar-alt",
+        "author": "Admin",
+        "authorIcon": "far fa-user-circle",
+        "title": "Picked up a Brussels burger Sprouts ham",
+        "text": "Bndulgence diminution so discovered mr apartments. Are off under folly death wrote cause her way spite. Plan upon yet way get cold spot its week. Almost do am or limits hearts. Resolve parties but why she shewing. She sang know now",
+        "btnText": "Read More",
+        "btnIcon": "fas fa-arrow-right",
+        "thumbFull": "5-full.jpg",
+        "thumb": "5.jpg"
+    },
+    {
+        "id": 6,
+        "date": "14 August, 2024",
+        "day": "14",
+        "month": "Aug",
+        "category": [
+            "Pizza, Food"
+        ],
+        "dateIcon": "far fa-calendar-alt",
+        "author": "john Baus",
+        "authorIcon": "far fa-user-circle",
+        "title": "Prefabricated passive house",
+        "text": "Bndulgence diminution so discovered mr apartments. Are off under folly death wrote cause her way spite. Plan upon yet way get cold spot its week. Almost do am or limits hearts. Resolve parties but why she shewing. She sang know now",
+        "btnText": "Read More",
+        "btnIcon": "fas fa-arrow-right",
+        "thumbFull": "6-full.jpg",
+        "thumb": "6.jpg"
+    },
+    {
+        "id": 7,
+        "date": "13 August, 2024",
+        "day": "13",
+        "month": "Aug",
+        "category": [
+            "Burger, Food"
+        ],
+        "dateIcon": "far fa-calendar-alt",
+        "author": "Admin",
+        "authorIcon": "far fa-user-circle",
+        "title": "Picked up a Brussels burger Sprouts ham",
+        "text": "Bndulgence diminution so discovered mr apartments. Are off under folly death wrote cause her way spite. Plan upon yet way get cold spot its week. Almost do am or limits hearts. Resolve parties but why she shewing. She sang know now",
+        "btnText": "Read More",
+        "btnIcon": "fas fa-arrow-right",
+        "thumbFull": "5-full.jpg",
+        "thumb": "5.jpg"
+    },
+    {
+        "id": 8,
+        "date": "12 August, 2024",
+        "day": "12",
+        "month": "Aug",
+        "category": [
+            "Pizza, Food"
+        ],
+        "dateIcon": "far fa-calendar-alt",
+        "author": "Istiak Ahmed",
+        "authorIcon": "far fa-user-circle",
+        "title": "Breeding point has terminate the hole.",
+        "text": "Bndulgence diminution so discovered mr apartments. Are off under folly death wrote cause her way spite. Plan upon yet way get cold spot its week. Almost do am or limits hearts. Resolve parties but why she shewing. She sang know now",
+        "btnText": "Read More",
+        "btnIcon": "fas fa-arrow-right",
+        "thumbFull": "4-full.jpg",
+        "thumb": "4.jpg"
+    },
+    {
+        "id": 9,
+        "date": "14 August, 2024",
+        "day": "14",
+        "month": "Aug",
+        "category": [
+            "Burger, Food"
+        ],
+        "dateIcon": "far fa-calendar-alt",
+        "author": "john Baus",
+        "authorIcon": "far fa-user-circle",
+        "title": "Overcame breeding point concerns has.",
+        "text": "Bndulgence diminution so discovered mr apartments. Are off under folly death wrote cause her way spite. Plan upon yet way get cold spot its week. Almost do am or limits hearts. Resolve parties but why she shewing. She sang know now",
+        "btnText": "Read More",
+        "btnIcon": "fas fa-arrow-right",
+        "thumbFull": "3-full.jpg",
+        "thumb": "3.jpg",
+        "animationDelay": "700"
+    },
+    {
+        "id": 10,
+        "date": "14 August, 2024",
+        "day": "14",
+        "month": "Aug",
+        "category": [
+            "Pizza, Food"
+        ],
+        "dateIcon": "far fa-calendar-alt",
+        "author": "john Baus",
+        "authorIcon": "far fa-user-circle",
+        "title": "Prefabricated passive house",
+        "text": "Bndulgence diminution so discovered mr apartments. Are off under folly death wrote cause her way spite. Plan upon yet way get cold spot its week. Almost do am or limits hearts. Resolve parties but why she shewing. She sang know now",
+        "btnText": "Read More",
+        "btnIcon": "fas fa-arrow-right",
+        "thumbFull": "6-full.jpg",
+        "thumb": "6.jpg"
+    },
+    {
+        "id": 11,
+        "date": "12 August, 2024",
+        "day": "12",
+        "month": "Aug",
+        "category": [
+            "Burger, Food"
+        ],
+        "dateIcon": "far fa-calendar-alt",
+        "author": "john Baus",
+        "authorIcon": "far fa-user-circle",
+        "title": "Picked up a Brussels burger Sprouts.",
+        "text": "Bndulgence diminution so discovered mr apartments. Are off under folly death wrote cause her way spite. Plan upon yet way get cold spot its week. Almost do am or limits hearts. Resolve parties but why she shewing. She sang know now",
+        "btnText": "Read More",
+        "btnIcon": "fas fa-arrow-right",
+        "thumbFull": "1-full.jpg",
+        "thumb": "1.jpg",
+        "animationDelay": "300"
+    },
+    {
+        "id": 12,
+        "date": "13 August, 2024",
+        "day": "13",
+        "month": "Aug",
+        "category": [
+            "Pizza, Food"
+        ],
+        "dateIcon": "far fa-calendar-alt",
+        "author": "Admin",
+        "authorIcon": "far fa-user-circle",
+        "title": "This prefabricated passive house highly",
+        "text": "Bndulgence diminution so discovered mr apartments. Are off under folly death wrote cause her way spite. Plan upon yet way get cold spot its week. Almost do am or limits hearts. Resolve parties but why she shewing. She sang know now",
+        "btnText": "Read More",
+        "btnIcon": "fas fa-arrow-right",
+        "thumbFull": "2-full.jpg",
+        "thumb": "2.jpg",
+        "animationDelay": "500"
+    },
+    {
+        "id": 13,
+        "date": "12 August, 2024",
+        "day": "12",
+        "month": "Aug",
+        "category": [
+            "Pizza, Food"
+        ],
+        "dateIcon": "far fa-calendar-alt",
+        "author": "Istiak Ahmed",
+        "authorIcon": "far fa-user-circle",
+        "title": "Breeding point has terminate the hole.",
+        "text": "Bndulgence diminution so discovered mr apartments. Are off under folly death wrote cause her way spite. Plan upon yet way get cold spot its week. Almost do am or limits hearts. Resolve parties but why she shewing. She sang know now",
+        "btnText": "Read More",
+        "btnIcon": "fas fa-arrow-right",
+        "thumbFull": "4-full.jpg",
+        "thumb": "4.jpg"
+    },
+    {
+        "id": 14,
+        "date": "14 August, 2024",
+        "day": "14",
+        "month": "Aug",
+        "category": [
+            "Burger, Food"
+        ],
+        "dateIcon": "far fa-calendar-alt",
+        "author": "john Baus",
+        "authorIcon": "far fa-user-circle",
+        "title": "Overcame breeding point concerns has.",
+        "text": "Bndulgence diminution so discovered mr apartments. Are off under folly death wrote cause her way spite. Plan upon yet way get cold spot its week. Almost do am or limits hearts. Resolve parties but why she shewing. She sang know now",
+        "btnText": "Read More",
+        "btnIcon": "fas fa-arrow-right",
+        "thumbFull": "3-full.jpg",
+        "thumb": "3.jpg",
+        "animationDelay": "700"
+    },
+    {
+        "id": 15,
+        "date": "13 August, 2024",
+        "day": "13",
+        "month": "Aug",
+        "category": [
+            "Burger, Food"
+        ],
+        "dateIcon": "far fa-calendar-alt",
+        "author": "Admin",
+        "authorIcon": "far fa-user-circle",
+        "title": "Picked up a Brussels burger Sprouts ham",
+        "text": "Bndulgence diminution so discovered mr apartments. Are off under folly death wrote cause her way spite. Plan upon yet way get cold spot its week. Almost do am or limits hearts. Resolve parties but why she shewing. She sang know now",
+        "btnText": "Read More",
+        "btnIcon": "fas fa-arrow-right",
+        "thumbFull": "5-full.jpg",
+        "thumb": "5.jpg"
+    }
+]

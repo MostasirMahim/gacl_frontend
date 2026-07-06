@@ -1,0 +1,50 @@
+[
+  {
+    "id": 1,
+    "title": "Classic chicken",
+    "badge": "Must Try",
+    "description": ["Ricotta", "goat cheese", "beetroot"],
+    "price": 35,
+    "thumb": "16.png"
+  },
+  {
+    "id": 2,
+    "title": "Cheese Burger",
+    "badge": null,
+    "description": ["Atlantic", "chips", "salad", "tartare"],
+    "price": 42,
+    "thumb": "17.png"
+  },
+  {
+    "id": 3,
+    "title": "Grilled Chicken",
+    "badge": "New Item",
+    "description": ["Truffle mash", "pepper sauce."],
+    "price": 28,
+    "thumb": "18.png"
+  },
+  {
+    "id": 4,
+    "title": "Margherita Pizza",
+    "badge": null,
+    "description": ["Ricotta", "goat cheese", "beetroot"],
+    "price": 15,
+    "thumb": "13.png"
+  },
+  {
+    "id": 5,
+    "title": "Pepperoni Pizza",
+    "badge": "Favourite",
+    "description": ["Atlantic", "chips", "salad", "tartare"],
+    "price": 29,
+    "thumb": "14.png"
+  },
+  {
+    "id": 6,
+    "title": "BBQ Chicken Pizza",
+    "badge": null,
+    "description": ["Truffle mash", "pepper sauce."],
+    "price": 45,
+    "thumb": "15.png"
+  }
+]

@@ -1,0 +1,14 @@
+[
+    {
+        "id": 1,
+        "thumb": "23.jpg",
+        "infoText": "19.png",
+        "itemDiscount": "21.png"
+    },
+    {
+        "id": 2,
+        "thumb": "24.jpg",
+        "infoText": "20.png",
+        "itemDiscount": "21.png"
+    }
+]

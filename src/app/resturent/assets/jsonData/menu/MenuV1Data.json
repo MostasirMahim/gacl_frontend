@@ -1,0 +1,77 @@
+[
+    {
+        "id": 1,
+        "thumb": "12.png",
+        "animation": "fadeInUp",
+        "delay": "100",
+        "title": "Breakfast",
+        "listData": [
+            {
+                "id": 1,
+                "listName": "Breakfast casserole",
+                "price": "$5 - $20"
+            },
+            {
+                "id": 2,
+                "listName": "Greek yogurt.",
+                "price": "$12 - $25"
+            },
+            {
+                "id": 3,
+                "listName": "Cottage cheese.",
+                "price": "$15 - $30"
+            }
+        ],
+        "btnText": "Make Order"
+    },
+    {
+        "id": 2,
+        "thumb": "13.png",
+        "animation": "fadeInUp",
+        "delay": "200",
+        "title": "Lunch",
+        "listData": [
+            {
+                "id": 1,
+                "listName": "Breakfast casserole",
+                "price": "$8 - $14"
+            },
+            {
+                "id": 2,
+                "listName": "Greek yogurt.",
+                "price": "$13 - $20"
+            },
+            {
+                "id": 3,
+                "listName": "Cottage cheese.",
+                "price": "$15 - $45"
+            }
+        ],
+        "btnText": "Make Order"
+    },
+    {
+        "id": 3,
+        "thumb": "12.png",
+        "animation": "fadeInUp",
+        "delay": "100",
+        "title": "Dinner",
+        "listData": [
+            {
+                "id": 1,
+                "listName": "Breakfast casserole",
+                "price": "$14 - $28"
+            },
+            {
+                "id": 2,
+                "listName": "Greek yogurt.",
+                "price": "$20 - $50"
+            },
+            {
+                "id": 3,
+                "listName": "Cottage cheese.",
+                "price": "$40 - $60"
+            }
+        ],
+        "btnText": "Make Order"
+    }
+]

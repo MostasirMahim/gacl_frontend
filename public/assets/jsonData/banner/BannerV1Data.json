@@ -1,0 +1,22 @@
+[
+    {
+        "id": 1,
+        "bgThumb": "20.jpg",
+        "subTitle": "Best fast food",
+        "titleFirst": "Choosing The",
+        "titleLast": "Best Food Items",
+        "text": "Plan upon yet way get cold spot its week. Almost do am or limits hearts. Resolve parties but why she shewing know.",
+        "btnText": "Explore menu",
+        "videoId": "V5w1OGknhlc"
+    },
+    {
+        "id": 2,
+        "bgThumb": "22.jpg",
+        "subTitle": "DELICIOUS FOOD",
+        "titleFirst": "Seasonal Food",
+        "titleLast": "Best & Delicious",
+        "text": "Enjoy an exceptional journey of taste. It’s our job every day to make every important aspect of the customer experience.",
+        "btnText": "Explore menu",
+        "videoId": "V5w1OGknhlc"
+    }
+]

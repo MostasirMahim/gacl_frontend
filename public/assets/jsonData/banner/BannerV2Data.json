@@ -1,0 +1,22 @@
+[
+    {
+        "id": 1,
+        "bgThumb": "3.jpg",
+        "subTitle": "Welcome To Restan",
+        "titleFirst": "Delicious Food & Wonderful",
+        "titleLast": "Eating Experience",
+        "textFirst": "Creating delicious premium food since 1980",
+        "textLast": "Book online or call (1800)456-6743",
+        "btnText": "Explore Menu"
+    },
+    {
+        "id": 2,
+        "bgThumb": "4.jpg",
+        "subTitle": "More Flavour",
+        "titleFirst": "Best Food & Wonderful",
+        "titleLast": "Eating Experience",
+        "textFirst": "Creating delicious premium food since 1980",
+        "textLast": "Book online or call (1800)456-6743",
+        "btnText": "Explore Menu"
+    }
+]

@@ -30,6 +30,12 @@ if (typeof setInterval !== "undefined") {
 export async function middleware(req: NextRequest) {
   const url = req.nextUrl.clone();
   const pathname = req.nextUrl.pathname;
+
+  // Allow public access to resturent routes
+  if (pathname === "/resturent" || pathname.startsWith("/resturent/")) {
+    return NextResponse.next();
+  }
+
   const token = req.cookies.get("access_token")?.value;
 
   if (!token) {
@@ -127,6 +133,6 @@ export async function middleware(req: NextRequest) {
 
 export const config = {
   matcher: [
-    "/((?!_next/static|_next/image|favicon.ico|robots.txt|assets|login|forget-password).*)",
+    "/((?!_next/static|_next/image|favicon.ico|robots.txt|assets|login|forget-password|resturent).*)",
   ],
 };

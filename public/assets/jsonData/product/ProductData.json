@@ -1,0 +1,169 @@
+[
+    {
+        "id": 1,
+        "thumb": "1.png",
+        "productTag": ["Cheese", "Pizza"],
+        "title": "Margherita Pizza",
+        "newPrice": 12.00,
+        "btnText": "Add to cart"
+    },
+    {
+        "id": 2,
+        "thumb": "2.png",
+        "badge": "Sale!",
+        "productTag": ["Creamy", "Burger"],
+        "title": "Margherita Pizza",
+        "newPrice": 8.00,
+        "oldPrice": 5.00,
+        "btnText": "Add to cart"
+    },
+    {
+        "id": 3,
+        "thumb": "3.png",
+        "productTag": ["Beef", "Steak"],
+        "title": "Grilled Flank Steak",
+        "newPrice": 14.00,
+        "btnText": "Add to cart"
+    },
+    {
+        "id": 4,
+        "thumb": "5.png",
+        "productTag": ["BBQ", "Meat"],
+        "title": "Barbecue Chicken",
+        "newPrice": 8.00,
+        "btnText": "Add to cart"
+    },
+    {
+        "id": 5,
+        "thumb": "8.png",
+        "productTag": ["Food", "Roll"],
+        "title": "Vegetable Roll",
+        "newPrice": 25.00,
+        "btnText": "Add to cart"
+    },
+    {
+        "id": 6,
+        "thumb": "6.png",
+        "productTag": ["Pasta", "Spicy"],
+        "title": "Creamy Pasta",
+        "newPrice": 18.00,
+        "oldPrice": 13.00,
+        "btnText": "Add to cart"
+    },
+    {
+        "id": 7,
+        "thumb": "7.png",
+        "productTag": ["Meat", "Shawarma"],
+        "title": "Chicken Shawarma",
+        "newPrice": 3.00,
+        "btnText": "Add to cart"
+    },
+    {
+        "id": 8,
+        "thumb": "4.png",
+        "productTag": ["Sandwich", "Chicken"],
+        "title": "Submarine Sandwich",
+        "newPrice": 6.00,
+        "btnText": "Add to cart"
+    },
+        {
+        "id": 9,
+        "thumb": "7.png",
+        "productTag": ["Meat", "Shawarma"],
+        "title": "Chicken Shawarma",
+        "newPrice": 3.00,
+        "btnText": "Add to cart"
+    },
+       {
+        "id": 10,
+        "thumb": "6.png",
+        "productTag": ["Pasta", "Spicy"],
+        "title": "Creamy Pasta",
+        "newPrice": 18.00,
+        "oldPrice": 13.00,
+        "btnText": "Add to cart"
+    },
+        {
+        "id": 11,
+        "thumb": "8.png",
+        "productTag": ["Food", "Roll"],
+        "title": "Vegetable Roll",
+        "newPrice": 25.00,
+        "btnText": "Add to cart"
+    },
+        {
+        "id": 12,
+        "thumb": "5.png",
+        "productTag": ["BBQ", "Meat"],
+        "title": "Barbecue Chicken",
+        "newPrice": 8.00,
+        "btnText": "Add to cart"
+    },
+        {
+        "id": 13,
+        "thumb": "3.png",
+        "productTag": ["Beef", "Steak"],
+        "title": "Grilled Flank Steak",
+        "newPrice": 14.00,
+        "btnText": "Add to cart"
+    },
+        {
+        "id": 14,
+        "thumb": "4.png",
+        "productTag": ["Sandwich", "Chicken"],
+        "title": "Submarine Sandwich",
+        "newPrice": 6.00,
+        "btnText": "Add to cart"
+    },
+        {
+        "id": 15,
+        "thumb": "1.png",
+        "productTag": ["Cheese", "Pizza"],
+        "title": "Margherita Pizza",
+        "newPrice": 12.00,
+        "btnText": "Add to cart"
+    },
+        {
+        "id": 16,
+        "thumb": "2.png",
+        "badge": "Sale!",
+        "productTag": ["Creamy", "Burger"],
+        "title": "Margherita Pizza",
+        "newPrice": 8.00,
+        "oldPrice": 5.00,
+        "btnText": "Add to cart"
+    },
+        {
+        "id": 17,
+        "thumb": "7.png",
+        "productTag": ["Meat", "Shawarma"],
+        "title": "Chicken Shawarma",
+        "newPrice": 3.00,
+        "btnText": "Add to cart"
+    },
+        {
+        "id": 18,
+        "thumb": "8.png",
+        "productTag": ["Food", "Roll"],
+        "title": "Vegetable Roll",
+        "newPrice": 25.00,
+        "btnText": "Add to cart"
+    },
+        {
+        "id": 19,
+        "thumb": "3.png",
+        "productTag": ["Beef", "Steak"],
+        "title": "Grilled Flank Steak",
+        "newPrice": 14.00,
+        "btnText": "Add to cart"
+    },
+        {
+        "id": 20,
+        "thumb": "6.png",
+        "productTag": ["Pasta", "Spicy"],
+        "title": "Creamy Pasta",
+        "newPrice": 18.00,
+        "oldPrice": 13.00,
+        "btnText": "Add to cart"
+    }
+]

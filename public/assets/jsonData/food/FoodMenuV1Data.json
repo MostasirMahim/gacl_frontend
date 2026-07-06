@@ -1,0 +1,47 @@
+[
+    {
+        "id": 1,
+        "thumb": "1.jpg",
+        "rating": 4.8,
+        "title": "Cheese Burger",
+        "text": "Resolve parties but why she shewing. She sang know now",
+        "oldPrice": 14.00,
+        "newPrice": 12.00
+    },
+    {
+        "id": 2,
+        "thumb": "3.jpg",
+        "rating": 4.9,
+        "title": "Burrata Sandwich",
+        "text": "Resolve parties but why she shewing. She sang know now",
+        "oldPrice": 14.00,
+        "newPrice": 12.00
+    },
+    {
+        "id": 3,
+        "thumb": "2.jpg",
+        "rating": 4.5,
+        "title": "Grilled Flank Steak",
+        "text": "Resolve parties but why she shewing. She sang know now",
+        "oldPrice": 14.00,
+        "newPrice": 12.00
+    },
+    {
+        "id": 4,
+        "thumb": "4.jpg",
+        "rating": 4.8,
+        "title": "Homemade Pizza",
+        "text": "Resolve parties but why she shewing. She sang know now",
+        "oldPrice": 14.00,
+        "newPrice": 12.00
+    },
+    {
+        "id": 5,
+        "thumb": "5.jpg",
+        "rating": 4.9,
+        "title": "Pasta Aglio Olio",
+        "text": "Resolve parties but why she shewing. She sang know now",
+        "oldPrice": 14.00,
+        "newPrice": 12.00
+    }
+]

@@ -1,0 +1,38 @@
+[
+    {
+        "id": 1,
+        "ratings": 5,
+        "rate": "5/5",
+        "title": "The best food ever",
+        "text": "Targeting consultation discover apartments. ndulgence off under folly death wrote cause her way spite. Plan upon yet way get cold spot its week. Almost do am or limits hearts. Resolve parties but why she shewing.",
+        "name": "Matthew J. Wyman",
+        "designation": "Senior Consultant"
+    },
+    {
+        "id": 2,
+        "ratings": 5,
+        "rate": "5/5",
+        "title": "Awesome and delicious food",
+        "text": "Breaking consultation discover apartments. ndulgence off under folly death wrote cause her way spite. Plan upon yet way get cold spot its week. Almost do am or limits hearts. Resolve parties but why she shewing.",
+        "name": "Istiak Ahmed",
+        "designation": "Marketing Manager"
+    },
+    {
+        "id": 3,
+        "ratings": 5,
+        "rate": "5/5",
+        "title": "The best food ever",
+        "text": "Targeting consultation discover apartments. ndulgence off under folly death wrote cause her way spite. Plan upon yet way get cold spot its week. Almost do am or limits hearts. Resolve parties but why she shewing.",
+        "name": "Matthew J. Wyman",
+        "designation": "Senior Consultant"
+    },
+    {
+        "id": 4,
+        "ratings": 5,
+        "rate": "5/5",
+        "title": "Awesome and delicious food",
+        "text": "Breaking consultation discover apartments. ndulgence off under folly death wrote cause her way spite. Plan upon yet way get cold spot its week. Almost do am or limits hearts. Resolve parties but why she shewing.",
+        "name": "Istiak Ahmed",
+        "designation": "Marketing Manager"
+    }
+]

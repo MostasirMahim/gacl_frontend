@@ -1,0 +1,34 @@
+[
+    {
+        "id": 1,
+        "title": "Hamburger",
+        "thumb": "9.png",
+        "price": 12,
+        "rating": 5,
+        "description": "The hamburger is the original and the best-known burger to date"
+    },
+    {
+        "id": 2,
+        "title": "Chicken Burger.",
+        "thumb": "10.png",
+        "price": 16,
+        "rating": 5,
+        "description": "The hamburger is the original and the best-known burger to date"
+    },
+    {
+        "id": 3,
+        "title": "Cheese Burger",
+        "thumb": "11.png",
+        "price": 25,
+        "rating": 5,
+        "description": "The hamburger is the original and the best-known burger to date"
+    },
+    {
+        "id": 4,
+        "title": "Bacon Burger",
+        "thumb": "12.png",
+        "price": 18,
+        "rating": 5,
+        "description": "The hamburger is the original and the best-known burger to date"
+    }
+]

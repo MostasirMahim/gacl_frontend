@@ -1,0 +1,74 @@
+[
+    {
+        "id": 1,
+        "thumb": "1.jpg",
+        "rating": 5.0,
+        "title": "Pizza Slice",
+        "text": "Cheese, Ham & Pineapple",
+        "delay": "100",
+        "newPrice": 12.00
+    },
+    {
+        "id": 2,
+        "thumb": "2.jpg",
+        "rating": 4.8,
+        "title": "Cheese Burger",
+        "text": "Cheese, Ham & Pineapple",
+        "delay": "200",
+        "newPrice": 14.00
+    },
+    {
+        "id": 3,
+        "thumb": "3.jpg",
+        "rating": 4.5,
+        "title": "Chicken Masala",
+        "text": "Cheese, Ham & Pineapple",
+        "delay": "300",
+        "newPrice": 16.00
+    },
+    {
+        "id": 4,
+        "thumb": "4.jpg",
+        "rating": 5.0,
+        "title": "Vegetable Roll",
+        "text": "Cheese, Ham & Pineapple",
+        "delay": "400",
+        "newPrice": 18.00
+    },
+    {
+        "id": 5,
+        "thumb": "17.jpg",
+        "rating": 4.7,
+        "title": "Salmon Steak",
+        "text": "Cheese, Ham & Pineapple",
+        "delay": "100",
+        "newPrice": 11.00
+    },
+    {
+        "id": 6,
+        "thumb": "18.jpg",
+        "rating": 5.0,
+        "title": "Fries McDonald's",
+        "text": "Cheese, Ham & Pineapple",
+        "delay": "200",
+        "newPrice": 13.00
+    },
+    {
+        "id": 7,
+        "thumb": "19.jpg",
+        "rating": 4.8,
+        "title": "Chocolate chip",
+        "text": "Cheese, Ham & Pineapple",
+        "delay": "300",
+        "newPrice": 15.00
+    },
+    {
+        "id": 8,
+        "thumb": "20.jpg",
+        "rating": 4.3,
+        "title": "Meatballs Pasta",
+        "text": "Cheese, Ham & Pineapple",
+        "delay": "400",
+        "newPrice": 17.00
+    }
+]

@@ -1,0 +1,23 @@
+[
+    {
+        "id": 1,
+        "thumb": "13.png",
+        "info": "Quality Foods",
+        "text": "Belonging sir curiosity discovery extremity yet forfeited prevailed own off. Traveling by introduced of mr terminated.",
+        "delay": "00"
+    },
+    {
+        "id": 2,
+        "thumb": "14.png",
+        "info": "Fast Delivery",
+        "text": "Belonging sir curiosity discovery extremity yet forfeited prevailed own off. Traveling by introduced of mr terminated.",
+        "delay": "200"
+    },
+    {
+        "id": 3,
+        "thumb": "15.png",
+        "info": "Delicious Recipes",
+        "text": "Belonging sir curiosity discovery extremity yet forfeited prevailed own off. Traveling by introduced of mr terminated.",
+        "delay": "400"
+    }
+]

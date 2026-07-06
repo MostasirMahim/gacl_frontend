@@ -1,0 +1,42 @@
+[
+    {
+        "id": 1,
+        "thumb": "1.jpg",
+        "serviceName": "Find Dining",
+        "openingHours": "06 PM - 09 PM",
+        "price": 50,
+        "items": 90,
+        "title": "Resolve parties but why she shewing. Zealously necessary breakfast. Surrounded sir motionless she end literature.",
+        "btnText": "Reserve a seat"
+    },
+    {
+        "id": 2,
+        "thumb": "2.jpg",
+        "serviceName": "Party And Event",
+        "openingHours": "06 PM - 09 PM",
+        "price": 80,
+        "items": 140,
+        "title": "Resolve parties but why she shewing. Zealously necessary breakfast. Surrounded sir motionless she end literature.",
+        "btnText": "Reserve a seat"
+    },
+    {
+        "id": 3,
+        "thumb": "3.jpg",
+        "serviceName": "Buffet",
+        "openingHours": "06 PM - 09 PM",
+        "price": 60,
+        "items": 110,
+        "title": "Resolve parties but why she shewing. Zealously necessary breakfast. Surrounded sir motionless she end literature.",
+        "btnText": "Reserve a seat"
+    },
+    {
+        "id": 4,
+        "thumb": "4.jpg",
+        "serviceName": "Burger Day",
+        "openingHours": "06 PM - 09 PM",
+        "price": 70,
+        "items": 120,
+        "title": "Resolve parties but why she shewing. Zealously necessary breakfast. Surrounded sir motionless she end literature.",
+        "btnText": "Reserve a seat"
+    }
+]

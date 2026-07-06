@@ -1,0 +1,102 @@
+{
+    "innerCarousel": [
+        {
+            "id": 1,
+            "activeClass": "active",
+            "thumb": "1.png",
+            "badge": "-16%"
+        },
+        {
+            "id": 2,
+            "activeClass": "",
+            "thumb": "2.png",
+            "badge": "-25%"
+        },
+        {
+            "id": 3,
+            "activeClass": "",
+            "thumb": "3.png",
+            "badge": "-33%"
+        },
+        {
+            "id": 4,
+            "activeClass": "",
+            "thumb": "4.png",
+            "badge": "-50%"
+        },
+        {
+            "id": 5,
+            "activeClass": "",
+            "thumb": "1.png",
+            "badge": "-16%"
+        },
+        {
+            "id": 6,
+            "activeClass": "",
+            "thumb": "2.png",
+            "badge": "-25%"
+        },
+        {
+            "id": 7,
+            "activeClass": "",
+            "thumb": "3.png",
+            "badge": "-33%"
+        },
+        {
+            "id": 8,
+            "activeClass": "",
+            "thumb": "4.png",
+            "badge": "-50%"
+        }
+    ],
+    "outerCarousel": [
+        {
+            "id": 1,
+            "activeClass": "active",
+            "thumb": "1.png",
+            "slideNumber": "0"
+        },
+        {
+            "id": 2,
+            "activeClass": "",
+            "thumb": "2.png",
+            "slideNumber": "1"
+        },
+        {
+            "id": 3,
+            "activeClass": "",
+            "thumb": "3.png",
+            "slideNumber": "2"
+        },
+        {
+            "id": 4,
+            "activeClass": "",
+            "thumb": "4.png",
+            "slideNumber": "3"
+        },
+        {
+            "id": 5,
+            "activeClass": "",
+            "thumb": "1.png",
+            "slideNumber": "5"
+        },
+        {
+            "id": 6,
+            "activeClass": "",
+            "thumb": "2.png",
+            "slideNumber": "6"
+        },
+        {
+            "id": 7,
+            "activeClass": "",
+            "thumb": "3.png",
+            "slideNumber": "7"
+        },
+        {
+            "id": 8,
+            "activeClass": "",
+            "thumb": "4.png",
+            "slideNumber": "8"
+        }
+    ]
+}

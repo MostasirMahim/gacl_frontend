@@ -1,0 +1,38 @@
+[
+    {
+        "id": 1,
+        "thumb": "2.jpg",
+        "subTitle": "Cheesy Favorite",
+        "title": "Crispy Crust Pizzeria"
+    },
+    {
+        "id": 2,
+        "thumb": "3.jpg",
+        "subTitle": "Grill Chicken",
+        "title": "Chicken Sandwich"
+    },
+    {
+        "id": 3,
+        "thumb": "4.jpg",
+        "subTitle": "Cheesy Favorite",
+        "title": "Salmon Steak"
+    },
+    {
+        "id": 4,
+        "thumb": "2.jpg",
+        "subTitle": "Cheesy Favorite",
+        "title": "Crispy Crust Pizzeria"
+    },
+    {
+        "id": 5,
+        "thumb": "3.jpg",
+        "subTitle": "Grill Chicken",
+        "title": "Chicken Sandwich"
+    },
+    {
+        "id": 6,
+        "thumb": "4.jpg",
+        "subTitle": "Cheesy Favorite",
+        "title": "Salmon Steak"
+    }
+]

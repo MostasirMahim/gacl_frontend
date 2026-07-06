@@ -1,0 +1,50 @@
+[
+    {
+        "id": 1,
+        "thumb": "25.jpg",
+        "category": "Main Dishes",
+        "name": "Chicken Alfredo"
+    },
+    {
+        "id": 2,
+        "thumb": "26.jpg",
+        "category": "Desserts",
+        "name": "Cheesecakes"
+    },
+    {
+        "id": 3,
+        "thumb": "27.jpg",
+        "category": "Sea Food",
+        "name": "Salmon Fry"
+    },
+    {
+        "id": 4,
+        "thumb": "28.jpg",
+        "category": "Beverage",
+        "name": "Hot chocolate"
+    },
+    {
+        "id": 5,
+        "thumb": "25.jpg",
+        "category": "Main Dishes",
+        "name": "Chicken Alfredo"
+    },
+    {
+        "id": 6,
+        "thumb": "26.jpg",
+        "category": "Desserts",
+        "name": "Cheesecakes"
+    },
+    {
+        "id": 7,
+        "thumb": "27.jpg",
+        "category": "Sea Food",
+        "name": "Salmon Fry"
+    },
+    {
+        "id": 8,
+        "thumb": "28.jpg",
+        "category": "Beverage",
+        "name": "Hot chocolate"
+    }
+]

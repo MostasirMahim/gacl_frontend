@@ -1,0 +1,374 @@
+[
+    {
+        "id": 1,
+        "thumb": "1.jpg",
+        "name": "Alexander Petllo",
+        "designation": "Assistant Chef",
+        "email": "alexander@digital.com",
+        "skillProgress": [
+            {
+                "id": 1,
+                "title": "Fast Food",
+                "end": 88
+            },
+            {
+                "id": 2,
+                "title": "Sea Food",
+                "end": 95
+            },
+            {
+                "id": 3,
+                "title": "Drinks & Juice",
+                "end": 80
+            }
+        ],
+        "memberData": [
+            {
+                "id": 1,
+                "listTitle": "Education",
+                "memberInfo": [
+                    {
+                        "id": 1,
+                        "title": "Residential College",
+                        "info": "BA Honours - Biology",
+                        "timeSpan": "2004 - 2008"
+                    },
+                    {
+                        "id": 2,
+                        "title": "University of Iowa",
+                        "info": "Master's degree - Macroeconomics",
+                        "timeSpan": "2009 - 2012"
+                    }
+                ]
+            },
+            {
+                "id": 2,
+                "listTitle": "Experience",
+                "memberInfo": [
+                    {
+                        "id": 1,
+                        "title": "Senior Chef",
+                        "info": "Dubia Arab Hotel",
+                        "timeSpan": "31 Aug, 2013"
+                    },
+                    {
+                        "id": 2,
+                        "title": "Master of Restaurant",
+                        "info": "Muskan Food Factory",
+                        "timeSpan": "12 Dec 2018"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "id": 2,
+        "thumb": "2.jpg",
+        "name": "Mendia Juxef",
+        "designation": "Burger King",
+        "email": "mendia@digital.com",
+        "skillProgress": [
+            {
+                "id": 1,
+                "title": "Fast Food",
+                "end": 88
+            },
+            {
+                "id": 2,
+                "title": "Sea Food",
+                "end": 95
+            },
+            {
+                "id": 3,
+                "title": "Drinks & Juice",
+                "end": 80
+            }
+        ],
+        "memberData": [
+            {
+                "id": 1,
+                "listTitle": "Education",
+                "memberInfo": [
+                    {
+                        "id": 1,
+                        "title": "Residential College",
+                        "info": "BA Honours - Biology",
+                        "timeSpan": "2004 - 2008"
+                    },
+                    {
+                        "id": 2,
+                        "title": "University of Iowa",
+                        "info": "Master's degree - Macroeconomics",
+                        "timeSpan": "2009 - 2012"
+                    }
+                ]
+            },
+            {
+                "id": 2,
+                "listTitle": "Experience",
+                "memberInfo": [
+                    {
+                        "id": 1,
+                        "title": "Senior Chef",
+                        "info": "Dubia Arab Hotel",
+                        "timeSpan": "31 Aug, 2013"
+                    },
+                    {
+                        "id": 2,
+                        "title": "Master of Restaurant",
+                        "info": "Muskan Food Factory",
+                        "timeSpan": "12 Dec 2018"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "id": 3,
+        "thumb": "3.jpg",
+        "name": "Petro William",
+        "designation": "Main Chef",
+        "email": "petro@digital.com",
+        "skillProgress": [
+            {
+                "id": 1,
+                "title": "Fast Food",
+                "end": 88
+            },
+            {
+                "id": 2,
+                "title": "Sea Food",
+                "end": 95
+            },
+            {
+                "id": 3,
+                "title": "Drinks & Juice",
+                "end": 80
+            }
+        ],
+        "memberData": [
+            {
+                "id": 1,
+                "listTitle": "Education",
+                "memberInfo": [
+                    {
+                        "id": 1,
+                        "title": "Residential College",
+                        "info": "BA Honours - Biology",
+                        "timeSpan": "2004 - 2008"
+                    },
+                    {
+                        "id": 2,
+                        "title": "University of Iowa",
+                        "info": "Master's degree - Macroeconomics",
+                        "timeSpan": "2009 - 2012"
+                    }
+                ]
+            },
+            {
+                "id": 2,
+                "listTitle": "Experience",
+                "memberInfo": [
+                    {
+                        "id": 1,
+                        "title": "Senior Chef",
+                        "info": "Dubia Arab Hotel",
+                        "timeSpan": "31 Aug, 2013"
+                    },
+                    {
+                        "id": 2,
+                        "title": "Master of Restaurant",
+                        "info": "Muskan Food Factory",
+                        "timeSpan": "12 Dec 2018"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "id": 4,
+        "thumb": "8.jpg",
+        "name": "Alexander Petllo",
+        "designation": "Assistant Chef",
+        "email": "petllo@digital.com",
+        "skillProgress": [
+            {
+                "id": 1,
+                "title": "Fast Food",
+                "end": 88
+            },
+            {
+                "id": 2,
+                "title": "Sea Food",
+                "end": 95
+            },
+            {
+                "id": 3,
+                "title": "Drinks & Juice",
+                "end": 80
+            }
+        ],
+        "memberData": [
+            {
+                "id": 1,
+                "listTitle": "Education",
+                "memberInfo": [
+                    {
+                        "id": 1,
+                        "title": "Residential College",
+                        "info": "BA Honours - Biology",
+                        "timeSpan": "2004 - 2008"
+                    },
+                    {
+                        "id": 2,
+                        "title": "University of Iowa",
+                        "info": "Master's degree - Macroeconomics",
+                        "timeSpan": "2009 - 2012"
+                    }
+                ]
+            },
+            {
+                "id": 2,
+                "listTitle": "Experience",
+                "memberInfo": [
+                    {
+                        "id": 1,
+                        "title": "Senior Chef",
+                        "info": "Dubia Arab Hotel",
+                        "timeSpan": "31 Aug, 2013"
+                    },
+                    {
+                        "id": 2,
+                        "title": "Master of Restaurant",
+                        "info": "Muskan Food Factory",
+                        "timeSpan": "12 Dec 2018"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "id": 5,
+        "thumb": "9.jpg",
+        "name": "Mendia Juxef",
+        "designation": "Burger King",
+        "email": "juxef@digital.com",
+        "skillProgress": [
+            {
+                "id": 1,
+                "title": "Fast Food",
+                "end": 88
+            },
+            {
+                "id": 2,
+                "title": "Sea Food",
+                "end": 95
+            },
+            {
+                "id": 3,
+                "title": "Drinks & Juice",
+                "end": 80
+            }
+        ],
+        "memberData": [
+            {
+                "id": 1,
+                "listTitle": "Education",
+                "memberInfo": [
+                    {
+                        "id": 1,
+                        "title": "Residential College",
+                        "info": "BA Honours - Biology",
+                        "timeSpan": "2004 - 2008"
+                    },
+                    {
+                        "id": 2,
+                        "title": "University of Iowa",
+                        "info": "Master's degree - Macroeconomics",
+                        "timeSpan": "2009 - 2012"
+                    }
+                ]
+            },
+            {
+                "id": 2,
+                "listTitle": "Experience",
+                "memberInfo": [
+                    {
+                        "id": 1,
+                        "title": "Senior Chef",
+                        "info": "Dubia Arab Hotel",
+                        "timeSpan": "31 Aug, 2013"
+                    },
+                    {
+                        "id": 2,
+                        "title": "Master of Restaurant",
+                        "info": "Muskan Food Factory",
+                        "timeSpan": "12 Dec 2018"
+                    }
+                ]
+            }
+        ]
+    },
+    {
+        "id": 6,
+        "thumb": "10.jpg",
+        "name": "Petro William",
+        "designation": "Main Chef",
+        "email": "william@digital.com",
+        "skillProgress": [
+            {
+                "id": 1,
+                "title": "Fast Food",
+                "end": 88
+            },
+            {
+                "id": 2,
+                "title": "Sea Food",
+                "end": 95
+            },
+            {
+                "id": 3,
+                "title": "Drinks & Juice",
+                "end": 80
+            }
+        ],
+        "memberData": [
+            {
+                "id": 1,
+                "listTitle": "Education",
+                "memberInfo": [
+                    {
+                        "id": 1,
+                        "title": "Residential College",
+                        "info": "BA Honours - Biology",
+                        "timeSpan": "2004 - 2008"
+                    },
+                    {
+                        "id": 2,
+                        "title": "University of Iowa",
+                        "info": "Master's degree - Macroeconomics",
+                        "timeSpan": "2009 - 2012"
+                    }
+                ]
+            },
+            {
+                "id": 2,
+                "listTitle": "Experience",
+                "memberInfo": [
+                    {
+                        "id": 1,
+                        "title": "Senior Chef",
+                        "info": "Dubia Arab Hotel",
+                        "timeSpan": "31 Aug, 2013"
+                    },
+                    {
+                        "id": 2,
+                        "title": "Master of Restaurant",
+                        "info": "Muskan Food Factory",
+                        "timeSpan": "12 Dec 2018"
+                    }
+                ]
+            }
+        ]
+    }
+]
