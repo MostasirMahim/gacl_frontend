@@ -41,17 +41,15 @@ export const metadata: Metadata = {
   title: "Restan - Food & Restaurant NextJS Template",
 };
 
-export default function RootLayout({
+export default function RestaurantLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${marcellus.variable} ${lato.variable} ${dancingScript.variable}`}>
-      <body>
-        <Dependency />
-        {children}
-      </body>
-    </html>
+    <div className={`${marcellus.variable} ${lato.variable} ${dancingScript.variable}`}>
+      <Dependency />
+      {children}
+    </div>
   );
 }

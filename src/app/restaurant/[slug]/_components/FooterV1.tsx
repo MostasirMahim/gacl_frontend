@@ -2,13 +2,13 @@ import Link from 'next/link';
 import FooterRowContent from './FooterRowContent';
 import Image from 'next/image';
 
-const FooterV1 = () => {
+const FooterV1 = ({ footerConfig }: { footerConfig?: any }) => {
     return (
         <>
             <footer>
                 <div className="container">
                     <div className="footer-style-one bg-dark text-light">
-                        <FooterRowContent />
+                        <FooterRowContent footerConfig={footerConfig} />
                     </div>
                 </div>
 

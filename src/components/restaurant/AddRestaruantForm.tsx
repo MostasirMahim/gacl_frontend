@@ -63,6 +63,18 @@ export default function AddRestaurantForm({
       booking_fees_per_seat: "",
       cuisine_type: "",
       restaurant_type: "",
+      slug: "",
+      slogan_1: "",
+      slogan_2: "",
+      banner_title: "",
+      delivery_banner_title: "",
+      delivery_banner_text: "",
+      reservation_banner_title: "",
+      reservation_banner_text: "",
+      reservation_banner_launch_menu: "",
+      reservation_banner_dinner_menu: "",
+      meta_title: "",
+      meta_description: "",
       "reset-button-0": "",
       "submit-button-0": "",
     },
@@ -613,6 +625,201 @@ export default function AddRestaurantForm({
               </FormItem>
             )}
           />
+
+          {/* New Fields */}
+          <FormField
+            control={form.control}
+            name="slug"
+            render={({ field }) => (
+              <FormItem className="col-span-12 md:col-span-6 flex flex-col gap-2 space-y-0 items-start">
+                <FormLabel>Restaurant Slug (URL part)</FormLabel>
+                <div className="w-full">
+                  <FormControl>
+                    <Input placeholder="kfc-dhaka" type="text" {...field} />
+                  </FormControl>
+                  <FormDescription>Unique URL slug (e.g. kfc-dhaka)</FormDescription>
+                  <FormMessage />
+                </div>
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="slogan_1"
+            render={({ field }) => (
+              <FormItem className="col-span-12 md:col-span-6 flex flex-col gap-2 space-y-0 items-start">
+                <FormLabel>Slogan 1</FormLabel>
+                <div className="w-full">
+                  <FormControl>
+                    <Input placeholder="Fresh and Hot" type="text" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </div>
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="slogan_2"
+            render={({ field }) => (
+              <FormItem className="col-span-12 md:col-span-6 flex flex-col gap-2 space-y-0 items-start">
+                <FormLabel>Slogan 2</FormLabel>
+                <div className="w-full">
+                  <FormControl>
+                    <Input placeholder="Best chicken in town" type="text" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </div>
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="banner_title"
+            render={({ field }) => (
+              <FormItem className="col-span-12 md:col-span-6 flex flex-col gap-2 space-y-0 items-start">
+                <FormLabel>Hero Banner Title</FormLabel>
+                <div className="w-full">
+                  <FormControl>
+                    <Input placeholder="Welcome to KFC" type="text" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </div>
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="delivery_banner_title"
+            render={({ field }) => (
+              <FormItem className="col-span-12 md:col-span-6 flex flex-col gap-2 space-y-0 items-start">
+                <FormLabel>Delivery Banner Title</FormLabel>
+                <div className="w-full">
+                  <FormControl>
+                    <Input placeholder="30 Minutes Delivery!" type="text" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </div>
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="delivery_banner_text"
+            render={({ field }) => (
+              <FormItem className="col-span-12 flex flex-col gap-2 space-y-0 items-start">
+                <FormLabel>Delivery Banner Description</FormLabel>
+                <div className="w-full">
+                  <FormControl>
+                    <Textarea placeholder="A relaxing and pleasant atmosphere..." {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </div>
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="reservation_banner_title"
+            render={({ field }) => (
+              <FormItem className="col-span-12 md:col-span-6 flex flex-col gap-2 space-y-0 items-start">
+                <FormLabel>Reservation Banner Title</FormLabel>
+                <div className="w-full">
+                  <FormControl>
+                    <Input placeholder="Reservation Your Favorite Private Table" type="text" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </div>
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="reservation_banner_text"
+            render={({ field }) => (
+              <FormItem className="col-span-12 flex flex-col gap-2 space-y-0 items-start">
+                <FormLabel>Reservation Banner Description</FormLabel>
+                <div className="w-full">
+                  <FormControl>
+                    <Textarea placeholder="Enjoy a nice dinner..." {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </div>
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="reservation_banner_launch_menu"
+            render={({ field }) => (
+              <FormItem className="col-span-12 md:col-span-6 flex flex-col gap-2 space-y-0 items-start">
+                <FormLabel>Lunch Menu Subtitle / Stats</FormLabel>
+                <div className="w-full">
+                  <FormControl>
+                    <Input placeholder="30+ items" type="text" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </div>
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="reservation_banner_dinner_menu"
+            render={({ field }) => (
+              <FormItem className="col-span-12 md:col-span-6 flex flex-col gap-2 space-y-0 items-start">
+                <FormLabel>Dinner Menu Subtitle / Stats</FormLabel>
+                <div className="w-full">
+                  <FormControl>
+                    <Input placeholder="50+ items" type="text" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </div>
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="meta_title"
+            render={({ field }) => (
+              <FormItem className="col-span-12 md:col-span-6 flex flex-col gap-2 space-y-0 items-start">
+                <FormLabel>SEO Meta Title</FormLabel>
+                <div className="w-full">
+                  <FormControl>
+                    <Input placeholder="KFC Dhaka - Best Fried Chicken" type="text" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </div>
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="meta_description"
+            render={({ field }) => (
+              <FormItem className="col-span-12 flex flex-col gap-2 space-y-0 items-start">
+                <FormLabel>SEO Meta Description</FormLabel>
+                <div className="w-full">
+                  <FormControl>
+                    <Textarea placeholder="Order chicken online from KFC Dhaka..." {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </div>
+              </FormItem>
+            )}
+          />
+
           <FormField
             control={form.control}
             name="reset-button-0"

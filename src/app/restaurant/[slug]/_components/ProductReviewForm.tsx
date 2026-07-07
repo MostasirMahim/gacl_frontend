@@ -1,16 +1,37 @@
 "use client"
+import { useState } from 'react';
+import axiosInstance from "@/lib/axiosInstance";
 
-interface FormEventHandler {
-    (event: React.FormEvent<HTMLFormElement>): void;
+interface ProductReviewFormProps {
+    itemId?: number;
 }
 
-const ProductReviewForm = () => {
+const ProductReviewForm = ({ itemId }: ProductReviewFormProps) => {
+    const [rating, setRating] = useState(5);
+    const [reviewText, setReviewText] = useState("");
+    const [submitting, setSubmitting] = useState(false);
 
-    const handleForm: FormEventHandler = (event) => {
-        event.preventDefault()
-        const form = event.target as HTMLFormElement;
-        form.reset()
-        alert("Thanks For Your Review! (Static submit)")
+    const handleForm = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        if (!itemId) {
+            alert("Thanks For Your Review! (Static submit)");
+            return;
+        }
+        setSubmitting(true);
+        try {
+            await axiosInstance.post(`/api/portal-management/v1/items/${itemId}/reviews/`, {
+                rating: rating,
+                review_text: reviewText
+            });
+            alert("Thanks For Your Review!");
+            setReviewText("");
+            window.location.reload();
+        } catch (error: any) {
+            console.error(error);
+            alert(error.response?.data?.message || "Failed to submit review. Please make sure you are logged in as a member.");
+        } finally {
+            setSubmitting(false);
+        }
     }
 
     return (
@@ -18,29 +39,43 @@ const ProductReviewForm = () => {
             <form className="contact-form" onSubmit={handleForm}>
                 <div className="row">
                     <div className="col-lg-12">
-                        <div className="form-group comments">
-                            <textarea className="form-control" id="comments" name="comments" placeholder="Tell Us About Project *" autoComplete='off' required />
-                        </div>
-                    </div>
-                </div>
-                <div className="row">
-                    <div className="col-lg-6">
-                        <div className="form-group">
-                            <input className="form-control" id="name" name="name" placeholder="Name" type="text" autoComplete='off' required />
-                            <span className="alert-error"></span>
-                        </div>
-                    </div>
-                    <div className="col-lg-6">
-                        <div className="form-group">
-                            <input className="form-control" id="email" name="email" placeholder="Email*" type="email" autoComplete='off' required />
-                            <span className="alert-error"></span>
+                        <div className="rating-select mb-3">
+                            <span className="mr-2">Your Rating:</span>
+                            <span>
+                                {[1, 2, 3, 4, 5].map((star) => (
+                                    <span 
+                                        key={star} 
+                                        onClick={() => setRating(star)} 
+                                        style={{ cursor: 'pointer' }}
+                                        className="text-warning mr-1"
+                                    >
+                                        <i className={star <= rating ? "fas fa-star" : "far fa-star"}></i>
+                                    </span>
+                                ))}
+                            </span>
                         </div>
                     </div>
                 </div>
                 <div className="row">
                     <div className="col-lg-12">
-                        <button type="submit" name="submit" id="submit">
-                            Post Review
+                        <div className="form-group comments">
+                            <textarea 
+                                className="form-control" 
+                                id="comments" 
+                                name="comments" 
+                                placeholder="Your Review *" 
+                                value={reviewText}
+                                onChange={(e) => setReviewText(e.target.value)}
+                                autoComplete='off' 
+                                required 
+                            />
+                        </div>
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-lg-12">
+                        <button type="submit" name="submit" id="submit" disabled={submitting}>
+                            {submitting ? "Posting..." : "Post Review"}
                         </button>
                     </div>
                 </div>

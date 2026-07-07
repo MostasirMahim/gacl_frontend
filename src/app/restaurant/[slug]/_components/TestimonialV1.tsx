@@ -5,7 +5,24 @@ import Image from 'next/image';
 import TestimonialV1Data from "../assets/jsonData/testimonial/TestimonialV1Data.json"
 import SingleTestimonialV1 from './SingleTestimonialV1';
 
-const TestimonialV1 = () => {
+interface TestimonialType {
+    id: number;
+    rating?: number;
+    ratings?: number;
+    rate?: string;
+    title: string;
+    text: string;
+    name: string;
+    designation: string;
+}
+
+interface TestimonialV1Props {
+    testimonials?: TestimonialType[];
+}
+
+const TestimonialV1 = ({ testimonials }: TestimonialV1Props) => {
+    const list = testimonials && testimonials.length > 0 ? testimonials : TestimonialV1Data;
+
     return (
         <>
             <div className="testimonial-area bg-gray default-padding">
@@ -46,7 +63,7 @@ const TestimonialV1 = () => {
                                 }}
                             >
                                 <div className="swiper-wrapper">
-                                    {TestimonialV1Data.map(testimonial =>
+                                    {list.map(testimonial =>
                                         <SwiperSlide key={testimonial.id}>
                                             <SingleTestimonialV1 testimonial={testimonial} />
                                         </SwiperSlide>

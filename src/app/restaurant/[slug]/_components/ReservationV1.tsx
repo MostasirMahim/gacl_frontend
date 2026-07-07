@@ -1,11 +1,24 @@
 import ReservationForm from './ReservationForm';
 
+interface RestaurantType {
+    reservation_banner_title?: string;
+    reservation_banner_text?: string;
+    reservation_banner_launch_menu?: string;
+    reservation_banner_dinner_menu?: string;
+}
+
 interface DataType {
     btnClass?: string;
     sectionClass?: string;
+    restaurant?: RestaurantType;
 }
 
-const ReservationV1 = ({ btnClass, sectionClass }: DataType) => {
+const ReservationV1 = ({ btnClass, sectionClass, restaurant }: DataType) => {
+    const title = restaurant?.reservation_banner_title || "Reservation Your Favorite Private Table";
+    const text = restaurant?.reservation_banner_text || "A relaxing and pleasant atmosphere, good jazz, dinner, and cocktails. The Patio Time Bar opens in the center of Florence. The only bar inspired by the 1960s, it will give you a experience that you’ll have a hard time forgetting.";
+    const lunchStats = restaurant?.reservation_banner_launch_menu || "30+ items";
+    const dinnerStats = restaurant?.reservation_banner_dinner_menu || "50+ items";
+
     return (
         <>
             <div className={`reservation-area default-padding-top bg-cover shadow dark ${sectionClass}`}
@@ -15,22 +28,22 @@ const ReservationV1 = ({ btnClass, sectionClass }: DataType) => {
                         <div className="col-lg-6">
                             <div className="reservation-info text-light">
                                 <h4 className="sub-heading">Reservation</h4>
-                                <h2 className="title">Reservation Your Favorite Private Table</h2>
+                                <h2 className="title">{title}</h2>
                                 <p>
-                                    {`A relaxing and pleasant atmosphere, good jazz, dinner, and cocktails. The Patio Time Bar opens in the center of Florence. The only bar inspired by the 1960s, it will give you a experience that you’ll have a hard time forgetting.`}
+                                    {text}
                                 </p>
                                 <div className="reservation-time">
                                     <ul>
                                         <li>
                                             <h4>Launch Menu</h4>
                                             <p>
-                                                30+ items
+                                                {lunchStats}
                                             </p>
                                         </li>
                                         <li>
                                             <h4>Dinner Menu</h4>
                                             <p>
-                                                50+ items
+                                                {dinnerStats}
                                             </p>
                                         </li>
                                     </ul>

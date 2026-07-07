@@ -1,25 +1,52 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import { getMediaUrl } from '@/lib/utils';
 
 interface DataType {
     id: number;
-    thumb: string;
+    slug?: string;
+    thumb?: string;
+    cover_image?: string;
+    item_media?: { image: string }[];
     badge?: string;
-    title: string;
-    newPrice: number;
+    title?: string;
+    name?: string;
+    newPrice?: number;
+    selling_price?: string | number;
     oldPrice?: number;
-    btnText: string;
-    productTag: string[];
+    half_price?: string | number;
+    btnText?: string;
+    productTag?: string[];
+    tags?: string[];
 }
 
-const SingleProductGrid = ({ product }: { product: DataType }) => {
-    const { id, thumb, badge, title, newPrice, oldPrice, btnText, productTag } = product
+const SingleProductGrid = ({ product, restaurantSlug }: { product: DataType; restaurantSlug?: string }) => {
+    const { id, slug, thumb, cover_image, item_media, badge, title, name, newPrice, selling_price, oldPrice, half_price, btnText, productTag, tags } = product;
 
-    const newP = (Math.floor(newPrice)).toFixed(2);
-    const oldP = oldPrice?.toFixed(2) ?? '';
+    const displayTitle = name || title || "Item";
+    const displayNewPrice = selling_price !== undefined && selling_price !== null ? Number(selling_price) : (newPrice || 0);
+    const displayOldPrice = half_price !== undefined && half_price !== null ? Number(half_price) : oldPrice;
+    const displayTags = tags || productTag || [];
+    const displayBtnText = btnText || "Add to Cart";
+
+    const newP = (Math.floor(displayNewPrice)).toFixed(2);
+    const oldP = displayOldPrice?.toFixed(2) ?? '';
+
+    let imageSrc = "/assets/img/shop/1.jpg";
+    if (cover_image) {
+        imageSrc = getMediaUrl(cover_image);
+    } else if (item_media && item_media.length > 0) {
+        imageSrc = getMediaUrl(item_media[0].image);
+    } else if (thumb) {
+        imageSrc = thumb.startsWith("/media") || thumb.startsWith("http") ? getMediaUrl(thumb) : `/assets/img/shop/${thumb}`;
+    }
+
+    const itemDetailLink = restaurantSlug && slug
+        ? `/restaurant/${restaurantSlug}/items/${slug}`
+        : `/restaurant/shop-single/${id}`;
 
     const handleAddToCart = () => {
-        alert(`${title} added to cart! (Static Mode)`);
+        alert(`${displayTitle} added to cart! (Static Mode)`);
     };
 
     return (
@@ -30,8 +57,8 @@ const SingleProductGrid = ({ product }: { product: DataType }) => {
                         {badge &&
                             <span className="onsale">{badge}</span>
                         }
-                        <Link href={`/resturent/shop-single/${id}`}>
-                            <Image src={`/assets/img/shop/${thumb}`} alt="Product" width={450} height={450} />
+                        <Link href={itemDetailLink}>
+                            <Image src={imageSrc} alt="Product" width={450} height={450} />
                         </Link>
                         <div className="shop-action">
                             <ul>
@@ -46,21 +73,21 @@ const SingleProductGrid = ({ product }: { product: DataType }) => {
                     </div>
                     <div className="product-caption">
                         <div className="product-tags">
-                            {productTag.map((data, index) =>
+                            {displayTags.map((data, index) =>
                                 <Link href="#" key={index}>{data}</Link>
                             )}
                         </div>
                         <h4 className="product-title">
-                            <Link href={`/resturent/shop-single/${id}`}>{title}</Link>
+                            <Link href={itemDetailLink}>{displayTitle}</Link>
                         </h4>
                         <div className="price">
-                            <span className={oldPrice ? '' : 'd-none'}>
-                                <del>${oldPrice ? oldP : ''}</del>
+                            <span className={displayOldPrice ? '' : 'd-none'}>
+                                <del>${displayOldPrice ? oldP : ''}</del>
                             </span>
                             <span className='ms-2'>${newP}</span>
                         </div>
                         <Link href="#" className="cart-btn" scroll={false} onClick={handleAddToCart}>
-                            <i className="fas fa-shopping-bag"></i>{btnText}
+                            <i className="fas fa-shopping-bag"></i>{displayBtnText}
                         </Link>
                     </div>
                 </div>

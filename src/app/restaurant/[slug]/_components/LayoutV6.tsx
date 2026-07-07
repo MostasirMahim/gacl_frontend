@@ -8,17 +8,20 @@ interface DataType {
   breadCrumb?: string;
   title?: string;
   logoWhite?: boolean;
+  bgImage?: string;
+  homePath?: string;
+  footerConfig?: any;
 }
 
-const LayoutV6 = ({ children, breadCrumb, title, logoWhite }: DataType) => {
+const LayoutV6 = ({ children, breadCrumb, title, logoWhite, bgImage, homePath, footerConfig }: DataType) => {
   return (
     <>
       <div className="wrapper">
         <HeaderTopV1 />
         {/* <HeaderV6 logoWhite={logoWhite} /> */}
-        {breadCrumb && <BreadCrumb breadCrumb={breadCrumb} title={title} />}
+        {breadCrumb && <BreadCrumb breadCrumb={breadCrumb} title={title} bgImage={bgImage} homePath={homePath} />}
         {children}
-        <FooterV1 />
+        <FooterV1 footerConfig={footerConfig} />
       </div>
     </>
   );

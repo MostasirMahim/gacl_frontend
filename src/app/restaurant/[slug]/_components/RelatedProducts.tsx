@@ -4,7 +4,14 @@ import SingleProductGrid from './SingleProductGrid';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Keyboard, Autoplay } from 'swiper/modules';
 
-const RelatedProducts = () => {
+interface RelatedProductsProps {
+    relatedItems?: any[];
+    restaurantSlug?: string;
+}
+
+const RelatedProducts = ({ relatedItems, restaurantSlug }: RelatedProductsProps) => {
+    const list = relatedItems && relatedItems.length > 0 ? relatedItems : ProductData;
+
     return (
         <>
             <div className="related-products carousel-shadow">
@@ -29,9 +36,9 @@ const RelatedProducts = () => {
                                 },
                             }}
                         >
-                            {ProductData.map(product =>
+                            {list.map(product =>
                                 <SwiperSlide key={product.id}>
-                                    <SingleProductGrid product={product} />
+                                    <SingleProductGrid product={product} restaurantSlug={restaurantSlug} />
                                 </SwiperSlide>
                             )}
                         </Swiper>

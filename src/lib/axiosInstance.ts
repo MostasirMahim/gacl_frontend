@@ -20,7 +20,12 @@ axiosInstance.interceptors.response.use(
 
       console.group(`✅ [AXIOS_SUCCESS_${logId}] HTTP ${status} -> ${url}`);
       console.log("Request Method:", response.config.method?.toUpperCase());
-      console.log("Response Data:", responseData);
+      if (typeof window === "undefined") {
+        console.log("Response Data:");
+        console.dir(responseData, { depth: null, colors: true });
+      } else {
+        console.log("Response Data:", responseData);
+      }
       console.groupEnd();
     }
     return response;
@@ -35,7 +40,12 @@ axiosInstance.interceptors.response.use(
       console.group(`🚨 [AXIOS_ERR_${logId}] HTTP ${status} -> ${url}`);
       console.error("Request Method:", error?.config?.method?.toUpperCase());
       console.error("Request Data:", error?.config?.data);
-      console.error("Server Response Payload:", responseData);
+      if (typeof window === "undefined") {
+        console.error("Server Response Payload:");
+        console.dir(responseData, { depth: null, colors: true });
+      } else {
+        console.error("Server Response Payload:", responseData);
+      }
       console.groupEnd();
     }
     return Promise.reject(error);

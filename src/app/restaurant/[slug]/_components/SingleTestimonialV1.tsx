@@ -2,8 +2,9 @@ import RatingsStar from './RatingsStar';
 
 interface DataType {
     id: number;
-    ratings: number;
-    rate: string;
+    ratings?: number;
+    rating?: number;
+    rate?: string;
     title: string;
     text: string;
     name: string;
@@ -11,7 +12,9 @@ interface DataType {
 }
 
 const SingleTestimonialV1 = ({ testimonial }: { testimonial: DataType }) => {
-    const { ratings, rate, title, text, name, designation } = testimonial
+    const { id, ratings, rating, rate, title, text, name, designation } = testimonial;
+    const finalRating = rating !== undefined && rating !== null ? rating : (ratings || 5);
+    const finalRate = rate ? rate : `${finalRating} out of 5`;
 
     return (
         <>
@@ -20,9 +23,9 @@ const SingleTestimonialV1 = ({ testimonial }: { testimonial: DataType }) => {
                     <div className="content">
                         <div className="rating">
                             <div className="icon">
-                                <RatingsStar ratings={ratings} />
+                                <RatingsStar ratings={finalRating} />
                             </div>
-                            <span>({rate})</span>
+                            <span>({finalRate})</span>
                         </div>
                         <h2>{title}</h2>
                         <p>{`“${text}”`}</p>

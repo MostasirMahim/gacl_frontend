@@ -1,44 +1,70 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import { getMediaUrl } from '@/lib/utils';
 
 interface DataType {
-    id: number
-    thumb: string
-    name: string
-    price: number
-    priceFull: number
-    leftInfo: string
-    rightInfo: string
+    id: number;
+    slug?: string;
+    thumb?: string;
+    cover_image?: string;
+    item_media?: { image: string }[];
+    name: string;
+    price?: number;
+    half_price?: number | string;
+    priceFull?: number;
+    selling_price?: number | string;
+    leftInfo?: string;
+    sub_items?: string;
+    rightInfo?: string;
+    free_bonus?: string;
 }
 
-const SingleFoodMenuTabV3 = ({ data }: { data: DataType }) => {
-    const { id, thumb, name, price, priceFull, leftInfo, rightInfo } = data
+const SingleFoodMenuTabV3 = ({ data, restaurantSlug }: { data: DataType; restaurantSlug?: string }) => {
+    const { id, slug, thumb, cover_image, item_media, name, price, half_price, priceFull, selling_price, leftInfo, sub_items, rightInfo, free_bonus } = data;
+
+    const displayPrice = half_price !== undefined && half_price !== null ? half_price : price;
+    const displayPriceFull = selling_price !== undefined && selling_price !== null ? selling_price : priceFull;
+    const displaySub = sub_items !== undefined && sub_items !== null ? sub_items : leftInfo;
+    const displayBonus = free_bonus !== undefined && free_bonus !== null ? free_bonus : rightInfo;
+
+    let imageSrc = "/assets/img/food/1.jpg";
+    if (cover_image) {
+        imageSrc = getMediaUrl(cover_image);
+    } else if (item_media && item_media.length > 0) {
+        imageSrc = getMediaUrl(item_media[0].image);
+    } else if (thumb) {
+        imageSrc = thumb.startsWith("/media") || thumb.startsWith("http") ? getMediaUrl(thumb) : `/assets/img/food/${thumb}`;
+    }
+
+    const itemDetailLink = restaurantSlug && slug
+        ? `/restaurant/${restaurantSlug}/items/${slug}`
+        : `/restaurant/shop-single/${id}`;
 
     return (
         <>
             <li>
                 <div className="thumbnail">
-                    <Image src={`/assets/img/food/${thumb}`} alt="Image Not Found" width={200} height={200} />
+                    <Image src={imageSrc} alt="Image Not Found" width={200} height={200} />
                 </div>
                 <div className="content">
                     <div className="top">
                         <div className="title">
-                            <h4><Link href={`/resturent/shop-single/${id}`}>{name}</Link></h4>
+                            <h4><Link href={itemDetailLink}>{name}</Link></h4>
                         </div>
                         <div className="price">
-                            <span>${price}</span>
-                            <span>${priceFull}</span>
+                            {displayPrice !== undefined && displayPrice !== null && <span>${displayPrice}</span>}
+                            {displayPriceFull !== undefined && displayPriceFull !== null && <span>${displayPriceFull}</span>}
                         </div>
                     </div>
                     <div className="bottom">
                         <div className="left">
                             <p>
-                                {leftInfo}
+                                {displaySub}
                             </p>
                         </div>
                         <div className="right">
                             <p>
-                                {rightInfo}
+                                {displayBonus}
                             </p>
                         </div>
                     </div>

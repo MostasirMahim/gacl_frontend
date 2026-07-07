@@ -24,6 +24,7 @@ import { Button } from "@/components/ui/button";
 import { toast } from "react-toastify";
 import axiosInstance from "@/lib/axiosInstance";
 import { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 
 interface Props {
   restaurantData: any;
@@ -46,18 +47,47 @@ function RestaurantItemAddForm({ restaurantData, categoriesData }: Props) {
       selling_price: 0,
       category: "",
       restaurant: "",
+      slug: "",
+      sku: "",
+      stock: 0,
+      half_price: "",
+      free_bonus: "",
+      sub_items: "",
+      tags: "",
+      menu_section: "",
       "reset-button-0": "",
       "submit-button-0": "",
     },
   });
   const { setError } = form;
 
+  const selectedRestaurant = form.watch("restaurant");
+
+  const { data: sectionsData } = useQuery({
+    queryKey: ["restaurantSections", selectedRestaurant],
+    queryFn: async () => {
+      if (!selectedRestaurant) return [];
+      const res = await axiosInstance.get(`/api/portal-management/v1/restaurants/${selectedRestaurant}/sections/`);
+      return res?.data?.data || [];
+    },
+    enabled: !!selectedRestaurant
+  });
+  const sections = sectionsData || [];
+
   async function onSubmit(values: any) {
+    const payload = {
+      ...values,
+      tags: values.tags ? values.tags.split(",").map((t: string) => t.trim()).filter(Boolean) : [],
+      half_price: values.half_price === "" ? null : Number(values.half_price),
+      menu_section: values.menu_section === "" ? null : Number(values.menu_section),
+      stock: values.stock === "" ? 0 : Number(values.stock)
+    };
+
     try {
       setLoading(true);
       const response = await axiosInstance.post(
         "/api/restaurants/v1/restaurants/items/",
-        values
+        payload
       );
       if (response.status === 201) {
         toast.success("Item added successfully");
@@ -373,6 +403,154 @@ function RestaurantItemAddForm({ restaurantData, categoriesData }: Props) {
               </FormItem>
             )}
           />
+
+          {/* New Fields */}
+          <FormField
+            control={form.control}
+            name="slug"
+            render={({ field }) => (
+              <FormItem className="col-span-12 md:col-span-6 flex flex-col gap-2 space-y-0 items-start">
+                <FormLabel>Slug</FormLabel>
+                <div className="w-full">
+                  <FormControl>
+                    <Input placeholder="item-slug" type="text" {...field} />
+                  </FormControl>
+                  <FormDescription>Unique URL identifier (e.g. cheese-pizza)</FormDescription>
+                  <FormMessage />
+                </div>
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="sku"
+            render={({ field }) => (
+              <FormItem className="col-span-12 md:col-span-6 flex flex-col gap-2 space-y-0 items-start">
+                <FormLabel>SKU Code</FormLabel>
+                <div className="w-full">
+                  <FormControl>
+                    <Input placeholder="CHZ-PIZ-01" type="text" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </div>
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="stock"
+            render={({ field }) => (
+              <FormItem className="col-span-12 md:col-span-6 flex flex-col gap-2 space-y-0 items-start">
+                <FormLabel>Stock Quantity</FormLabel>
+                <div className="w-full">
+                  <FormControl>
+                    <Input type="number" placeholder="100" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </div>
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="half_price"
+            render={({ field }) => (
+              <FormItem className="col-span-12 md:col-span-6 flex flex-col gap-2 space-y-0 items-start">
+                <FormLabel>Half Price (Optional)</FormLabel>
+                <div className="w-full">
+                  <FormControl>
+                    <Input type="number" placeholder="e.g. 5.99" {...field} />
+                  </FormControl>
+                  <FormDescription>Can be null / empty</FormDescription>
+                  <FormMessage />
+                </div>
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="free_bonus"
+            render={({ field }) => (
+              <FormItem className="col-span-12 md:col-span-6 flex flex-col gap-2 space-y-0 items-start">
+                <FormLabel>Free Bonus tag (Optional)</FormLabel>
+                <div className="w-full">
+                  <FormControl>
+                    <Input placeholder="e.g. Free garlic bread" type="text" {...field} />
+                  </FormControl>
+                  <FormDescription>Can be null / empty</FormDescription>
+                  <FormMessage />
+                </div>
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="tags"
+            render={({ field }) => (
+              <FormItem className="col-span-12 md:col-span-6 flex flex-col gap-2 space-y-0 items-start">
+                <FormLabel>Tags (Comma separated)</FormLabel>
+                <div className="w-full">
+                  <FormControl>
+                    <Input placeholder="e.g. CheesePizza, Spicy" type="text" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </div>
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="sub_items"
+            render={({ field }) => (
+              <FormItem className="col-span-12 flex flex-col gap-2 space-y-0 items-start">
+                <FormLabel>Ingredients / Sub Items list</FormLabel>
+                <div className="w-full">
+                  <FormControl>
+                    <Textarea placeholder="e.g. Ricotta / goat cheese / beetroot" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </div>
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="menu_section"
+            render={({ field }) => (
+              <FormItem className="col-span-12 flex flex-col gap-2 space-y-0 items-start">
+                <FormLabel>Menu Section</FormLabel>
+                <div className="w-full">
+                  <FormControl>
+                    <Select
+                      key="select-sections"
+                      value={field.value}
+                      onValueChange={field.onChange}
+                    >
+                      <SelectTrigger className="w-full ">
+                        <SelectValue placeholder="Select section (after restaurant selected)" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {sections.map((section: any) => (
+                          <SelectItem key={section.id} value={`${section.id}`}>
+                            {section.title}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </FormControl>
+                  <FormMessage />
+                </div>
+              </FormItem>
+            )}
+          />
+
           <FormField
             control={form.control}
             name="reset-button-0"
