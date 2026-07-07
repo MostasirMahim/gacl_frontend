@@ -23,6 +23,15 @@ interface FooterConfigType {
 }
 
 const FooterRowContent = ({ footerConfig }: { footerConfig?: FooterConfigType }) => {
+    const formatExternalLink = (url: string) => {
+        if (!url) return "#";
+        const trimmed = url.trim();
+        if (trimmed.startsWith("http://") || trimmed.startsWith("https://") || trimmed.startsWith("/") || trimmed.startsWith("#")) {
+            return trimmed;
+        }
+        return `https://${trimmed}`;
+    };
+
     const aboutText = footerConfig?.about_us?.text || "Continued at zealously necessary is Surrounded sir motionless she end literature. Gay direction neglected.";
     const fbLink = footerConfig?.about_us?.facebook || "https://facebook.com";
     const twitterLink = footerConfig?.about_us?.twitter || "https://twitter.com";
@@ -54,22 +63,22 @@ const FooterRowContent = ({ footerConfig }: { footerConfig?: FooterConfigType })
                         <p>{aboutText}</p>
                         <ul className="footer-social">
                             <li>
-                                <a href={fbLink} target='_blank' rel="noreferrer">
+                                <a href={formatExternalLink(fbLink)} target='_blank' rel="noreferrer">
                                     <i className="fab fa-facebook-f"></i>
                                 </a>
                             </li>
                             <li>
-                                <a href={twitterLink} target='_blank' rel="noreferrer">
+                                <a href={formatExternalLink(twitterLink)} target='_blank' rel="noreferrer">
                                     <i className="fab fa-twitter"></i>
                                 </a>
                             </li>
                             <li>
-                                <a href={youtubeLink} target='_blank' rel="noreferrer">
+                                <a href={formatExternalLink(youtubeLink)} target='_blank' rel="noreferrer">
                                     <i className="fab fa-youtube"></i>
                                 </a>
                             </li>
                             <li>
-                                <a href={linkedinLink} target='_blank' rel="noreferrer">
+                                <a href={formatExternalLink(linkedinLink)} target='_blank' rel="noreferrer">
                                     <i className="fab fa-linkedin-in"></i>
                                 </a>
                             </li>

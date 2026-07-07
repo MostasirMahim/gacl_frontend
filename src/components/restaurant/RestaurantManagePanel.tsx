@@ -173,12 +173,9 @@ export default function RestaurantManagePanel({
         },
       };
 
-      const fd = new FormData();
-      fd.append("footer_config", JSON.stringify(payload));
-
       await axiosInstance.patch(
         `/api/restaurants/v1/restaurants/${restaurantId}/detail/`,
-        fd,
+        { footer_config: payload },
       );
 
       queryClient.invalidateQueries({ queryKey: ["restaurantDetail", restaurantId] });
