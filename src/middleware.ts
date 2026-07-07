@@ -2,7 +2,6 @@ import { protected_routes } from "@/lib/protected_routes";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
-
 interface PermissionCache {
   permissions: string[];
   timestamp: number;
@@ -32,7 +31,7 @@ export async function middleware(req: NextRequest) {
   const pathname = req.nextUrl.pathname;
 
   // Allow public access to resturent routes
-  if (pathname === "/resturent" || pathname.startsWith("/resturent/")) {
+  if (pathname === "/restaurant" || pathname.startsWith("/restaurant/")) {
     return NextResponse.next();
   }
 
@@ -68,7 +67,7 @@ export async function middleware(req: NextRequest) {
           },
           cache: "no-store",
           credentials: "include",
-        }
+        },
       );
 
       const json = await apiRes.json();
@@ -117,7 +116,7 @@ export async function middleware(req: NextRequest) {
   }
 
   const matchedRoute = protected_routes.find(
-    (route) => pathname === route.path || pathname.startsWith(`${route.path}/`)
+    (route) => pathname === route.path || pathname.startsWith(`${route.path}/`),
   );
 
   if (
@@ -133,6 +132,6 @@ export async function middleware(req: NextRequest) {
 
 export const config = {
   matcher: [
-    "/((?!_next/static|_next/image|favicon.ico|robots.txt|assets|login|forget-password|resturent).*)",
+    "/((?!_next/static|_next/image|favicon.ico|robots.txt|assets|login|forget-password|restaurant).*)",
   ],
 };
