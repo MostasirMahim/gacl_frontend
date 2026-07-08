@@ -16,6 +16,7 @@ import './assets/css/validnavs.css';
 import './assets/css/style.css';
 
 import Dependency from "./_components/Dependency";
+import CartSideSheet from "./_components/shop/CartSideSheet";
 import type { Metadata } from "next";
 import { Marcellus, Lato, Dancing_Script } from 'next/font/google';
 
@@ -43,13 +44,16 @@ export const metadata: Metadata = {
 
 export default function RestaurantLayout({
   children,
+  params,
 }: Readonly<{
   children: React.ReactNode;
+  params: { slug: string };
 }>) {
   return (
     <div className={`${marcellus.variable} ${lato.variable} ${dancingScript.variable}`}>
       <Dependency />
       {children}
+      <CartSideSheet restaurantSlug={params.slug} />
     </div>
   );
 }

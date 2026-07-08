@@ -1,6 +1,5 @@
 "use client";
 import { useEffect } from "react";
-import { ScrollToTop } from "react-simple-scroll-up";
 import { ToastContainer } from "react-toastify";
 import AOS from 'aos'
 import 'aos/dist/aos.css';
@@ -27,7 +26,6 @@ const Dependency = () => {
 
     return (
         <>
-            <ScrollToTop symbol={<i className="fas fa-long-arrow-up"></i>} />
             <ToastContainer />
         </>
     );

@@ -1,4 +1,5 @@
 "use client";
+import { useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Keyboard, Autoplay } from "swiper/modules";
 import ProductCarouselData from "../../assets/jsonData/product/ProductCarouselData.json";
@@ -8,6 +9,8 @@ import RelatedProducts from "../RelatedProducts";
 import Image from "next/image";
 import { getMediaUrl } from "@/lib/utils";
 import RatingsStar from "../RatingsStar";
+import { toast } from "react-toastify";
+import { useRestaurantCartStore } from "@/store/useRestaurantCartStore";
 
 interface ItemDetailType {
   id: number;
@@ -51,6 +54,10 @@ const ShopSinglePageContent = ({
   // Resolve dynamic vs static mockup fields
   const isDynamic = productInfo.name !== undefined;
 
+  const [quantity, setQuantity] = useState(1);
+  const [portion, setPortion] = useState<"full" | "half">("full");
+  const addItem = useRestaurantCartStore((state) => state.addItem);
+
   const title = isDynamic ? productInfo.name : productInfo.title;
   const newPrice = isDynamic
     ? Number(productInfo.selling_price)
@@ -75,7 +82,11 @@ const ShopSinglePageContent = ({
     ? productInfo.description || "No description available."
     : "The Aspire 5 is a compact laptop in a thin case with a metal cover, a high-quality Full HD IPS display and a rich set of interfaces. Thanks to its powerful components, the laptop can handle resource-intensive tasks perfectly and is also suitable for most games.";
 
-  const newP = Math.floor(newPrice).toFixed(2);
+  const activePrice = isDynamic && portion === "half" && productInfo.half_price
+    ? Number(productInfo.half_price)
+    : newPrice;
+
+  const newP = Number(activePrice).toFixed(2);
   const oldP = oldPrice?.toFixed(2) ?? "";
 
   // Calculate overall average rating from dynamic reviews
@@ -111,8 +122,37 @@ const ShopSinglePageContent = ({
         thumb: `/assets/img/shop/${data.thumb}`,
       }));
 
-  const handleAddToCart = () => {
-    alert(`${title} added to cart! (Static Mode)`);
+  const handleAddToCart = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (!isDynamic) {
+      alert(`${title} added to cart! (Static Mode)`);
+      return;
+    }
+
+    if (productInfo.stock <= 0) {
+      toast.error("This item is currently out of stock.");
+      return;
+    }
+
+    const price = portion === "half" && productInfo.half_price
+      ? Number(productInfo.half_price)
+      : Number(productInfo.selling_price);
+
+    const cover_image = hasMedia ? productInfo.item_media[0].image : undefined;
+
+    addItem(
+      restaurantSlug || "",
+      {
+        item_id: productInfo.id,
+        name: productInfo.name,
+        price,
+        portion,
+        cover_image,
+        sku: productInfo.sku,
+      },
+      quantity
+    );
+    toast.success(`Added ${quantity} x ${title} (${portion} portion) to cart!`);
   };
 
   return (
@@ -216,13 +256,34 @@ const ShopSinglePageContent = ({
                   </div>
                   <h2 className="product-title">{title}</h2>
                   <div className="price">
-                    <span className={oldPrice ? "" : "d-none"}>
-                      <del>${oldPrice ? oldP : ""}</del>
-                    </span>
-                    <span className="ms-2">${newP}</span>
+                    {portion === "full" && productInfo?.half_price ? (
+                      <span>
+                        Portion price: ${newP}
+                      </span>
+                    ) : (
+                      <span className="ms-2">${newP}</span>
+                    )}
                   </div>
-                  <div className="product-stock validthemes-in-stock">
+                  <div className="product-stock validthemes-in-stock d-flex align-items-center">
                     <span>{stockStatus}</span>
+                    {isDynamic && productInfo.half_price && (
+                      <button
+                        type="button"
+                        className="btn btn-sm ms-3 py-1 px-2"
+                        style={{
+                          backgroundColor: portion === "half" ? "var(--color-primary)" : "var(--dark)",
+                          color: "var(--white)",
+                          border: "1px solid var(--color-primary)",
+                          fontSize: "12px",
+                          fontWeight: "bold",
+                          borderRadius: "4px",
+                          transition: "all 0.3s ease"
+                        }}
+                        onClick={() => setPortion(portion === "full" ? "half" : "full")}
+                      >
+                        {portion === "half" ? "Portion: Half (Switch to Full)" : "Portion: Full (Switch to Half)"}
+                      </button>
+                    )}
                   </div>
                   <p>{description}</p>
                   <div className="product-purchase-list">
@@ -231,8 +292,12 @@ const ShopSinglePageContent = ({
                       id="quantity"
                       step="1"
                       name="quantity"
-                      min="0"
-                      placeholder="0"
+                      min="1"
+                      value={quantity}
+                      onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
+                      placeholder="1"
+                      className="form-control"
+                      style={{ width: "80px", display: "inline-block", marginRight: "10px" }}
                     />
                     <Link
                       href="#"
@@ -241,7 +306,7 @@ const ShopSinglePageContent = ({
                       scroll={false}
                     >
                       <i className="fas fa-shopping-cart"></i>
-                      Add to cart
+                      Order Now
                     </Link>
                     <div className="shop-action">
                       <ul>
