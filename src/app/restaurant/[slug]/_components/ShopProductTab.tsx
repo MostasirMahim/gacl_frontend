@@ -2,12 +2,15 @@ import ProductReviewForm from './ProductReviewForm';
 import Link from 'next/link';
 import Image from 'next/image';
 import RatingsStar from './RatingsStar';
+import { getMediaUrl } from '@/lib/utils';
 
 interface ReviewType {
     id: number;
     rating: number;
     review_text: string;
     member_name: string;
+    reviewer_avatar?: string;
+    is_active?: boolean;
     created_at?: string;
 }
 
@@ -18,7 +21,7 @@ interface ShopProductTabProps {
 }
 
 const ShopProductTab = ({ itemId, reviews, additionalInfo }: ShopProductTabProps) => {
-    const reviewsCount = reviews ? reviews.length : 1;
+    const reviewsCount = reviews ? reviews.length : 0;
     const hasAdditional = additionalInfo && Object.keys(additionalInfo).length > 0;
 
     return (
@@ -96,14 +99,19 @@ const ShopProductTab = ({ itemId, reviews, additionalInfo }: ShopProductTabProps
                                         reviews.map((rev) => (
                                             <div className="item" key={rev.id}>
                                                 <div className="thumb">
-                                                    <Image src="/assets/img/team/1.jpg" width={800} height={800} alt="Thumb" />
+                                                    <Image 
+                                                        src={rev.reviewer_avatar ? getMediaUrl(rev.reviewer_avatar) : "/assets/img/team/1.jpg"} 
+                                                        width={800} 
+                                                        height={800} 
+                                                        alt="Thumb" 
+                                                    />
                                                 </div>
                                                 <div className="info">
                                                     <div className="rating">
                                                         <RatingsStar ratings={rev.rating} />
                                                     </div>
                                                     <div className="review-date">
-                                                        {rev.created_at ? new Date(rev.created_at).toLocaleDateString() : "April 8, 2021"}
+                                                        {rev.created_at ? new Date(rev.created_at).toLocaleDateString() : ''}
                                                     </div>
                                                     <div className="review-authro">
                                                         <h5>{rev.member_name}</h5>
@@ -115,46 +123,10 @@ const ShopProductTab = ({ itemId, reviews, additionalInfo }: ShopProductTabProps
                                             </div>
                                         ))
                                     ) : (
-                                        <>
-                                            <div className="item">
-                                                <div className="thumb">
-                                                    <Image src="/assets/img/team/1.jpg" width={800} height={800} alt="Thumb" />
-                                                </div>
-                                                <div className="info">
-                                                    <div className="rating">
-                                                        <i className="fas fa-star"></i>
-                                                        <i className="fas fa-star"></i>
-                                                        <i className="fas fa-star"></i>
-                                                        <i className="fas fa-star"></i>
-                                                        <i className="fas fa-star-half-alt"></i>
-                                                    </div>
-                                                    <div className="review-date">April 8, 2021</div>
-                                                    <div className="review-authro"><h5>Aleesha Brown</h5></div>
-                                                    <p>
-                                                        Highly recommended. Will purchase more in future.
-                                                    </p>
-                                                </div>
-                                            </div>
-                                            <div className="item">
-                                                <div className="thumb">
-                                                    <Image src="/assets/img/team/2.jpg" width={800} height={800} alt="Thumb" />
-                                                </div>
-                                                <div className="info">
-                                                    <div className="rating">
-                                                        <i className="fas fa-star"></i>
-                                                        <i className="fas fa-star"></i>
-                                                        <i className="fas fa-star"></i>
-                                                        <i className="fas fa-star"></i>
-                                                        <i className="fas fa-star-half-alt"></i>
-                                                    </div>
-                                                    <div className="review-date">April 8, 2021</div>
-                                                    <div className="review-authro"><h5>Sarah Albert</h5></div>
-                                                    <p>
-                                                        Great product quality!
-                                                    </p>
-                                                </div>
-                                            </div>
-                                        </>
+                                        <div style={{ padding: '20px 0', color: '#999', textAlign: 'center' }}>
+                                            <i className="far fa-comment-dots" style={{ fontSize: '2rem', marginBottom: '10px', display: 'block' }}></i>
+                                            No reviews yet for this item.
+                                        </div>
                                     )}
                                 </div>
                                 <div className="review-form">

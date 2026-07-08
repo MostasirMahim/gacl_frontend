@@ -208,6 +208,17 @@ export default function RestaurantManagePanel({
   const [editTestimonial, setEditTestimonial] = useState<any>(null);
   const [tv, setTv] = useState<any>({});
 
+  const [reviewModalOpen, setReviewModalOpen] = useState(false);
+  const [editReview, setEditReview] = useState<any>(null);
+  const [revVal, setRevVal] = useState<any>({
+    item: "",
+    reviewer_name: "",
+    rating: 5,
+    review_text: "",
+    is_active: true,
+  });
+  const [reviewAvatarFile, setReviewAvatarFile] = useState<File | null>(null);
+
   // ----------------------------------------
   // Overview Actions
   // ----------------------------------------
@@ -626,6 +637,73 @@ export default function RestaurantManagePanel({
       } catch (e: any) {
         toast.error("Failed to delete review");
       }
+    }
+  }
+
+  function startAddReview() {
+    setEditReview(null);
+    setRevVal({
+      item: items[0]?.id || "",
+      reviewer_name: "",
+      rating: 5,
+      review_text: "",
+      is_active: true,
+    });
+    setReviewAvatarFile(null);
+    setReviewModalOpen(true);
+  }
+
+  function startEditReview(rev: any) {
+    setEditReview(rev);
+    setRevVal({
+      item: rev.item || "",
+      reviewer_name: rev.reviewer_name || rev.member_name || "",
+      rating: rev.rating || 5,
+      review_text: rev.review_text || "",
+      is_active: rev.is_active ?? true,
+    });
+    setReviewAvatarFile(null);
+    setReviewModalOpen(true);
+  }
+
+  async function saveReview() {
+    try {
+      const fd = new FormData();
+      fd.append("item", String(revVal.item));
+      fd.append("reviewer_name", revVal.reviewer_name);
+      fd.append("rating", String(revVal.rating));
+      fd.append("review_text", revVal.review_text);
+      fd.append("is_active", String(revVal.is_active));
+      if (reviewAvatarFile) {
+        fd.append("reviewer_avatar", reviewAvatarFile);
+      }
+
+      const headers = { "Content-Type": "multipart/form-data" };
+
+      if (editReview) {
+        await axiosInstance.patch(
+          `/api/portal-management/v1/reviews/${editReview.id}/`,
+          fd,
+          { headers },
+        );
+        toast.success("Review updated successfully");
+      } else {
+        await axiosInstance.post(
+          `/api/portal-management/v1/restaurants/${restaurantId}/reviews/`,
+          fd,
+          { headers },
+        );
+        toast.success("Review created successfully");
+      }
+      setReviewModalOpen(false);
+      queryClient.invalidateQueries({
+        queryKey: ["restaurantReviews", restaurantId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["restaurantDetail", restaurantId],
+      });
+    } catch (e: any) {
+      toast.error(e?.response?.data?.message || "Failed to save review");
     }
   }
 
@@ -1126,11 +1204,16 @@ export default function RestaurantManagePanel({
       {/* REVIEWS TAB */}
       {activeTab === "reviews" && (
         <div className="p-6 bg-card rounded-xl border border-border/50 shadow-sm space-y-4">
-          <div>
-            <h2 className="text-xl font-semibold">Member Reviews Moderation</h2>
-            <p className="text-xs text-muted-foreground mt-0.5">
-              Moderate customer reviews submitted dynamically
-            </p>
+          <div className="flex items-center justify-between">
+            <div>
+              <h2 className="text-xl font-semibold">Reviews Moderation</h2>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                Manage, add, and moderate food item reviews
+              </p>
+            </div>
+            <Button size="sm" onClick={startAddReview} className="h-8 gap-1">
+              <Plus className="w-3.5 h-3.5" /> Add Review
+            </Button>
           </div>
           {loadingReviews ? (
             <LoadingDots />
@@ -1186,6 +1269,14 @@ export default function RestaurantManagePanel({
                               Approve
                             </>
                           )}
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="outline"
+                          className="h-8 w-8 p-0"
+                          onClick={() => startEditReview(rev)}
+                        >
+                          <Pencil className="w-3.5 h-3.5" />
                         </Button>
                         <Button
                           size="sm"
@@ -2116,6 +2207,122 @@ export default function RestaurantManagePanel({
             </div>
             <Button onClick={saveTestimonial} className="w-full mt-2">
               Save Testimonial
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
+      {/* REVIEW EDIT/ADD DIALOG */}
+      <Dialog
+        open={reviewModalOpen}
+        onOpenChange={setReviewModalOpen}
+      >
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle>
+              {editReview ? "Edit Review" : "Add Review"}
+            </DialogTitle>
+          </DialogHeader>
+          <div className="space-y-3">
+            <div>
+              <label className="text-xs text-muted-foreground block mb-1">
+                Select Food Item
+              </label>
+              <select
+                value={revVal.item}
+                onChange={(e) => setRevVal({ ...revVal, item: e.target.value })}
+                className="w-full h-10 px-3 border border-input rounded-md text-sm bg-background"
+                disabled={!!editReview}
+              >
+                <option value="">-- Select Item --</option>
+                {items.map((it: any) => (
+                  <option key={it.id} value={it.id}>
+                    {it.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="text-xs text-muted-foreground">
+                Reviewer Name
+              </label>
+              <Input
+                value={revVal.reviewer_name || ""}
+                placeholder="e.g. John Doe"
+                onChange={(e) => setRevVal({ ...revVal, reviewer_name: e.target.value })}
+              />
+            </div>
+            <div>
+              <label className="text-xs text-muted-foreground block">
+                Reviewer Avatar{" "}
+                <span className="text-[10px] text-primary font-medium">
+                  (Recommended: 800x800 px)
+                </span>
+              </label>
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    const img = new Image();
+                    img.src = URL.createObjectURL(file);
+                    img.onload = () => {
+                      URL.revokeObjectURL(img.src);
+                      if (
+                        Math.abs(img.width - 800) > 50 ||
+                        Math.abs(img.height - 800) > 50
+                      ) {
+                        toast.warning(
+                          `Image size warning: selected avatar is ${img.width}x${img.height}px. Best dimensions are 800x800px to maintain consistent layout.`
+                        );
+                      }
+                    };
+                    setReviewAvatarFile(file);
+                  } else {
+                    setReviewAvatarFile(null);
+                  }
+                }}
+                className="mt-1 block text-xs"
+              />
+            </div>
+            <div>
+              <label className="text-xs text-muted-foreground block mb-1">
+                Rating (1 to 5)
+              </label>
+              <select
+                value={revVal.rating}
+                onChange={(e) =>
+                  setRevVal({ ...revVal, rating: Number(e.target.value) })
+                }
+                className="w-full h-10 px-3 border border-input rounded-md text-sm bg-background"
+              >
+                {[1, 2, 3, 4, 5].map((n) => (
+                  <option key={n} value={n}>
+                    {n} Stars
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="text-xs text-muted-foreground">
+                Review Text
+              </label>
+              <Textarea
+                value={revVal.review_text || ""}
+                placeholder="Tell us what you thought of the dish..."
+                onChange={(e) => setRevVal({ ...revVal, review_text: e.target.value })}
+              />
+            </div>
+            <div className="flex items-center gap-2 pt-1">
+              <Switch
+                checked={revVal.is_active}
+                onCheckedChange={(v) => setRevVal({ ...revVal, is_active: v })}
+              />
+              <span className="text-xs font-medium">Display Active</span>
+            </div>
+            <Button onClick={saveReview} className="w-full mt-2">
+              Save Review
             </Button>
           </div>
         </DialogContent>

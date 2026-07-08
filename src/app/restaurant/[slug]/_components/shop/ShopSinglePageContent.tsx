@@ -7,6 +7,7 @@ import ShopProductTab from "../ShopProductTab";
 import RelatedProducts from "../RelatedProducts";
 import Image from "next/image";
 import { getMediaUrl } from "@/lib/utils";
+import RatingsStar from "../RatingsStar";
 
 interface ItemDetailType {
   id: number;
@@ -77,6 +78,12 @@ const ShopSinglePageContent = ({
   const newP = Math.floor(newPrice).toFixed(2);
   const oldP = oldPrice?.toFixed(2) ?? "";
 
+  // Calculate overall average rating from dynamic reviews
+  const avgRating =
+    reviews && reviews.length > 0
+      ? reviews.reduce((sum: number, r: any) => sum + Number(r.rating), 0) / reviews.length
+      : 0;
+
   // Resolve images
   const hasMedia =
     isDynamic && productInfo.item_media && productInfo.item_media.length > 0;
@@ -146,11 +153,13 @@ const ShopSinglePageContent = ({
                     <div className="carousel-indicators">
                       <Swiper
                         className="product-gallery-carousel"
+                        style={{ width: "100%" }}
                         modules={[Keyboard, Autoplay]}
                         loop={outerCarouselImages.length > 4}
                         slidesPerView={2}
                         spaceBetween={30}
                         autoplay={false}
+                        centerInsufficientSlides={true}
                         breakpoints={{
                           768: {
                             slidesPerView: 3,
@@ -176,6 +185,7 @@ const ShopSinglePageContent = ({
                                 alt="thumb"
                                 width={450}
                                 height={450}
+                                style={{ width: "100%", height: "auto" }}
                               />
                             </div>
                           </SwiperSlide>
@@ -199,13 +209,9 @@ const ShopSinglePageContent = ({
                     </div>
                     <div className="review-count">
                       <div className="rating">
-                        <i className="fas fa-star"></i>
-                        <i className="fas fa-star"></i>
-                        <i className="fas fa-star"></i>
-                        <i className="fas fa-star"></i>
-                        <i className="fas fa-star-half-alt"></i>
+                        <RatingsStar ratings={avgRating} />
                       </div>
-                      <span>({reviews ? reviews.length : 8} Review)</span>
+                      <span>({reviews ? reviews.length : 0} Review)</span>
                     </div>
                   </div>
                   <h2 className="product-title">{title}</h2>
