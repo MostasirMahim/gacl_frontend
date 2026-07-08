@@ -8,7 +8,7 @@ export const metadata = {
 const CheckoutPage = ({ params }: { params: { slug: string } }) => {
   return (
     <>
-      <LayoutV6 title="Cart Page" breadCrumb="checkout">
+      <LayoutV6 title="Cart Page" breadCrumb="checkout" homePath={`/restaurant/${params.slug}/menu`}>
         <CheckoutContent restaurantSlug={params.slug} />
       </LayoutV6>
     </>

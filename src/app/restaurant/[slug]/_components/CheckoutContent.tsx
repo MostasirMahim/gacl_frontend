@@ -307,6 +307,15 @@ const CheckoutContent = ({ restaurantSlug }: CheckoutContentProps) => {
                         value={note}
                         onChange={(e) => setNote(e.target.value)}
                         autoComplete="off"
+                        style={{
+                          minHeight: "100px",
+                          maxHeight: "150px",
+                          border: "2px solid rgba(0,0,0,0.1)",
+                          transition: "border-color 0.3s ease",
+                          borderRadius: "8px"
+                        }}
+                        onFocus={(e) => e.target.style.border = "2px solid var(--color-primary)"}
+                        onBlur={(e) => e.target.style.border = "2px solid rgba(0,0,0,0.1)"}
                       />
                     </div>
                   </div>
@@ -445,54 +454,96 @@ const CheckoutContent = ({ restaurantSlug }: CheckoutContentProps) => {
                         boxShadow: "0 4px 20px rgba(0,0,0,0.4)"
                       }}
                     >
-                      <i className="fas fa-shield-alt fa-4x mb-3" style={{ color: "var(--color-primary)" }}></i>
+                      <div 
+                        className="icon-box mb-4 mx-auto" 
+                        style={{ 
+                          width: "80px", 
+                          height: "80px", 
+                          borderRadius: "50%", 
+                          backgroundColor: "var(--color-primary)", 
+                          display: "flex", 
+                          alignItems: "center", 
+                          justifyContent: "center",
+                          boxShadow: "0 4px 15px rgba(0,0,0,0.1)"
+                        }}
+                      >
+                        <i className="fas fa-envelope-open-text fa-3x" style={{ color: "var(--white)" }}></i>
+                      </div>
                       <h3 className="mb-2">Confirm Your Order</h3>
                       <p className="text-muted mb-4">
                         We sent a 6-digit one-time code to your registered email / device. Please enter the OTP below to verify and send your order to the kitchen.
                       </p>
 
                       <form onSubmit={handleVerifyOtp}>
-                        <div className="form-group mb-4">
+                        <div className="form-group mb-5" style={{ position: "relative" }}>
+                          <div className="d-flex gap-2 justify-content-center" style={{ pointerEvents: "none" }}>
+                            {otp.padEnd(6, " ").split("").map((char, i) => (
+                              <div key={i} style={{ 
+                                width: "50px", 
+                                height: "60px", 
+                                border: (otp.length === i || (otp.length === 6 && i === 5)) ? "2px solid var(--color-primary)" : "2px solid rgba(0,0,0,0.1)", 
+                                borderRadius: "8px", 
+                                display: "flex", 
+                                alignItems: "center", 
+                                justifyContent: "center", 
+                                fontSize: "24px", 
+                                fontWeight: "bold", 
+                                backgroundColor: "var(--white)",
+                                color: "var(--color-heading)",
+                                boxShadow: "inset 0 2px 5px rgba(0,0,0,0.02)",
+                                transition: "all 0.2s ease"
+                              }}>
+                                {char.trim()}
+                              </div>
+                            ))}
+                          </div>
                           <input
-                            className="form-control text-center tracking-widest"
                             type="text"
-                            placeholder="Enter 6-Digit OTP"
                             value={otp}
-                            onChange={(e) => setOtp(e.target.value)}
+                            onChange={(e) => setOtp(e.target.value.replace(/[^0-9]/g, ''))}
                             maxLength={6}
                             required
                             style={{
-                              color: "var(--color-primary)",
-                              fontSize: "24px",
-                              fontWeight: "bold",
-                              letterSpacing: "4px"
+                              position: "absolute",
+                              top: 0,
+                              left: 0,
+                              width: "100%",
+                              height: "100%",
+                              opacity: 0,
+                              cursor: "text",
+                              outline: "none",
+                              color: "transparent",
+                              background: "transparent"
                             }}
                           />
                         </div>
 
-                        <button
-                          type="submit"
-                          className="btn btn-theme secondary w-100 py-3 mb-3"
-                          disabled={verifyingOtp}
-                        >
-                          {verifyingOtp ? (
-                            <>
-                              <i className="fas fa-spinner fa-spin me-2"></i>
-                              Verifying...
-                            </>
-                          ) : (
-                            "Verify & Confirm Order"
-                          )}
-                        </button>
-
-                        <button
-                          type="button"
-                          className="btn btn-link text-muted"
-                          onClick={() => setPlacedOrder(null)}
-                          style={{ fontSize: "14px" }}
-                        >
-                          Go Back & Edit Settings
-                        </button>
+                        <div className="d-flex gap-3">
+                          <button
+                            type="button"
+                            className="btn btn-theme secondary flex-fill py-3"
+                            onClick={() => setPlacedOrder(null)}
+                            style={{ fontSize: "16px", fontWeight: "600", borderRadius: "8px" }}
+                          >
+                            Go Back
+                          </button>
+                          
+                          <button
+                            type="submit"
+                            className="btn btn-theme flex-fill py-3"
+                            disabled={verifyingOtp}
+                            style={{ fontSize: "16px", fontWeight: "600", borderRadius: "8px" }}
+                          >
+                            {verifyingOtp ? (
+                              <>
+                                <i className="fas fa-spinner fa-spin me-2"></i>
+                                Verifying...
+                              </>
+                            ) : (
+                              "Verify & Confirm"
+                            )}
+                          </button>
+                        </div>
                       </form>
                     </div>
                   )}
