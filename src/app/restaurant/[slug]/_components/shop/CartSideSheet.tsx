@@ -359,7 +359,7 @@ export default function CartSideSheet({ restaurantSlug }: CartSideSheetProps) {
                     src={
                       item.cover_image
                         ? getMediaUrl(item.cover_image)
-                        : "/assets/img/shop/1.jpg"
+                        : "/assets/restaurent_images/shop/1.jpg"
                     }
                     alt={item.name}
                     fill

@@ -812,6 +812,7 @@
 		"singleProductGrid": {
 			"defaultTitle": "Item",
 			"defaultBtnText": "Add to Cart",
+			"defaultImage": "/assets/restaurent_images/shop/1.jpg",
 			"wishlistLabel": "Add to wishlist",
 			"quickViewLabel": "Quick view",
 			"restaurantContextMissing": "Restaurant context is missing.",

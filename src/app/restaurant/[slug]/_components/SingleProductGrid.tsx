@@ -65,7 +65,7 @@ const SingleProductGrid = ({
   const newP = Math.floor(displayNewPrice).toFixed(2);
   const oldP = displayOldPrice?.toFixed(2) ?? "";
 
-  let imageSrc = "/assets/img/shop/1.jpg";
+  let imageSrc = staticData.ui.singleProductGrid.defaultImage;
   if (cover_image) {
     imageSrc = getMediaUrl(cover_image);
   } else if (item_media && item_media.length > 0) {
@@ -74,7 +74,7 @@ const SingleProductGrid = ({
     imageSrc =
       thumb.startsWith("/media") || thumb.startsWith("http")
         ? getMediaUrl(thumb)
-        : `/assets/img/shop/${thumb}`;
+        : `/assets/restaurent_images/shop/${thumb}`;
   }
 
   const itemDetailLink =
