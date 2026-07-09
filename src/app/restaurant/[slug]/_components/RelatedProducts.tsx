@@ -1,8 +1,8 @@
 "use client";
-import ProductData from '../assets/jsonData/product/ProductData.json'
 import SingleProductGrid from './SingleProductGrid';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Keyboard, Autoplay } from 'swiper/modules';
+import staticData from "../assets/staticData.json";
 
 interface RelatedProductsProps {
     relatedItems?: any[];
@@ -10,14 +10,14 @@ interface RelatedProductsProps {
 }
 
 const RelatedProducts = ({ relatedItems, restaurantSlug }: RelatedProductsProps) => {
-    const list = relatedItems && relatedItems.length > 0 ? relatedItems : ProductData;
+    const list = relatedItems && relatedItems.length > 0 ? relatedItems : staticData.productData;
 
     return (
         <>
             <div className="related-products carousel-shadow">
                 <div className="row">
                     <div className="col-md-12">
-                        <h3>Related Products</h3>
+                        <h3>{staticData.ui.relatedProducts.heading}</h3>
                         <Swiper className="vt-products text-center related-product-carousel"
                             modules={[Keyboard, Autoplay]}
                             loop={true}

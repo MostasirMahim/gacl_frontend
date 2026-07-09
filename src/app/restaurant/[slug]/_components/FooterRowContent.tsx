@@ -1,6 +1,6 @@
 import Link from 'next/link';
-import SocialShare from './SocialShare';
 import FooterNewsLetter from './FooterNewsLetter';
+import staticData from "../assets/staticData.json";
 
 interface FooterConfigType {
     about_us?: {
@@ -32,34 +32,27 @@ const FooterRowContent = ({ footerConfig }: { footerConfig?: FooterConfigType })
         return `https://${trimmed}`;
     };
 
-    const aboutText = footerConfig?.about_us?.text || "Continued at zealously necessary is Surrounded sir motionless she end literature. Gay direction neglected.";
-    const fbLink = footerConfig?.about_us?.facebook || "https://facebook.com";
-    const twitterLink = footerConfig?.about_us?.twitter || "https://twitter.com";
-    const youtubeLink = footerConfig?.about_us?.youtube || "https://youtube.com";
-    const linkedinLink = footerConfig?.about_us?.linkedin || "https://linkedin.com";
+    const aboutText = footerConfig?.about_us?.text || staticData.ui.footerRowContent.aboutText;
+    const fbLink = footerConfig?.about_us?.facebook || staticData.ui.footerRowContent.socialLinks.facebook;
+    const twitterLink = footerConfig?.about_us?.twitter || staticData.ui.footerRowContent.socialLinks.twitter;
+    const youtubeLink = footerConfig?.about_us?.youtube || staticData.ui.footerRowContent.socialLinks.youtube;
+    const linkedinLink = footerConfig?.about_us?.linkedin || staticData.ui.footerRowContent.socialLinks.linkedin;
 
-    const exploreLinks = footerConfig?.explore || [
-        { label: "Menu", link: "/resturent/food-menu" },
-        { label: "About", link: "#" },
-        { label: "Help Center", link: "#" },
-        { label: "Career", link: "#" },
-        { label: "Features", link: "#" },
-        { label: "Contact", link: "#" }
-    ];
+    const exploreLinks = footerConfig?.explore || staticData.ui.footerRowContent.exploreLinks;
 
-    const address = footerConfig?.contact_info?.address || "175 10h Street, Office 375 Berlin, De 21562";
-    const phone1 = footerConfig?.contact_info?.phone_1 || "+123 34598768";
-    const phone2 = footerConfig?.contact_info?.phone_2 || "+554 34598734";
-    const email = footerConfig?.contact_info?.email || "food@restan.com";
+    const address = footerConfig?.contact_info?.address || staticData.ui.footerRowContent.address;
+    const phone1 = footerConfig?.contact_info?.phone_1 || staticData.ui.footerRowContent.phone1;
+    const phone2 = footerConfig?.contact_info?.phone_2 || staticData.ui.footerRowContent.phone2;
+    const email = footerConfig?.contact_info?.email || staticData.ui.footerRowContent.email;
 
-    const newsletterText = footerConfig?.newsletter?.text || "Join our subscribers list to get the latest news and special offers.";
+    const newsletterText = footerConfig?.newsletter?.text || staticData.ui.footerRowContent.newsletterText;
 
     return (
         <>
             <div className="row">
                 <div className="col-lg-3 col-md-6 footer-item mt-50">
                     <div className="f-item about">
-                        <h4 className="widget-title">About Us</h4>
+                        <h4 className="widget-title">{staticData.ui.footerRowContent.aboutTitle}</h4>
                         <p>{aboutText}</p>
                         <ul className="footer-social">
                             <li>
@@ -88,7 +81,7 @@ const FooterRowContent = ({ footerConfig }: { footerConfig?: FooterConfigType })
 
                 <div className="col-lg-3 col-md-6 mt-50 footer-item pl-50 pl-md-15 pl-xs-15">
                     <div className="f-item link">
-                        <h4 className="widget-title">Explore</h4>
+                        <h4 className="widget-title">{staticData.ui.footerRowContent.exploreTitle}</h4>
                         <ul>
                             {exploreLinks.map((item, index) => (
                                 <li key={index}>
@@ -101,7 +94,7 @@ const FooterRowContent = ({ footerConfig }: { footerConfig?: FooterConfigType })
 
                 <div className="col-lg-3 col-md-6 footer-item  mt-50">
                     <div className="f-item contact">
-                        <h4 className="widget-title">Contact Info</h4>
+                        <h4 className="widget-title">{staticData.ui.footerRowContent.contactTitle}</h4>
                         <ul>
                             <li>
                                 <div className="icon">
@@ -138,7 +131,7 @@ const FooterRowContent = ({ footerConfig }: { footerConfig?: FooterConfigType })
                 </div>
 
                 <div className="col-lg-3 col-md-6 footer-item mt-50">
-                    <h4 className="widget-title">Newsletter</h4>
+                        <h4 className="widget-title">{staticData.ui.footerRowContent.newsletterTitle}</h4>
                     <p>{newsletterText}</p>
                     <FooterNewsLetter />
                 </div>

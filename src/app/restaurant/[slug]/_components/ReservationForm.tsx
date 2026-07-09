@@ -2,6 +2,7 @@
 import { useRef, useState } from 'react';
 import CustomSelect from './CustomSelect';
 import ReactDatePicker from 'react-datepicker';
+import staticData from "../assets/staticData.json";
 
 interface DataType {
     btnClass?: string;
@@ -13,27 +14,15 @@ interface FormEventHandler {
 
 const ReservationForm = ({ btnClass }: DataType) => {
 
-    const personOptions = [
-        { value: '1', label: '1 Person' },
-        { value: '2', label: '2 Person' },
-        { value: '3', label: '3 Person' },
-        { value: '4', label: '4 Person' },
-        { value: '5', label: '5 Person' },
-    ]
+    const personOptions = staticData.ui.reservationForm.personOptions
 
-    const scheduleOptions = [
-        { value: '10', label: '10:00 AM' },
-        { value: '11', label: '11:00 AM' },
-        { value: '12', label: '12:00 PM' },
-        { value: '1', label: '1:00 PM' },
-        { value: '2', label: '2:00 PM' },
-    ]
+    const scheduleOptions = staticData.ui.reservationForm.scheduleOptions
 
     const handleBooking: FormEventHandler = (event) => {
         event.preventDefault()
         const form = event.target as HTMLFormElement;
         form.reset()
-        alert("Thanks For Booking! (Reservation submitted statically)")
+        alert(staticData.ui.reservationForm.submitAlert)
     }
 
     const [startDate, setStartDate] = useState<Date | null>(null);
@@ -45,15 +34,15 @@ const ReservationForm = ({ btnClass }: DataType) => {
                 <div className="row">
                     <div className="col-lg-12">
                         <div className="form-group">
-                            <label htmlFor="phone">Phone</label>
-                            <input className="form-control" id="phone" name="phone" placeholder="+4733378901" type="text" autoComplete='off' required />
+                            <label htmlFor="phone">{staticData.ui.reservationForm.phoneLabel}</label>
+                            <input className="form-control" id="phone" name="phone" placeholder={staticData.ui.reservationForm.phonePlaceholder} type="text" autoComplete='off' required />
                         </div>
                     </div>
                 </div>
                 <div className="row">
                     <div className="col-lg-12">
                         <div className="form-group">
-                            <label htmlFor="subject">Person</label>
+                            <label htmlFor="subject">{staticData.ui.reservationForm.personLabel}</label>
                             <CustomSelect options={personOptions} selectValue={2} />
                         </div>
                     </div>
@@ -61,12 +50,12 @@ const ReservationForm = ({ btnClass }: DataType) => {
                 <div className="row">
                     <div className="col-lg-12">
                         <div className="input-group date date-picker-one">
-                            <label htmlFor="date">Date</label>
+                            <label htmlFor="date">{staticData.ui.reservationForm.dateLabel}</label>
                             <ReactDatePicker
                                 id='schedule'
                                 selected={startDate}
                                 onChange={(date: Date | null) => setStartDate(date)}
-                                placeholderText="Date"
+                                placeholderText={staticData.ui.reservationForm.datePlaceholder}
                                 ref={datePickerRef}
                                 required
                                 wrapperClassName="w-100"
@@ -83,7 +72,7 @@ const ReservationForm = ({ btnClass }: DataType) => {
                 <div className="row">
                     <div className="col-lg-12">
                         <div className="form-group">
-                            <label htmlFor="time">Time</label>
+                            <label htmlFor="time">{staticData.ui.reservationForm.timeLabel}</label>
                             <CustomSelect options={scheduleOptions} selectValue={2} />
                         </div>
                     </div>
@@ -91,7 +80,7 @@ const ReservationForm = ({ btnClass }: DataType) => {
                 <div className="row">
                     <div className="col-lg-12">
                         <button type="submit" name="submit" id="submit" className={`${btnClass}`}>
-                            Book A Table
+                            {staticData.ui.reservationForm.buttonLabel}
                         </button>
                     </div>
                 </div>

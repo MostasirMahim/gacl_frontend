@@ -1,6 +1,6 @@
 import SingleFoodMenuTabV3 from "./SingleFoodMenuTabV3";
-import FoodCartV4Data from "../assets/jsonData/food/FoodCartV4Data.json";
 import React from "react";
+import staticData from "../assets/staticData.json";
 
 interface SectionType {
   id: number;
@@ -106,16 +106,16 @@ const FoodMenuV5 = ({ sections, restaurantSlug }: FoodMenuV5Props) => {
   // Fallback static design
   const useDynamic = sections && sections.length > 2;
 
-  const sec3Title = useDynamic ? sections[2].title : "Sea Food";
-  const sec3Sub = useDynamic ? sections[2].description : "Fresh from ocean";
+  const sec3Title = useDynamic ? sections[2].title : staticData.ui.foodMenu.defaultSection3Title;
+  const sec3Sub = useDynamic ? sections[2].description : staticData.ui.foodMenu.defaultSection3Subtitle;
   const sec3Items = useDynamic ? sections[2].items : [];
 
   const sec4Title =
-    useDynamic && sections.length > 3 ? sections[3].title : "Beverage";
+    useDynamic && sections.length > 3 ? sections[3].title : staticData.ui.foodMenu.defaultSection4Title;
   const sec4Sub =
     useDynamic && sections.length > 3
       ? sections[3].description
-      : "Drinks & Wine";
+      : staticData.ui.foodMenu.defaultSection4Subtitle;
   const sec4Items = useDynamic && sections.length > 3 ? sections[3].items : [];
 
   return (
@@ -131,8 +131,8 @@ const FoodMenuV5 = ({ sections, restaurantSlug }: FoodMenuV5Props) => {
                     <h2 className="title">{sec3Title}</h2>
                   </div>
                   <ul className="meal-type">
-                    <li>Half</li>
-                    <li>Full</li>
+                    <li>{staticData.ui.foodMenu.mealTypeLabels[0]}</li>
+                    <li>{staticData.ui.foodMenu.mealTypeLabels[1]}</li>
                   </ul>
                   <ul className="meal-items">
                     {useDynamic
@@ -143,7 +143,7 @@ const FoodMenuV5 = ({ sections, restaurantSlug }: FoodMenuV5Props) => {
                             key={item.id}
                           />
                         ))
-                      : FoodCartV4Data.slice(2, 3).map((food) => (
+                        : staticData.foodCartV4Data.slice(2, 3).map((food) => (
                           <React.Fragment key={food.id}>
                             {food.tabContent.slice(0, 1).map((list) => (
                               <React.Fragment key={list.id}>
@@ -171,8 +171,8 @@ const FoodMenuV5 = ({ sections, restaurantSlug }: FoodMenuV5Props) => {
                       <h2 className="title">{sec4Title}</h2>
                     </div>
                     <ul className="meal-type">
-                      <li>Half</li>
-                      <li>Full</li>
+                      <li>{staticData.ui.foodMenu.mealTypeLabels[0]}</li>
+                      <li>{staticData.ui.foodMenu.mealTypeLabels[1]}</li>
                     </ul>
                     <ul className="meal-items">
                       {useDynamic
@@ -183,7 +183,7 @@ const FoodMenuV5 = ({ sections, restaurantSlug }: FoodMenuV5Props) => {
                               key={item.id}
                             />
                           ))
-                        : FoodCartV4Data.slice(3, 4).map((food) => (
+                        : staticData.foodCartV4Data.slice(3, 4).map((food) => (
                             <React.Fragment key={food.id}>
                               {food.tabContent.slice(0, 1).map((list) => (
                                 <React.Fragment key={list.id}>

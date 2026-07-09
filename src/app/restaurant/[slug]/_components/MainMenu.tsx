@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import staticData from "../assets/staticData.json";
 
 interface DataType {
     isOpen: boolean;
@@ -14,25 +15,19 @@ const MainMenu = ({ isOpen, closeMenu, navbarPlacement, toggleSubMenu, isMenuOpe
     return (
         <>
             <div className={`collapse navbar-collapse collapse-mobile ${isOpen ? "show" : ""}`} id="navbar-menu">
-                <Image src="/assets/img/logo-2.png" width={675} height={332} alt="Logo" />
+                <Image src={staticData.ui.mainMenu.logo} width={675} height={332} alt="Logo" />
                 <button type="button" className="navbar-toggle" data-toggle="collapse" data-target="#navbar-menu" onClick={closeMenu}>
                     <i className="fa fa-times"></i>
                 </button>
                 <ul className={`nav navbar-nav ${navbarPlacement}`} data-in="fadeInDown" data-out="fadeOutUp">
                     <li>
-                        <Link href="/resturent/food-menu">
-                            Food Menu
-                        </Link>
+                        <Link href={staticData.ui.mainMenu.items[0].href}>{staticData.ui.mainMenu.items[0].label}</Link>
                     </li>
                     <li>
-                        <Link href="/resturent/shop-single/1">
-                            Shop Single (1)
-                        </Link>
+                        <Link href={staticData.ui.mainMenu.items[1].href}>{staticData.ui.mainMenu.items[1].label}</Link>
                     </li>
                     <li>
-                        <Link href="/resturent/shop-single/2">
-                            Shop Single (2)
-                        </Link>
+                        <Link href={staticData.ui.mainMenu.items[2].href}>{staticData.ui.mainMenu.items[2].label}</Link>
                     </li>
                 </ul>
             </div>

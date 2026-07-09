@@ -1,6 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { getMediaUrl } from '@/lib/utils';
+import staticData from "../assets/staticData.json";
 
 interface DataType {
     id: number;
@@ -27,7 +28,7 @@ const SingleFoodMenuTabV3 = ({ data, restaurantSlug }: { data: DataType; restaur
     const displaySub = sub_items !== undefined && sub_items !== null ? sub_items : leftInfo;
     const displayBonus = free_bonus !== undefined && free_bonus !== null ? free_bonus : rightInfo;
 
-    let imageSrc = "/assets/img/food/1.jpg";
+    let imageSrc = staticData.ui.singleFoodMenuTabV3.defaultImage;
     if (cover_image) {
         imageSrc = getMediaUrl(cover_image);
     } else if (item_media && item_media.length > 0) {
@@ -38,7 +39,7 @@ const SingleFoodMenuTabV3 = ({ data, restaurantSlug }: { data: DataType; restaur
 
     const itemDetailLink = restaurantSlug && slug
         ? `/restaurant/${restaurantSlug}/items/${slug}`
-        : `/restaurant/shop-single/${id}`;
+        : `${staticData.ui.singleFoodMenuTabV3.staticRoutePrefix}${id}`;
 
     return (
         <>

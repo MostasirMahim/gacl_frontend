@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import { getMediaUrl } from '@/lib/utils';
+import staticData from "../assets/staticData.json";
 
 interface DataType {
     breadCrumb?: string;
@@ -9,8 +10,8 @@ interface DataType {
 }
 
 const BreadCrumb = ({ breadCrumb, title, bgImage, homePath }: DataType) => {
-    const bg = bgImage ? getMediaUrl(bgImage) : "/assets/img/shape/5.jpg";
-    const home = homePath ? homePath : "/restaurant";
+    const bg = bgImage ? getMediaUrl(bgImage) : staticData.ui.menuPage.defaultBgImage;
+    const home = homePath ? homePath : staticData.ui.breadcrumb.defaultHomePath;
 
     return (
         <>
@@ -19,10 +20,10 @@ const BreadCrumb = ({ breadCrumb, title, bgImage, homePath }: DataType) => {
                 <div className="container">
                     <div className="row">
                         <div className="col-lg-12 col-md-12">
-                            <h1>{title ? title : "Error Page"}</h1>
+                            <h1>{title ? title : staticData.ui.breadcrumb.defaultTitle}</h1>
                             <ul className="breadcrumb">
                                 <li><Link href={home}><i className="fas fa-home"></i> Home</Link></li>
-                                <li>{breadCrumb ? breadCrumb : "not-found"}</li>
+                                <li>{breadCrumb ? breadCrumb : staticData.ui.breadcrumb.defaultCrumb}</li>
                             </ul>
                         </div>
                     </div>

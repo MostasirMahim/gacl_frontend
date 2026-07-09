@@ -1,4 +1,5 @@
 import ReservationForm from './ReservationForm';
+import staticData from "../assets/staticData.json";
 
 interface RestaurantType {
     reservation_banner_title?: string;
@@ -14,20 +15,20 @@ interface DataType {
 }
 
 const ReservationV1 = ({ btnClass, sectionClass, restaurant }: DataType) => {
-    const title = restaurant?.reservation_banner_title || "Reservation Your Favorite Private Table";
-    const text = restaurant?.reservation_banner_text || "A relaxing and pleasant atmosphere, good jazz, dinner, and cocktails. The Patio Time Bar opens in the center of Florence. The only bar inspired by the 1960s, it will give you a experience that you’ll have a hard time forgetting.";
-    const lunchStats = restaurant?.reservation_banner_launch_menu || "30+ items";
-    const dinnerStats = restaurant?.reservation_banner_dinner_menu || "50+ items";
+    const title = restaurant?.reservation_banner_title || staticData.ui.reservationV1.title;
+    const text = restaurant?.reservation_banner_text || staticData.ui.reservationV1.text;
+    const lunchStats = restaurant?.reservation_banner_launch_menu || staticData.ui.reservationV1.lunchStats;
+    const dinnerStats = restaurant?.reservation_banner_dinner_menu || staticData.ui.reservationV1.dinnerStats;
 
     return (
         <>
             <div className={`reservation-area default-padding-top bg-cover shadow dark ${sectionClass}`}
-                style={{ backgroundImage: 'url(/assets/img/banner/2.jpg)' }}>
+                style={{ backgroundImage: `url(${staticData.ui.reservationV1.bgImage})` }}>
                 <div className="container">
                     <div className="row">
                         <div className="col-lg-6">
                             <div className="reservation-info text-light">
-                                <h4 className="sub-heading">Reservation</h4>
+                                <h4 className="sub-heading">{staticData.ui.reservationV1.subHeading}</h4>
                                 <h2 className="title">{title}</h2>
                                 <p>
                                     {text}
@@ -35,13 +36,13 @@ const ReservationV1 = ({ btnClass, sectionClass, restaurant }: DataType) => {
                                 <div className="reservation-time">
                                     <ul>
                                         <li>
-                                            <h4>Launch Menu</h4>
+                                            <h4>{staticData.ui.reservationV1.lunchLabel}</h4>
                                             <p>
                                                 {lunchStats}
                                             </p>
                                         </li>
                                         <li>
-                                            <h4>Dinner Menu</h4>
+                                            <h4>{staticData.ui.reservationV1.dinnerLabel}</h4>
                                             <p>
                                                 {dinnerStats}
                                             </p>

@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import staticData from "../assets/staticData.json";
 
 interface DataType {
     id: number;
@@ -19,7 +20,7 @@ const SingleProductList = ({ product }: { product: DataType }) => {
     const oldP = oldPrice?.toFixed(2) ?? '';
 
     const handleAddToCart = () => {
-        alert(`${title} added to cart! (Static Mode)`);
+        alert(`${title} ${staticData.ui.singleProductList.staticModeAlert}`);
     };
 
     return (
@@ -38,10 +39,10 @@ const SingleProductList = ({ product }: { product: DataType }) => {
                                 <div className="shop-action">
                                     <ul>
                                         <li className="cart"  >
-                                            <Link href="#" onClick={handleAddToCart} scroll={false}><span>Add to cart</span></Link>
+                                            <Link href="#" onClick={handleAddToCart} scroll={false}><span>{staticData.ui.singleProductList.addToCartLabel}</span></Link>
                                         </li>
                                         <li className="wishlist">
-                                            <Link href="#" scroll={false}><span>Add to wishlist</span></Link>
+                                            <Link href="#" scroll={false}><span>{staticData.ui.singleProductList.wishlistLabel}</span></Link>
                                         </li>
                                     </ul>
                                 </div>

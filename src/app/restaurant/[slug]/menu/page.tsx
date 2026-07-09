@@ -5,6 +5,7 @@ import FoodMenuV5 from "../_components/FoodMenuV5";
 import LayoutV6 from "../_components/LayoutV6";
 import ReservationV1 from "../_components/ReservationV1";
 import TestimonialV1 from "../_components/TestimonialV1";
+import staticData from "../assets/staticData.json";
 
 interface Params {
     slug: string;
@@ -20,11 +21,11 @@ export async function generateMetadata({ params }: PageProps) {
         const res = await axiosInstance.get(`/api/restaurants/v1/public/by-slug/${slug}/menu/`);
         const restaurant = res.data.data.restaurant;
         return {
-            title: restaurant?.meta_title || `Restan - ${restaurant?.name || "Food Menu"}`
+            title: restaurant?.meta_title || `${staticData.ui.menuPage.metaPrefix}${restaurant?.name || staticData.ui.menuPage.defaultTitle}`
         };
     } catch {
         return {
-            title: "Restan - Food Menu"
+            title: `${staticData.ui.menuPage.metaPrefix}${staticData.ui.menuPage.defaultTitle}`
         };
     }
 }
@@ -44,8 +45,8 @@ const FoodMenuPage = async ({ params }: PageProps) => {
     const sections = data?.sections || [];
     const testimonials = data?.testimonials || [];
 
-    const pageTitle = restaurant?.name || "Food Menu";
-    const bgImage = restaurant?.banner_bg_image || "/assets/img/shape/5.jpg";
+    const pageTitle = restaurant?.name || staticData.ui.menuPage.defaultTitle;
+    const bgImage = restaurant?.banner_bg_image || staticData.ui.menuPage.defaultBgImage;
 
     return (
         <>

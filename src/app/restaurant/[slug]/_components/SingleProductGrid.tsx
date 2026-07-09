@@ -3,6 +3,7 @@ import Image from "next/image";
 import { getMediaUrl } from "@/lib/utils";
 import { useRestaurantCartStore } from "@/store/useRestaurantCartStore";
 import { toast } from "react-toastify";
+import staticData from "../assets/staticData.json";
 
 interface DataType {
   id: number;
@@ -49,7 +50,7 @@ const SingleProductGrid = ({
 
   const addItem = useRestaurantCartStore((state) => state.addItem);
 
-  const displayTitle = name || title || "Item";
+  const displayTitle = name || title || staticData.ui.singleProductGrid.defaultTitle;
   const displayNewPrice =
     selling_price !== undefined && selling_price !== null
       ? Number(selling_price)
@@ -59,7 +60,7 @@ const SingleProductGrid = ({
       ? Number(half_price)
       : oldPrice;
   const displayTags = tags || productTag || [];
-  const displayBtnText = btnText || "Add to Cart";
+  const displayBtnText = btnText || staticData.ui.singleProductGrid.defaultBtnText;
 
   const newP = Math.floor(displayNewPrice).toFixed(2);
   const oldP = displayOldPrice?.toFixed(2) ?? "";
@@ -84,7 +85,7 @@ const SingleProductGrid = ({
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     if (!restaurantSlug) {
-      toast.error("Restaurant context is missing.");
+      toast.error(staticData.ui.singleProductGrid.restaurantContextMissing);
       return;
     }
 
@@ -104,7 +105,7 @@ const SingleProductGrid = ({
       1,
     );
 
-    toast.success(`${displayTitle} (Full) added to cart!`);
+    toast.success(`${displayTitle} ${staticData.ui.singleProductGrid.toastSuffix}`);
   };
 
   return (
@@ -120,12 +121,12 @@ const SingleProductGrid = ({
               <ul>
                 <li className="wishlist">
                   <Link href="#" scroll={false}>
-                    <span>Add to wishlist</span>
+                    <span>{staticData.ui.singleProductGrid.wishlistLabel}</span>
                   </Link>
                 </li>
                 <li className="quick-view">
                   <Link href="#" scroll={false}>
-                    <span>Quick view</span>
+                    <span>{staticData.ui.singleProductGrid.quickViewLabel}</span>
                   </Link>
                 </li>
               </ul>

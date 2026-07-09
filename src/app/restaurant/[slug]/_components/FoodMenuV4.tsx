@@ -1,7 +1,7 @@
 import React from "react";
-import FoodCartV4Data from "../assets/jsonData/food/FoodCartV4Data.json";
 import SingleFoodMenuTabV3 from "./SingleFoodMenuTabV3";
 import { getMediaUrl } from "@/lib/utils";
+import staticData from "../assets/staticData.json";
 
 interface SectionType {
   id: number;
@@ -24,21 +24,21 @@ const FoodMenuV4 = ({ sections, restaurantSlug }: FoodMenuV4Props) => {
     : [];
   const useDynamic = filteredSections && filteredSections.length > 0;
 
-  const sec1Title = useDynamic ? filteredSections[0].title : "Breakfast";
+  const sec1Title = useDynamic ? filteredSections[0].title : staticData.ui.foodMenu.defaultSection1Title;
   const sec1Img =
     useDynamic && filteredSections[0].cover_image
       ? getMediaUrl(filteredSections[0].cover_image)
-      : "/assets/img/banner/10.jpg";
+      : staticData.ui.foodMenu.defaultSection1Image;
   const sec1Items = useDynamic ? filteredSections[0].items : [];
 
   const sec2Title =
     useDynamic && filteredSections.length > 1
       ? filteredSections[1].title
-      : "Lunch";
+      : staticData.ui.foodMenu.defaultSection2Title;
   const sec2Img =
     useDynamic && filteredSections.length > 1 && filteredSections[1].cover_image
       ? getMediaUrl(filteredSections[1].cover_image)
-      : "/assets/img/banner/11.jpg";
+      : staticData.ui.foodMenu.defaultSection2Image;
   const sec2Items =
     useDynamic && filteredSections.length > 1 ? filteredSections[1].items : [];
 
@@ -55,14 +55,14 @@ const FoodMenuV4 = ({ sections, restaurantSlug }: FoodMenuV4Props) => {
                   style={{ background: `url(${sec1Img})` }}
                 >
                   <div className="discount-badge">
-                    <strong>Menu</strong> {sec1Title}
+                    <strong>{staticData.ui.foodMenu.badgeLabel}</strong> {sec1Title}
                   </div>
                 </div>
                 <div className="col-lg-7">
                   <div className="info">
                     <ul className="meal-type">
-                      <li>Half</li>
-                      <li>Full</li>
+                      <li>{staticData.ui.foodMenu.mealTypeLabels[0]}</li>
+                      <li>{staticData.ui.foodMenu.mealTypeLabels[1]}</li>
                     </ul>
                     <ul className="meal-items">
                       {useDynamic
@@ -73,7 +73,7 @@ const FoodMenuV4 = ({ sections, restaurantSlug }: FoodMenuV4Props) => {
                               key={item.id}
                             />
                           ))
-                        : FoodCartV4Data.slice(0, 1).map((food) => (
+                        : staticData.foodCartV4Data.slice(0, 1).map((food) => (
                             <React.Fragment key={food.id}>
                               {food.tabContent.slice(0, 1).map((list) => (
                                 <React.Fragment key={list.id}>
@@ -103,14 +103,14 @@ const FoodMenuV4 = ({ sections, restaurantSlug }: FoodMenuV4Props) => {
                   style={{ background: `url(${sec2Img})` }}
                 >
                   <div className="discount-badge">
-                    <strong>Menu</strong> {sec2Title}
+                    <strong>{staticData.ui.foodMenu.badgeLabel}</strong> {sec2Title}
                   </div>
                 </div>
                 <div className="col-lg-7">
                   <div className="info">
                     <ul className="meal-type">
-                      <li>Half</li>
-                      <li>Full</li>
+                      <li>{staticData.ui.foodMenu.mealTypeLabels[0]}</li>
+                      <li>{staticData.ui.foodMenu.mealTypeLabels[1]}</li>
                     </ul>
                     <ul className="meal-items">
                       {useDynamic
@@ -121,7 +121,7 @@ const FoodMenuV4 = ({ sections, restaurantSlug }: FoodMenuV4Props) => {
                               key={item.id}
                             />
                           ))
-                        : FoodCartV4Data.slice(1, 2).map((food) => (
+                        : staticData.foodCartV4Data.slice(1, 2).map((food) => (
                             <React.Fragment key={food.id}>
                               {food.tabContent.slice(1, 2).map((list) => (
                                 <React.Fragment key={list.id}>

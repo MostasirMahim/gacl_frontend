@@ -2,7 +2,6 @@
 import { useState } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Keyboard, Autoplay } from "swiper/modules";
-import ProductCarouselData from "../../assets/jsonData/product/ProductCarouselData.json";
 import Link from "next/link";
 import ShopProductTab from "../ShopProductTab";
 import RelatedProducts from "../RelatedProducts";
@@ -11,6 +10,7 @@ import { getMediaUrl } from "@/lib/utils";
 import RatingsStar from "../RatingsStar";
 import { toast } from "react-toastify";
 import { useRestaurantCartStore } from "@/store/useRestaurantCartStore";
+import staticData from "../../assets/staticData.json";
 
 interface ItemDetailType {
   id: number;
@@ -81,10 +81,12 @@ const ShopSinglePageContent = ({
   const description = isDynamic
     ? productInfo.description || "No description available."
     : "The Aspire 5 is a compact laptop in a thin case with a metal cover, a high-quality Full HD IPS display and a rich set of interfaces. Thanks to its powerful components, the laptop can handle resource-intensive tasks perfectly and is also suitable for most games.";
+  const categoryLinks = staticData.ui.shopSingle.categoryLinks;
 
-  const activePrice = isDynamic && portion === "half" && productInfo.half_price
-    ? Number(productInfo.half_price)
-    : newPrice;
+  const activePrice =
+    isDynamic && portion === "half" && productInfo.half_price
+      ? Number(productInfo.half_price)
+      : newPrice;
 
   const newP = Number(activePrice).toFixed(2);
   const oldP = oldPrice?.toFixed(2) ?? "";
@@ -92,7 +94,8 @@ const ShopSinglePageContent = ({
   // Calculate overall average rating from dynamic reviews
   const avgRating =
     reviews && reviews.length > 0
-      ? reviews.reduce((sum: number, r: any) => sum + Number(r.rating), 0) / reviews.length
+      ? reviews.reduce((sum: number, r: any) => sum + Number(r.rating), 0) /
+        reviews.length
       : 0;
 
   // Resolve images
@@ -103,9 +106,9 @@ const ShopSinglePageContent = ({
         id: index + 1,
         thumb: getMediaUrl(media.image),
         activeClass: index === 0 ? "active" : "",
-        badge: "Sale",
+        badge: staticData.ui.shopSingle.saleBadge,
       }))
-    : ProductCarouselData.innerCarousel.map((data) => ({
+    : staticData.productCarouselData.innerCarousel.map((data) => ({
         ...data,
         thumb: `/assets/img/shop/${data.thumb}`,
       }));
@@ -117,7 +120,7 @@ const ShopSinglePageContent = ({
         activeClass: index === 0 ? "active" : "",
         slideNumber: String(index),
       }))
-    : ProductCarouselData.outerCarousel.map((data) => ({
+    : staticData.productCarouselData.outerCarousel.map((data) => ({
         ...data,
         thumb: `/assets/img/shop/${data.thumb}`,
       }));
@@ -125,7 +128,7 @@ const ShopSinglePageContent = ({
   const handleAddToCart = (e: React.MouseEvent) => {
     e.preventDefault();
     if (!isDynamic) {
-      alert(`${title} added to cart! (Static Mode)`);
+      alert(`${title} ${staticData.ui.shopSingle.staticModeAlert}`);
       return;
     }
 
@@ -134,9 +137,10 @@ const ShopSinglePageContent = ({
       return;
     }
 
-    const price = portion === "half" && productInfo.half_price
-      ? Number(productInfo.half_price)
-      : Number(productInfo.selling_price);
+    const price =
+      portion === "half" && productInfo.half_price
+        ? Number(productInfo.half_price)
+        : Number(productInfo.selling_price);
 
     const cover_image = hasMedia ? productInfo.item_media[0].image : undefined;
 
@@ -150,7 +154,7 @@ const ShopSinglePageContent = ({
         cover_image,
         sku: productInfo.sku,
       },
-      quantity
+      quantity,
     );
     toast.success(`Added ${quantity} x ${title} (${portion} portion) to cart!`);
   };
@@ -255,13 +259,31 @@ const ShopSinglePageContent = ({
                     </div>
                   </div>
                   <h2 className="product-title">{title}</h2>
-                  <div className="price">
-                    {portion === "full" && productInfo?.half_price ? (
-                      <span>
-                        Portion price: ${newP}
+                  <div
+                    className="price"
+                    style={{
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "6px",
+                    }}
+                  >
+                    <span>${newP}</span>
+                    {isDynamic && productInfo?.half_price && (
+                      <span
+                        style={{
+                          fontSize: "13px",
+                          fontStyle: "italic",
+                          fontWeight: 400,
+                          color:
+                            portion === "half"
+                              ? "var(--color-primary)"
+                              : "#888",
+                          letterSpacing: "0.01em",
+                          lineHeight: 1,
+                        }}
+                      >
+                        &mdash; {portion === "half" ? "Half" : "Full"}
                       </span>
-                    ) : (
-                      <span className="ms-2">${newP}</span>
                     )}
                   </div>
                   <div className="product-stock validthemes-in-stock d-flex align-items-center">
@@ -269,19 +291,63 @@ const ShopSinglePageContent = ({
                     {isDynamic && productInfo.half_price && (
                       <button
                         type="button"
-                        className="btn btn-sm ms-3 py-1 px-2"
+                        className="portion-toggle-btn"
+                        onClick={() =>
+                          setPortion(portion === "full" ? "half" : "full")
+                        }
                         style={{
-                          backgroundColor: portion === "half" ? "var(--color-primary)" : "var(--dark)",
-                          color: "var(--white)",
+                          display: "inline-flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          marginLeft: "10px",
+                          padding: "0 10px",
+                          height: "100%",
+                          minHeight: "34px",
+                          backgroundColor:
+                            portion === "half"
+                              ? "var(--color-primary)"
+                              : "transparent",
+                          color:
+                            portion === "half"
+                              ? "var(--white)"
+                              : "var(--color-primary)",
                           border: "1px solid var(--color-primary)",
-                          fontSize: "12px",
-                          fontWeight: "bold",
                           borderRadius: "4px",
-                          transition: "all 0.3s ease"
+                          fontSize: "12px",
+                          fontWeight: 600,
+                          lineHeight: 1,
+                          whiteSpace: "nowrap",
+                          cursor: "pointer",
+                          transition:
+                            "background-color 0.25s ease, color 0.25s ease",
                         }}
-                        onClick={() => setPortion(portion === "full" ? "half" : "full")}
+                        onMouseEnter={(e) => {
+                          (
+                            e.currentTarget as HTMLButtonElement
+                          ).style.backgroundColor = "var(--black)";
+                          (e.currentTarget as HTMLButtonElement).style.color =
+                            "var(--white)";
+                          (
+                            e.currentTarget as HTMLButtonElement
+                          ).style.borderColor = "var(--black)";
+                        }}
+                        onMouseLeave={(e) => {
+                          (
+                            e.currentTarget as HTMLButtonElement
+                          ).style.backgroundColor =
+                            portion === "half"
+                              ? "var(--color-primary)"
+                              : "transparent";
+                          (e.currentTarget as HTMLButtonElement).style.color =
+                            portion === "half"
+                              ? "var(--white)"
+                              : "var(--color-primary)";
+                          (
+                            e.currentTarget as HTMLButtonElement
+                          ).style.borderColor = "var(--color-primary)";
+                        }}
                       >
-                        {portion === "half" ? "Portion: Half (Switch to Full)" : "Portion: Full (Switch to Half)"}
+                        {portion === "half" ? staticData.ui.shopSingle.seeFullLabel : staticData.ui.shopSingle.seeHalfLabel}
                       </button>
                     )}
                   </div>
@@ -294,10 +360,16 @@ const ShopSinglePageContent = ({
                       name="quantity"
                       min="1"
                       value={quantity}
-                      onChange={(e) => setQuantity(Math.max(1, parseInt(e.target.value) || 1))}
+                      onChange={(e) =>
+                        setQuantity(Math.max(1, parseInt(e.target.value) || 1))
+                      }
                       placeholder="1"
                       className="form-control"
-                      style={{ width: "80px", display: "inline-block", marginRight: "10px" }}
+                      style={{
+                        width: "80px",
+                        display: "inline-block",
+                        marginRight: "10px",
+                      }}
                     />
                     <Link
                       href="#"
@@ -306,18 +378,18 @@ const ShopSinglePageContent = ({
                       scroll={false}
                     >
                       <i className="fas fa-shopping-cart"></i>
-                      Order Now
+                      {staticData.ui.shopSingle.orderLabel}
                     </Link>
                     <div className="shop-action">
                       <ul>
                         <li className="wishlist">
                           <Link href="#" scroll={false}>
-                            <span>Add to wishlist</span>
+                            <span>{staticData.ui.shopSingle.wishlistLabel}</span>
                           </Link>
                         </li>
                         <li className="compare">
                           <Link href="#" scroll={false}>
-                            <span>Compare</span>
+                            <span>{staticData.ui.shopSingle.compareLabel}</span>
                           </Link>
                         </li>
                       </ul>
@@ -325,24 +397,24 @@ const ShopSinglePageContent = ({
                   </div>
                   <div className="product-estimate-delivary">
                     <i className="fas fa-box-open"></i>
-                    <strong> 2-day Delivery</strong>
-                    <span>Speedy and reliable parcel delivery!</span>
+                    <strong> {staticData.ui.shopSingle.deliveryTitle}</strong>
+                    <span>{staticData.ui.shopSingle.deliveryText}</span>
                   </div>
                   <div className="product-meta">
                     <span className="sku">
-                      <strong>SKU:</strong> {sku}
+                      <strong>{staticData.ui.shopSingle.skuLabel}</strong> {sku}
                     </span>
                     <span className="posted-in">
-                      <strong>Category:</strong>
+                      <strong>{staticData.ui.shopSingle.categoryLabel}</strong>
                       {isDynamic ? (
                         <Link href="#">
-                          {productInfo.category || "General"}
+                          {productInfo.category || staticData.ui.shopSingle.generalCategory}
                         </Link>
                       ) : (
                         <>
-                          <Link href="#">Computer</Link>,
-                          <Link href="#">Speaker</Link>,
-                          <Link href="#">Headphone</Link>
+                          <Link href="#">{categoryLinks[0]}</Link>,
+                          <Link href="#">{categoryLinks[1]}</Link>,
+                          <Link href="#">{categoryLinks[2]}</Link>
                         </>
                       )}
                     </span>

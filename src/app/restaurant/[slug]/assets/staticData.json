@@ -1,0 +1,850 @@
+{
+	"foodCartV4Data": [
+		{
+			"id": 1,
+			"tabClass": "show active",
+			"tabThumb": "3.jpg",
+			"discount": 15,
+			"tabId": "tab1",
+			"tabContent": [
+				{
+					"id": 1,
+					"tabData": [
+						{
+							"id": 1,
+							"thumb": "1.jpg",
+							"name": "Chicken Alfredo",
+							"price": 20,
+							"priceFull": 40,
+							"leftInfo": "Ricotta / goat cheese / beetroot",
+							"rightInfo": "Free Drinks"
+						},
+						{
+							"id": 2,
+							"thumb": "2.jpg",
+							"name": "Fish Chips",
+							"price": 36,
+							"priceFull": 70,
+							"leftInfo": "Atlantic / chips / salad / tartare",
+							"rightInfo": "Free Drinks"
+						},
+						{
+							"id": 3,
+							"thumb": "3.jpg",
+							"name": "Ebony Fillet Steak",
+							"price": 44,
+							"priceFull": 85,
+							"leftInfo": "Truffle mash / pepper sauce",
+							"rightInfo": "Free Drinks"
+						},
+						{
+							"id": 4,
+							"thumb": "4.jpg",
+							"name": "Chicken Grill",
+							"price": 20,
+							"priceFull": 40,
+							"leftInfo": "Ricotta / goat cheese / beetroot",
+							"rightInfo": "Free Drinks"
+						}
+					]
+				},
+				{
+					"id": 2,
+					"tabData": [
+						{
+							"id": 1,
+							"thumb": "21.jpg",
+							"name": "Ditalini Pasta",
+							"price": 30,
+							"priceFull": 30,
+							"leftInfo": "Ricotta / goat cheese / beetroot",
+							"rightInfo": "Free Drinks"
+						},
+						{
+							"id": 2,
+							"thumb": "22.jpg",
+							"name": "BBQ Burger",
+							"price": 55,
+							"priceFull": 100,
+							"leftInfo": "Atlantic / chips / salad / tartare",
+							"rightInfo": "Free Drinks"
+						},
+						{
+							"id": 3,
+							"thumb": "23.jpg",
+							"name": "Sicilian Pizza",
+							"price": 88,
+							"priceFull": 88,
+							"leftInfo": "Truffle mash / pepper sauce.",
+							"rightInfo": "Free Drinks"
+						},
+						{
+							"id": 4,
+							"thumb": "24.jpg",
+							"name": "Fried Rice",
+							"price": 30,
+							"priceFull": 30,
+							"leftInfo": "Ricotta / goat cheese / beetroot",
+							"rightInfo": "Free Drinks"
+						}
+					]
+				}
+			]
+		},
+		{
+			"id": 2,
+			"tabClass": "",
+			"tabThumb": "6.jpg",
+			"discount": 18,
+			"tabId": "tab2",
+			"tabContent": [
+				{
+					"id": 1,
+					"tabData": [
+						{
+							"id": 1,
+							"thumb": "5.jpg",
+							"name": "Cupcakes",
+							"price": 10,
+							"priceFull": 20,
+							"leftInfo": "Ricotta / goat cheese / beetroot",
+							"rightInfo": "Extra Free Juice"
+						},
+						{
+							"id": 2,
+							"thumb": "6.jpg",
+							"name": "Brownies",
+							"price": 16,
+							"priceFull": 30,
+							"leftInfo": "Atlantic / chips / salad / tartare",
+							"rightInfo": "Extra Free Juice"
+						},
+						{
+							"id": 3,
+							"thumb": "7.jpg",
+							"name": "Muffins",
+							"price": 22,
+							"priceFull": 40,
+							"leftInfo": "Truffle mash / pepper sauce",
+							"rightInfo": "Extra Free Juice"
+						},
+						{
+							"id": 4,
+							"thumb": "8.jpg",
+							"name": "Cheesecakes",
+							"price": 34,
+							"priceFull": 65,
+							"leftInfo": "Ricotta / goat cheese / beetroot",
+							"rightInfo": "Extra Free Juice"
+						}
+					]
+				},
+				{
+					"id": 2,
+					"tabData": [
+						{
+							"id": 1,
+							"thumb": "6.jpg",
+							"name": "Brownies",
+							"price": 34,
+							"priceFull": 65,
+							"leftInfo": "Ricotta / goat cheese / beetroot",
+							"rightInfo": "Extra Free Juice"
+						},
+						{
+							"id": 2,
+							"thumb": "8.jpg",
+							"name": "Cheesecakes",
+							"price": 55,
+							"priceFull": 100,
+							"leftInfo": "Atlantic / chips / salad / tartare",
+							"rightInfo": "Extra Free Juice"
+						},
+						{
+							"id": 3,
+							"thumb": "7.jpg",
+							"name": "Muffins",
+							"price": 66,
+							"priceFull": 120,
+							"leftInfo": "Truffle mash / pepper sauce.",
+							"rightInfo": "Extra Free Juice"
+						},
+						{
+							"id": 4,
+							"thumb": "5.jpg",
+							"name": "Cupcakes",
+							"price": 20,
+							"priceFull": 40,
+							"leftInfo": "Ricotta / goat cheese / beetroot",
+							"rightInfo": "Extra Free Juice"
+						}
+					]
+				}
+			]
+		},
+		{
+			"id": 3,
+			"tabClass": "",
+			"tabThumb": "7.jpg",
+			"discount": 20,
+			"tabId": "tab3",
+			"tabContent": [
+				{
+					"id": 1,
+					"tabData": [
+						{
+							"id": 1,
+							"thumb": "9.jpg",
+							"name": "Salmon Fry",
+							"price": 40,
+							"priceFull": 80,
+							"leftInfo": "Ricotta / goat cheese / beetroot",
+							"rightInfo": "Extra Free Juice"
+						},
+						{
+							"id": 2,
+							"thumb": "10.jpg",
+							"name": "Pangasius or Basa",
+							"price": 15,
+							"priceFull": 30,
+							"leftInfo": "Atlantic / chips / salad / tartare",
+							"rightInfo": "Extra Free Juice"
+						},
+						{
+							"id": 3,
+							"thumb": "11.jpg",
+							"name": "Clams",
+							"price": 45,
+							"priceFull": 90,
+							"leftInfo": "Truffle mash / pepper sauce",
+							"rightInfo": "Extra Free Juice"
+						},
+						{
+							"id": 4,
+							"thumb": "12.jpg",
+							"name": "Red Crab",
+							"price": 20,
+							"priceFull": 40,
+							"leftInfo": "Ricotta / goat cheese / beetroot",
+							"rightInfo": "Extra Free Juice"
+						}
+					]
+				},
+				{
+					"id": 2,
+					"tabData": [
+						{
+							"id": 1,
+							"thumb": "12.jpg",
+							"name": "Red Crab",
+							"price": 30,
+							"priceFull": 60,
+							"leftInfo": "Ricotta / goat cheese / beetroot",
+							"rightInfo": "Extra Free Juice"
+						},
+						{
+							"id": 2,
+							"thumb": "11.jpg",
+							"name": "Clams",
+							"price": 78,
+							"priceFull": 140,
+							"leftInfo": "Atlantic / chips / salad / tartare",
+							"rightInfo": "Extra Free Juice"
+						},
+						{
+							"id": 3,
+							"thumb": "10.jpg",
+							"name": "Pangasius or Basa",
+							"price": 55,
+							"priceFull": 110,
+							"leftInfo": "Truffle mash / pepper sauce.",
+							"rightInfo": "Extra Free Juice"
+						},
+						{
+							"id": 4,
+							"thumb": "9.jpg",
+							"name": "Salmon Fry",
+							"price": 70,
+							"priceFull": 140,
+							"leftInfo": "Ricotta / goat cheese / beetroot",
+							"rightInfo": "Extra Free Juice"
+						}
+					]
+				}
+			]
+		},
+		{
+			"id": 4,
+			"tabClass": "",
+			"tabThumb": "8.jpg",
+			"discount": 25,
+			"tabId": "tab4",
+			"tabContent": [
+				{
+					"id": 1,
+					"tabData": [
+						{
+							"id": 1,
+							"thumb": "13.jpg",
+							"name": "Wine",
+							"price": 34,
+							"priceFull": 65,
+							"leftInfo": "Ricotta / goat cheese / beetroot",
+							"rightInfo": "Extra Free Juice"
+						},
+						{
+							"id": 2,
+							"thumb": "14.jpg",
+							"name": "Coffee",
+							"price": 45,
+							"priceFull": 90,
+							"leftInfo": "Atlantic / chips / salad / tartare",
+							"rightInfo": "Extra Free Juice"
+						},
+						{
+							"id": 3,
+							"thumb": "15.jpg",
+							"name": "Hot chocolate",
+							"price": 44,
+							"priceFull": 85,
+							"leftInfo": "Truffle mash / pepper sauce",
+							"rightInfo": "Extra Free Juice"
+						},
+						{
+							"id": 4,
+							"thumb": "16.jpg",
+							"name": "Milk Shake",
+							"price": 20,
+							"priceFull": 40,
+							"leftInfo": "Ricotta / goat cheese / beetroot",
+							"rightInfo": "Extra Free Juice"
+						}
+					]
+				},
+				{
+					"id": 2,
+					"tabData": [
+						{
+							"id": 1,
+							"thumb": "16.jpg",
+							"name": "Milk Shake",
+							"price": 30,
+							"priceFull": 60,
+							"leftInfo": "Ricotta / goat cheese / beetroot",
+							"rightInfo": "Extra Free Juice"
+						},
+						{
+							"id": 2,
+							"thumb": "15.jpg",
+							"name": "Hot Chocolate",
+							"price": 55,
+							"priceFull": 110,
+							"leftInfo": "Atlantic / chips / salad / tartare",
+							"rightInfo": "Extra Free Juice"
+						},
+						{
+							"id": 3,
+							"thumb": "14.jpg",
+							"name": "Coffee",
+							"price": 88,
+							"priceFull": 160,
+							"leftInfo": "Truffle mash / pepper sauce.",
+							"rightInfo": "Extra Free Juice"
+						},
+						{
+							"id": 4,
+							"thumb": "13.jpg",
+							"name": "Wine",
+							"price": 30,
+							"priceFull": 60,
+							"leftInfo": "Ricotta / goat cheese / beetroot",
+							"rightInfo": "Extra Free Juice"
+						}
+					]
+				}
+			]
+		}
+	],
+	"productData": [
+		{
+			"id": 1,
+			"thumb": "1.png",
+			"productTag": ["Cheese", "Pizza"],
+			"title": "Margherita Pizza",
+			"newPrice": 12,
+			"btnText": "Add to cart"
+		},
+		{
+			"id": 2,
+			"thumb": "2.png",
+			"badge": "Sale!",
+			"productTag": ["Creamy", "Burger"],
+			"title": "Margherita Pizza",
+			"newPrice": 8,
+			"oldPrice": 5,
+			"btnText": "Add to cart"
+		},
+		{
+			"id": 3,
+			"thumb": "3.png",
+			"productTag": ["Beef", "Steak"],
+			"title": "Grilled Flank Steak",
+			"newPrice": 14,
+			"btnText": "Add to cart"
+		},
+		{
+			"id": 4,
+			"thumb": "5.png",
+			"productTag": ["BBQ", "Meat"],
+			"title": "Barbecue Chicken",
+			"newPrice": 8,
+			"btnText": "Add to cart"
+		},
+		{
+			"id": 5,
+			"thumb": "8.png",
+			"productTag": ["Food", "Roll"],
+			"title": "Vegetable Roll",
+			"newPrice": 25,
+			"btnText": "Add to cart"
+		},
+		{
+			"id": 6,
+			"thumb": "6.png",
+			"productTag": ["Pasta", "Spicy"],
+			"title": "Creamy Pasta",
+			"newPrice": 18,
+			"oldPrice": 13,
+			"btnText": "Add to cart"
+		},
+		{
+			"id": 7,
+			"thumb": "7.png",
+			"productTag": ["Meat", "Shawarma"],
+			"title": "Chicken Shawarma",
+			"newPrice": 3,
+			"btnText": "Add to cart"
+		},
+		{
+			"id": 8,
+			"thumb": "4.png",
+			"productTag": ["Sandwich", "Chicken"],
+			"title": "Submarine Sandwich",
+			"newPrice": 6,
+			"btnText": "Add to cart"
+		},
+		{
+			"id": 9,
+			"thumb": "7.png",
+			"productTag": ["Meat", "Shawarma"],
+			"title": "Chicken Shawarma",
+			"newPrice": 3,
+			"btnText": "Add to cart"
+		},
+		{
+			"id": 10,
+			"thumb": "6.png",
+			"productTag": ["Pasta", "Spicy"],
+			"title": "Creamy Pasta",
+			"newPrice": 18,
+			"oldPrice": 13,
+			"btnText": "Add to cart"
+		},
+		{
+			"id": 11,
+			"thumb": "8.png",
+			"productTag": ["Food", "Roll"],
+			"title": "Vegetable Roll",
+			"newPrice": 25,
+			"btnText": "Add to cart"
+		},
+		{
+			"id": 12,
+			"thumb": "5.png",
+			"productTag": ["BBQ", "Meat"],
+			"title": "Barbecue Chicken",
+			"newPrice": 8,
+			"btnText": "Add to cart"
+		},
+		{
+			"id": 13,
+			"thumb": "3.png",
+			"productTag": ["Beef", "Steak"],
+			"title": "Grilled Flank Steak",
+			"newPrice": 14,
+			"btnText": "Add to cart"
+		},
+		{
+			"id": 14,
+			"thumb": "4.png",
+			"productTag": ["Sandwich", "Chicken"],
+			"title": "Submarine Sandwich",
+			"newPrice": 6,
+			"btnText": "Add to cart"
+		},
+		{
+			"id": 15,
+			"thumb": "1.png",
+			"productTag": ["Cheese", "Pizza"],
+			"title": "Margherita Pizza",
+			"newPrice": 12,
+			"btnText": "Add to cart"
+		},
+		{
+			"id": 16,
+			"thumb": "2.png",
+			"badge": "Sale!",
+			"productTag": ["Creamy", "Burger"],
+			"title": "Margherita Pizza",
+			"newPrice": 8,
+			"oldPrice": 5,
+			"btnText": "Add to cart"
+		},
+		{
+			"id": 17,
+			"thumb": "7.png",
+			"productTag": ["Meat", "Shawarma"],
+			"title": "Chicken Shawarma",
+			"newPrice": 3,
+			"btnText": "Add to cart"
+		},
+		{
+			"id": 18,
+			"thumb": "8.png",
+			"productTag": ["Food", "Roll"],
+			"title": "Vegetable Roll",
+			"newPrice": 25,
+			"btnText": "Add to cart"
+		},
+		{
+			"id": 19,
+			"thumb": "3.png",
+			"productTag": ["Beef", "Steak"],
+			"title": "Grilled Flank Steak",
+			"newPrice": 14,
+			"btnText": "Add to cart"
+		},
+		{
+			"id": 20,
+			"thumb": "6.png",
+			"productTag": ["Pasta", "Spicy"],
+			"title": "Creamy Pasta",
+			"newPrice": 18,
+			"oldPrice": 13,
+			"btnText": "Add to cart"
+		}
+	],
+	"productCarouselData": {
+		"innerCarousel": [
+			{
+				"id": 1,
+				"activeClass": "active",
+				"thumb": "1.png",
+				"badge": "-16%"
+			},
+			{
+				"id": 2,
+				"activeClass": "",
+				"thumb": "2.png",
+				"badge": "-25%"
+			},
+			{
+				"id": 3,
+				"activeClass": "",
+				"thumb": "3.png",
+				"badge": "-33%"
+			},
+			{
+				"id": 4,
+				"activeClass": "",
+				"thumb": "4.png",
+				"badge": "-50%"
+			},
+			{
+				"id": 5,
+				"activeClass": "",
+				"thumb": "1.png",
+				"badge": "-16%"
+			},
+			{
+				"id": 6,
+				"activeClass": "",
+				"thumb": "2.png",
+				"badge": "-25%"
+			},
+			{
+				"id": 7,
+				"activeClass": "",
+				"thumb": "3.png",
+				"badge": "-33%"
+			},
+			{
+				"id": 8,
+				"activeClass": "",
+				"thumb": "4.png",
+				"badge": "-50%"
+			}
+		],
+		"outerCarousel": [
+			{
+				"id": 1,
+				"activeClass": "active",
+				"thumb": "1.png",
+				"slideNumber": "0"
+			},
+			{
+				"id": 2,
+				"activeClass": "",
+				"thumb": "2.png",
+				"slideNumber": "1"
+			},
+			{
+				"id": 3,
+				"activeClass": "",
+				"thumb": "3.png",
+				"slideNumber": "2"
+			},
+			{
+				"id": 4,
+				"activeClass": "",
+				"thumb": "4.png",
+				"slideNumber": "3"
+			},
+			{
+				"id": 5,
+				"activeClass": "",
+				"thumb": "1.png",
+				"slideNumber": "5"
+			},
+			{
+				"id": 6,
+				"activeClass": "",
+				"thumb": "2.png",
+				"slideNumber": "6"
+			},
+			{
+				"id": 7,
+				"activeClass": "",
+				"thumb": "3.png",
+				"slideNumber": "7"
+			},
+			{
+				"id": 8,
+				"activeClass": "",
+				"thumb": "4.png",
+				"slideNumber": "8"
+			}
+		]
+	},
+	"testimonialV1Data": [
+		{
+			"id": 1,
+			"ratings": 5,
+			"rate": "5/5",
+			"title": "The best food ever",
+			"text": "Targeting consultation discover apartments. ndulgence off under folly death wrote cause her way spite. Plan upon yet way get cold spot its week. Almost do am or limits hearts. Resolve parties but why she shewing.",
+			"name": "Matthew J. Wyman",
+			"designation": "Senior Consultant"
+		},
+		{
+			"id": 2,
+			"ratings": 5,
+			"rate": "5/5",
+			"title": "Awesome and delicious food",
+			"text": "Breaking consultation discover apartments. ndulgence off under folly death wrote cause her way spite. Plan upon yet way get cold spot its week. Almost do am or limits hearts. Resolve parties but why she shewing.",
+			"name": "Istiak Ahmed",
+			"designation": "Marketing Manager"
+		},
+		{
+			"id": 3,
+			"ratings": 5,
+			"rate": "5/5",
+			"title": "The best food ever",
+			"text": "Targeting consultation discover apartments. ndulgence off under folly death wrote cause her way spite. Plan upon yet way get cold spot its week. Almost do am or limits hearts. Resolve parties but why she shewing.",
+			"name": "Matthew J. Wyman",
+			"designation": "Senior Consultant"
+		},
+		{
+			"id": 4,
+			"ratings": 5,
+			"rate": "5/5",
+			"title": "Awesome and delicious food",
+			"text": "Breaking consultation discover apartments. ndulgence off under folly death wrote cause her way spite. Plan upon yet way get cold spot its week. Almost do am or limits hearts. Resolve parties but why she shewing.",
+			"name": "Istiak Ahmed",
+			"designation": "Marketing Manager"
+		}
+	],
+	"ui": {
+		"menuPage": {
+			"defaultTitle": "Food Menu",
+			"defaultBgImage": "/assets/restaurent_images/shape/5.jpg",
+			"metaPrefix": "Restan - "
+		},
+		"shopSinglePage": {
+			"defaultTitle": "Shop Single",
+			"metaPrefix": "Restan - "
+		},
+		"breadcrumb": {
+			"defaultTitle": "Error Page",
+			"defaultHomePath": "/restaurant",
+			"defaultCrumb": "not-found"
+		},
+		"foodMenu": {
+			"mealTypeLabels": ["Half", "Full"],
+			"badgeLabel": "Menu",
+			"defaultSection1Title": "Breakfast",
+			"defaultSection1Image": "/assets/restaurent_images/banner/10.jpg",
+			"defaultSection2Title": "Lunch",
+			"defaultSection2Image": "/assets/restaurent_images/banner/11.jpg",
+			"defaultSection3Title": "Sea Food",
+			"defaultSection3Subtitle": "Fresh from ocean",
+			"defaultSection4Title": "Beverage",
+			"defaultSection4Subtitle": "Drinks & Wine"
+		},
+		"deliveryV1": {
+			"title": "30 Minutes Delivery!",
+			"text": "A relaxing and pleasant atmosphere, good jazz, dinner, and cocktails. The Patio Time Bar opens in the center of Florence. The only bar inspired by the 1960s, it will give you a experience that you’ll have a hard time forgetting.",
+			"buttonLabel": "Order Now",
+			"buttonHref": "/shop",
+			"bgImage": "/assets/restaurent_images/banner/9.jpg",
+			"shapeImage": "/assets/restaurent_images/illustration/11.png"
+		},
+		"reservationV1": {
+			"subHeading": "Reservation",
+			"title": "Reservation Your Favorite Private Table",
+			"text": "A relaxing and pleasant atmosphere, good jazz, dinner, and cocktails. The Patio Time Bar opens in the center of Florence. The only bar inspired by the 1960s, it will give you a experience that you’ll have a hard time forgetting.",
+			"lunchLabel": "Launch Menu",
+			"dinnerLabel": "Dinner Menu",
+			"lunchStats": "30+ items",
+			"dinnerStats": "50+ items",
+			"bgImage": "/assets/restaurent_images/banner/2.jpg"
+		},
+		"headerTopV1": {
+			"phoneLabel": "Phone:",
+			"phone": "+4733378901",
+			"emailLabel": "Email:",
+			"email": "food@restan.com",
+			"language": "English",
+			"languages": ["Spanish", "Arabic"]
+		},
+		"footer": {
+			"brandName": "Restan",
+			"logoLink": "/resturent/food-menu",
+			"logoImage": "/assets/restaurent_images/logo-light.png",
+			"shapeImage": "/assets/restaurent_images/shape/9.png",
+			"rightsText": "All Rights Reserved"
+		},
+		"footerRowContent": {
+			"aboutTitle": "About Us",
+			"aboutText": "Continued at zealously necessary is Surrounded sir motionless she end literature. Gay direction neglected.",
+			"exploreTitle": "Explore",
+			"exploreLinks": [
+				{ "label": "Menu", "link": "/resturent/food-menu" },
+				{ "label": "About", "link": "#" },
+				{ "label": "Help Center", "link": "#" },
+				{ "label": "Career", "link": "#" },
+				{ "label": "Features", "link": "#" },
+				{ "label": "Contact", "link": "#" }
+			],
+			"contactTitle": "Contact Info",
+			"address": "175 10h Street, Office 375 Berlin, De 21562",
+			"phone1": "+123 34598768",
+			"phone2": "+554 34598734",
+			"email": "food@restan.com",
+			"socialLinks": {
+				"facebook": "https://facebook.com",
+				"twitter": "https://twitter.com",
+				"youtube": "https://youtube.com",
+				"linkedin": "https://linkedin.com"
+			},
+			"newsletterTitle": "Newsletter",
+			"newsletterText": "Join our subscribers list to get the latest news and special offers."
+		},
+		"relatedProducts": {
+			"heading": "Related Products"
+		},
+		"headerV6": {
+			"brandHref": "/resturent/food-menu",
+			"displayLogo": "/assets/restaurent_images/logo-light.png",
+			"scrolledLogo": "/assets/restaurent_images/logo.png",
+			"mobileLogo": "/assets/restaurent_images/logo.png",
+			"reservationHref": "#schedule",
+			"reservationLabel": "Reservation"
+		},
+		"mainMenu": {
+			"logo": "/assets/restaurent_images/logo-2.png",
+			"items": [
+				{ "label": "Food Menu", "href": "/resturent/food-menu" },
+				{ "label": "Shop Single (1)", "href": "/resturent/shop-single/1" },
+				{ "label": "Shop Single (2)", "href": "/resturent/shop-single/2" }
+			]
+		},
+		"testimonialV1": {
+			"subTitle": "Happy Customers",
+			"title": "Our Customers Feedback",
+			"shapeImages": ["/assets/restaurent_images/shape/5.png", "/assets/restaurent_images/shape/7.png"],
+			"thumbImages": ["/assets/restaurent_images/team/4.jpg", "/assets/restaurent_images/team/5.jpg", "/assets/restaurent_images/team/6.jpg", "/assets/restaurent_images/team/7.jpg"]
+		},
+		"shopSingle": {
+			"defaultSku": "BE45VGRT",
+			"inStock": "In Stock",
+			"outOfStock": "Out of Stock",
+			"noDescription": "No description available.",
+			"fallbackDescription": "The Aspire 5 is a compact laptop in a thin case with a metal cover, a high-quality Full HD IPS display and a rich set of interfaces. Thanks to its powerful components, the laptop can handle resource-intensive tasks perfectly and is also suitable for most games.",
+			"saleBadge": "Sale",
+			"categoryLabel": "Category:",
+			"generalCategory": "General",
+			"categoryLinks": ["Computer", "Speaker", "Headphone"],
+			"skuLabel": "SKU:",
+			"deliveryTitle": "2-day Delivery",
+			"deliveryText": "Speedy and reliable parcel delivery!",
+			"wishlistLabel": "Add to wishlist",
+			"compareLabel": "Compare",
+			"orderLabel": "Order Now",
+			"seeFullLabel": "See Full",
+			"seeHalfLabel": "See Half",
+			"staticModeAlert": "added to cart! (Static Mode)"
+		},
+		"singleFoodMenuTabV3": {
+			"defaultImage": "/assets/restaurent_images/food/1.jpg",
+			"staticRoutePrefix": "/restaurant/shop-single/"
+		},
+		"singleProductGrid": {
+			"defaultTitle": "Item",
+			"defaultBtnText": "Add to Cart",
+			"wishlistLabel": "Add to wishlist",
+			"quickViewLabel": "Quick view",
+			"restaurantContextMissing": "Restaurant context is missing.",
+			"toastSuffix": "(Full) added to cart!"
+		},
+		"singleProductList": {
+			"addToCartLabel": "Add to cart",
+			"wishlistLabel": "Add to wishlist",
+			"staticModeAlert": "added to cart! (Static Mode)"
+		},
+		"reservationForm": {
+			"phoneLabel": "Phone",
+			"phonePlaceholder": "+4733378901",
+			"personLabel": "Person",
+			"dateLabel": "Date",
+			"datePlaceholder": "Date",
+			"timeLabel": "Time",
+			"buttonLabel": "Book A Table",
+			"submitAlert": "Thanks For Booking! (Reservation submitted statically)",
+			"personOptions": [
+				{ "value": "1", "label": "1 Person" },
+				{ "value": "2", "label": "2 Person" },
+				{ "value": "3", "label": "3 Person" },
+				{ "value": "4", "label": "4 Person" },
+				{ "value": "5", "label": "5 Person" }
+			],
+			"scheduleOptions": [
+				{ "value": "10", "label": "10:00 AM" },
+				{ "value": "11", "label": "11:00 AM" },
+				{ "value": "12", "label": "12:00 PM" },
+				{ "value": "1", "label": "1:00 PM" },
+				{ "value": "2", "label": "2:00 PM" }
+			]
+		}
+	}
+}

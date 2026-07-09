@@ -1,7 +1,7 @@
 import axiosInstance from "@/lib/axiosInstance";
 import LayoutV6 from "../../_components/LayoutV6";
 import ShopSinglePageContent from "../../_components/shop/ShopSinglePageContent";
-import ProductData from "../../assets/jsonData/product/ProductData.json";
+import staticData from "../../assets/staticData.json";
 
 interface Params {
   slug: string;
@@ -20,11 +20,11 @@ export async function generateMetadata({ params }: PageProps) {
     );
     const item = res.data.data.item;
     return {
-      title: `Restan - ${item?.name || "Shop Single"}`,
+      title: `${staticData.ui.shopSinglePage.metaPrefix}${item?.name || staticData.ui.shopSinglePage.defaultTitle}`,
     };
   } catch {
     return {
-      title: "Restan - Shop Single",
+      title: `${staticData.ui.shopSinglePage.metaPrefix}${staticData.ui.shopSinglePage.defaultTitle}`,
     };
   }
 }
@@ -51,10 +51,10 @@ const ShopSinglePage = async ({ params }: PageProps) => {
       error,
     );
     // Fallback search in static mockup json
-    data = ProductData.find((product: any) => product.slug === itemSlug);
+    data = staticData.productData.find((product: any) => product.slug === itemSlug);
   }
 
-  const title = data?.name || data?.title || "Shop Single";
+  const title = data?.name || data?.title || staticData.ui.shopSinglePage.defaultTitle;
 
   return (
     <>

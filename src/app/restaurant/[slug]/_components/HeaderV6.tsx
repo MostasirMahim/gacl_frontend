@@ -6,6 +6,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import useStickyMenu from './hooks/useStickyMenu';
 import HeaderCart from './HeaderCart';
+import staticData from "../assets/staticData.json";
 
 interface DataType {
     logoWhite?: boolean
@@ -26,19 +27,19 @@ const HeaderV6 = ({ logoWhite }: DataType) => {
                             <button type="button" className="navbar-toggle" data-toggle="collapse" data-target="#navbar-menu" onClick={openMenu}>
                                 <i className="fa fa-bars"></i>
                             </button>
-                            <Link className="navbar-brand" href="/resturent/food-menu">
-                                <Image src="/assets/img/logo-light.png" width={675} height={332} className="logo logo-display" alt="Logo" />
+                            <Link className="navbar-brand" href={staticData.ui.headerV6.brandHref}>
+                                <Image src={staticData.ui.headerV6.displayLogo} width={675} height={332} className="logo logo-display" alt="Logo" />
 
                                 {logoWhite ?
-                                    <Image src="/assets/img/logo-light.png" width={675} height={332} className="logo logo-scrolled" alt="Logo" /> :
-                                    <Image src="/assets/img/logo.png" width={675} height={332} className="logo logo-scrolled" alt="Logo" />
+                                    <Image src={staticData.ui.headerV6.displayLogo} width={675} height={332} className="logo logo-scrolled" alt="Logo" /> :
+                                    <Image src={staticData.ui.headerV6.scrolledLogo} width={675} height={332} className="logo logo-scrolled" alt="Logo" />
                                 }
 
                             </Link>
                         </div>
 
                         <div className={`collapse navbar-collapse collapse-mobile ${isOpen ? "show" : ""}`} id="navbar-menu">
-                            <Image src="/assets/img/logo.png" width={675} height={332} alt="Logo" />
+                            <Image src={staticData.ui.headerV6.mobileLogo} width={675} height={332} alt="Logo" />
                             <button type="button" className="navbar-toggle" data-toggle="collapse" data-target="#navbar-menu" onClick={closeMenu}>
                                 <i className="fa fa-times"></i>
                             </button>
@@ -58,7 +59,7 @@ const HeaderV6 = ({ logoWhite }: DataType) => {
                             <div className="attr-nav attr-box">
                                 <ul>
                                     <HeaderCart />
-                                    <li className="button"><Link href="#schedule">Reservation</Link></li>
+                                    <li className="button"><Link href={staticData.ui.headerV6.reservationHref}>{staticData.ui.headerV6.reservationLabel}</Link></li>
                                 </ul>
                             </div>
                         </div>

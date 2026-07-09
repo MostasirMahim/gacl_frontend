@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import staticData from "../assets/staticData.json";
 
 interface RestaurantType {
     delivery_banner_title?: string;
@@ -7,15 +8,15 @@ interface RestaurantType {
 }
 
 const DeliveryV1 = ({ restaurant }: { restaurant?: RestaurantType }) => {
-    const title = restaurant?.delivery_banner_title || "30 Minutes Delivery!";
-    const text = restaurant?.delivery_banner_text || "A relaxing and pleasant atmosphere, good jazz, dinner, and cocktails. The Patio Time Bar opens in the center of Florence. The only bar inspired by the 1960s, it will give you a experience that you’ll have a hard time forgetting.";
+    const title = restaurant?.delivery_banner_title || staticData.ui.deliveryV1.title;
+    const text = restaurant?.delivery_banner_text || staticData.ui.deliveryV1.text;
 
     return (
         <>
             <div className="deliverya-process-area shadow dark default-padding bg-dark text-light bg-cover"
-                style={{ backgroundImage: "url(/assets/img/banner/9.jpg)" }}>
+                style={{ backgroundImage: `url(${staticData.ui.deliveryV1.bgImage})` }}>
                 <div className="shape">
-                    <Image src="/assets/img/illustration/11.png" alt="Image Not Found" width={697} height={822} />
+                    <Image src={staticData.ui.deliveryV1.shapeImage} alt="Image Not Found" width={697} height={822} />
                 </div>
                 <div className="container">
                     <div className="row">
@@ -25,7 +26,7 @@ const DeliveryV1 = ({ restaurant }: { restaurant?: RestaurantType }) => {
                                 <p>
                                     {text}
                                 </p>
-                                <Link className="btn btn-theme btn-md animation mt-10" href="/shop">Order Now <i className="far fa-shopping-cart"></i></Link>
+                                <Link className="btn btn-theme btn-md animation mt-10" href={staticData.ui.deliveryV1.buttonHref}>{staticData.ui.deliveryV1.buttonLabel} <i className="far fa-shopping-cart"></i></Link>
                             </div>
                         </div>
                     </div>
