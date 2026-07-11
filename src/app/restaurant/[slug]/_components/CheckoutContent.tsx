@@ -10,6 +10,14 @@ interface CheckoutContentProps {
   restaurantSlug: string;
 }
 
+// Shape returned by the public member-lookup endpoint
+interface GuestMemberInfo {
+  id: number;
+  member_ID: string;
+  full_name: string;
+  email_hint: string;
+}
+
 const CheckoutContent = ({ restaurantSlug }: CheckoutContentProps) => {
   const router = useRouter();
   
@@ -20,9 +28,14 @@ const CheckoutContent = ({ restaurantSlug }: CheckoutContentProps) => {
 
   // Authentication & Member state
   const [member, setMember] = useState<any>(null);
-  const [loadingMember, setLoadingMember] = useState(true);
+  const [memberChecked, setMemberChecked] = useState(false); // true once auth check completes
   const [restaurant, setRestaurant] = useState<any>(null);
   const [loadingRestaurant, setLoadingRestaurant] = useState(true);
+
+  // Guest (unauthenticated) member lookup state
+  const [guestMemberIdInput, setGuestMemberIdInput] = useState("");
+  const [verifyingGuestMember, setVerifyingGuestMember] = useState(false);
+  const [verifiedGuestMember, setVerifiedGuestMember] = useState<GuestMemberInfo | null>(null);
 
   useEffect(() => {
     setMounted(true);
@@ -47,6 +60,11 @@ const CheckoutContent = ({ restaurantSlug }: CheckoutContentProps) => {
   const subtotal = cart.reduce((sum, item) => sum + item.price * item.quantity, 0);
   const finalTotal = Math.max(0, subtotal - couponDiscount);
 
+  // Derived: is the "Place Order" button allowed?
+  // - authenticated user: always (member is set)
+  // - guest user: only after successfully verifying a member ID
+  const canPlaceOrder = member !== null || verifiedGuestMember !== null;
+
   // Fetch Member Profile
   useEffect(() => {
     const fetchMember = async () => {
@@ -54,13 +72,12 @@ const CheckoutContent = ({ restaurantSlug }: CheckoutContentProps) => {
         const res = await axiosInstance.get("/api/member/v1/portal/me/");
         if (res.status === 200 && res.data?.data?.member_info) {
           setMember(res.data.data.member_info);
-        } else {
-          toast.error("You are not signed in yet. Please log in to place an order.");
         }
-      } catch (err) {
-        toast.error("You are not signed in yet. Please log in to place an order.");
+        // If not authenticated, member stays null — guest flow handles it silently
+      } catch {
+        // Unauthenticated or network error: fall through to guest flow
       } finally {
-        setLoadingMember(false);
+        setMemberChecked(true);
       }
     };
     fetchMember();
@@ -83,10 +100,37 @@ const CheckoutContent = ({ restaurantSlug }: CheckoutContentProps) => {
     fetchRestaurant();
   }, [restaurantSlug]);
 
+  // Guest: verify member by member_ID string
+  const handleVerifyGuestMember = async (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (!guestMemberIdInput.trim()) {
+      toast.warning("Please enter a Member ID");
+      return;
+    }
+    setVerifyingGuestMember(true);
+    try {
+      const res = await axiosInstance.get(
+        `/api/restaurants/v1/public/member-lookup/?member_id=${encodeURIComponent(guestMemberIdInput.trim())}`
+      );
+      if (res.status === 200 && res.data?.data) {
+        setVerifiedGuestMember(res.data.data);
+        toast.success(`Member verified: ${res.data.data.full_name}`);
+      } else {
+        setVerifiedGuestMember(null);
+        toast.error(res.data?.message || "Member not found");
+      }
+    } catch (err: any) {
+      setVerifiedGuestMember(null);
+      toast.error(err?.response?.data?.message || "No active member found with this Member ID");
+    } finally {
+      setVerifyingGuestMember(false);
+    }
+  };
+
   const handlePlaceOrder = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!member) {
-      toast.error("You are not signed in yet");
+    if (!member && !verifiedGuestMember) {
+      toast.error("Please verify a Member ID to place an order");
       return;
     }
     if (cart.length === 0) {
@@ -104,24 +148,37 @@ const CheckoutContent = ({ restaurantSlug }: CheckoutContentProps) => {
 
     setPlacing(true);
     try {
-      const payload = {
+      const sharedPayload = {
         restaurant_id: restaurant.id,
         serve_location: serveLocation,
         room_number: serveLocation === "room" ? roomNumber.trim() : "",
         note: note,
-        require_otp: true,
         items: cart.map((item) => ({
           item_id: item.item_id,
           quantity: item.quantity,
         })),
       };
 
-      const res = await axiosInstance.post("/api/restaurants/v1/restaurants/orders/", payload);
-      if (res.status === 201 && res.data?.data) {
-        setPlacedOrder(res.data.data);
-        toast.success("Order placed! An OTP verification code has been sent.");
+      if (!member && verifiedGuestMember) {
+        // ── GUEST PATH: use the public no-auth endpoint ──
+        const payload = { ...sharedPayload, member_id: verifiedGuestMember.id };
+        const res = await axiosInstance.post("/api/restaurants/v1/public/guest/orders/", payload);
+        if (res.status === 201 && res.data?.data) {
+          setPlacedOrder(res.data.data);
+          toast.success("Order placed! An OTP verification code has been sent to the member's email.");
+        } else {
+          toast.error(res.data?.message || "Failed to place order");
+        }
       } else {
-        toast.error(res.data?.message || "Failed to place order");
+        // ── AUTHENTICATED MEMBER PATH: existing endpoint ──
+        const payload = { ...sharedPayload, require_otp: true };
+        const res = await axiosInstance.post("/api/restaurants/v1/restaurants/orders/", payload);
+        if (res.status === 201 && res.data?.data) {
+          setPlacedOrder(res.data.data);
+          toast.success("Order placed! An OTP verification code has been sent.");
+        } else {
+          toast.error(res.data?.message || "Failed to place order");
+        }
       }
     } catch (err: any) {
       toast.error(err?.response?.data?.message || "Failed to place order");
@@ -140,10 +197,21 @@ const CheckoutContent = ({ restaurantSlug }: CheckoutContentProps) => {
 
     setVerifyingOtp(true);
     try {
-      const res = await axiosInstance.post(
-        `/api/restaurants/v1/restaurants/orders/${placedOrder.id}/verify-otp/`,
-        { otp_code: otp.trim() }
-      );
+      let res;
+      if (!member && verifiedGuestMember) {
+        // Guest path: public endpoint, include member_id as extra guard
+        res = await axiosInstance.post(
+          `/api/restaurants/v1/public/guest/orders/${placedOrder.id}/verify-otp/`,
+          { otp_code: otp.trim(), member_id: verifiedGuestMember.id }
+        );
+      } else {
+        // Authenticated member path
+        res = await axiosInstance.post(
+          `/api/restaurants/v1/restaurants/orders/${placedOrder.id}/verify-otp/`,
+          { otp_code: otp.trim() }
+        );
+      }
+
       if (res.status === 200 || res.status === 201) {
         toast.success("Order confirmed successfully! It is now being prepared.");
         clearCart(restaurantSlug);
@@ -173,7 +241,7 @@ const CheckoutContent = ({ restaurantSlug }: CheckoutContentProps) => {
     }
   };
 
-  if (!mounted || loadingMember || loadingRestaurant) {
+  if (!mounted || !memberChecked || loadingRestaurant) {
     return (
       <div className="checkout-area default-padding text-center">
         <div className="container">
@@ -188,34 +256,22 @@ const CheckoutContent = ({ restaurantSlug }: CheckoutContentProps) => {
     );
   }
 
-  if (!member) {
-    return (
-      <div className="checkout-area default-padding">
-        <div className="container">
-          <div className="row">
-            <div className="col-lg-8 offset-lg-2 text-center py-5" style={{ backgroundColor: "var(--white)", borderRadius: "8px", border: "1px solid var(--color-primary)" }}>
-              <i className="fas fa-exclamation-circle fa-4x mb-3" style={{ color: "var(--color-primary)" }}></i>
-              <h2>Authentication Required</h2>
-              <p className="text-muted">You must be logged in as a registered club member to place food orders.</p>
-              <button
-                className="btn btn-theme secondary mt-3"
-                onClick={() => router.push("/login")}
-              >
-                Sign In Now
-              </button>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
   if (cart.length === 0) {
     return (
       <div className="checkout-area default-padding">
+        <style>{`
+          body.bg-dark .checkout-empty-card {
+            background-color: #2b2b2b !important;
+            border-color: rgba(255,255,255,0.1) !important;
+          }
+          body.bg-dark .checkout-empty-card h2,
+          body.bg-dark .checkout-empty-card p {
+            color: #e8e8e8 !important;
+          }
+        `}</style>
         <div className="container">
           <div className="row">
-            <div className="col-lg-8 offset-lg-2 text-center py-5" style={{ backgroundColor: "var(--white)", borderRadius: "8px", border: "1px solid var(--color-primary)" }}>
+            <div className="col-lg-8 offset-lg-2 text-center py-5 checkout-empty-card" style={{ backgroundColor: "var(--white)", borderRadius: "8px", border: "1px solid var(--color-primary)" }}>
               <i className="fas fa-shopping-basket fa-4x mb-3" style={{ color: "var(--color-primary)" }}></i>
               <h2>Your Cart is Empty</h2>
               <p className="text-muted">Browse our menu items and add dishes to your cart to check out.</p>
@@ -239,10 +295,66 @@ const CheckoutContent = ({ restaurantSlug }: CheckoutContentProps) => {
           <div className="col-lg-12">
             <div className="checkout-form">
               <div className="row">
-                
-                 {/* Left side: Order summary & Notes */}
+
+                {/* ── Dark mode scoped styles ── */}
+                <style>{`
+                  body.bg-dark .checkout-card {
+                    background-color: #2b2b2b !important;
+                    border-color: rgba(255,255,255,0.1) !important;
+                    color: #e8e8e8 !important;
+                  }
+                  body.bg-dark .checkout-card h3,
+                  body.bg-dark .checkout-card h2,
+                  body.bg-dark .checkout-card label,
+                  body.bg-dark .checkout-card p {
+                    color: #e8e8e8 !important;
+                  }
+                  body.bg-dark .checkout-card .table {
+                    color: #e8e8e8 !important;
+                    background-color: #2b2b2b !important;
+                    --bs-table-bg: #2b2b2b !important;
+                    --bs-table-color: #e8e8e8 !important;
+                  }
+                  body.bg-dark .checkout-card .table > :not(caption) > * > * {
+                    background-color: #2b2b2b !important;
+                    color: #e8e8e8 !important;
+                    border-color: rgba(255,255,255,0.08) !important;
+                  }
+                  body.bg-dark .checkout-card .table-responsive {
+                    background-color: #2b2b2b !important;
+                  }
+                  body.bg-dark .checkout-input {
+                    background-color: #222222 !important;
+                    border-color: rgba(255,255,255,0.12) !important;
+                    color: #e8e8e8 !important;
+                  }
+                  body.bg-dark .checkout-input::placeholder {
+                    color: #666666 !important;
+                  }
+                  body.bg-dark .checkout-input:focus {
+                    border-color: var(--color-primary) !important;
+                    background-color: #1e1e1e !important;
+                  }
+                  body.bg-dark .otp-digit-box {
+                    background-color: #222222 !important;
+                    color: #e8e8e8 !important;
+                    border-color: rgba(255,255,255,0.12) !important;
+                  }
+                  /* OTP card (card-order-otp) dark bg */
+                  body.bg-dark .card-order-otp.checkout-card {
+                    background-color: #2b2b2b !important;
+                    border-color: var(--color-primary) !important;
+                  }
+                  /* Verified member name — white in dark mode */
+                  body.bg-dark .verified-member-name {
+                    color: #e8e8e8 !important;
+                  }
+                  body.bg-dark .verified-member-hint {
+                    color: #999999 !important;
+                  }
+                `}</style>
                 <div className="col-lg-6">
-                  <div className="shop-cart-totals" style={{ padding: "30px", backgroundColor: "var(--white)", borderRadius: "8px", border: "1px solid var(--color-primary)" }}>
+                  <div className="shop-cart-totals checkout-card" style={{ padding: "30px", backgroundColor: "var(--white)", borderRadius: "8px", border: "1px solid var(--color-primary)" }}>
                     <h3 className="mb-4" style={{ color: "var(--color-heading)" }}>Your Order</h3>
                     <div className="table-responsive">
                       <table className="table" style={{ color: "var(--color-heading)", borderColor: "rgba(0,0,0,0.1)" }}>
@@ -300,7 +412,7 @@ const CheckoutContent = ({ restaurantSlug }: CheckoutContentProps) => {
                     <h3>Order notes (optional)</h3>
                     <div className="form-group comments">
                       <textarea
-                        className="form-control"
+                        className="form-control checkout-input"
                         id="comments"
                         name="comments"
                         placeholder="Notes about your order, e.g. special notes for delivery."
@@ -325,7 +437,7 @@ const CheckoutContent = ({ restaurantSlug }: CheckoutContentProps) => {
                 <div className="col-lg-6 mt-5 mt-lg-0">
                   {!placedOrder ? (
                     <div
-                      className="card-order-config p-4"
+                      className="card-order-config checkout-card p-4"
                       style={{
                         backgroundColor: "var(--white)",
                         borderRadius: "8px",
@@ -360,7 +472,8 @@ const CheckoutContent = ({ restaurantSlug }: CheckoutContentProps) => {
                                 className="d-none"
                               />
                               <i className="fas fa-utensils me-2"></i>
-                              Restaurant Table
+                              <span className="d-none d-lg-inline">Restaurant Table</span>
+                              <span className="d-inline d-lg-none">Restaurant</span>
                             </label>
                             <label
                               className="flex-fill p-3 text-center border rounded cursor-pointer transition-all"
@@ -380,7 +493,8 @@ const CheckoutContent = ({ restaurantSlug }: CheckoutContentProps) => {
                                 className="d-none"
                               />
                               <i className="fas fa-door-open me-2"></i>
-                              Room Service
+                              <span className="d-none d-lg-inline">Room Service</span>
+                              <span className="d-inline d-lg-none">Room</span>
                             </label>
                           </div>
                         </div>
@@ -390,7 +504,7 @@ const CheckoutContent = ({ restaurantSlug }: CheckoutContentProps) => {
                           <div className="form-group mb-4 animate__animated animate__fadeIn">
                             <label htmlFor="roomNumber" className="mb-2">Room / Suite Number *</label>
                             <input
-                              className="form-control"
+                              className="form-control checkout-input"
                               id="roomNumber"
                               name="roomNumber"
                               type="text"
@@ -407,7 +521,7 @@ const CheckoutContent = ({ restaurantSlug }: CheckoutContentProps) => {
                           <label htmlFor="coupon" className="mb-2">Have a coupon code?</label>
                           <div className="input-group">
                             <input
-                              className="form-control"
+                              className="form-control checkout-input"
                               id="coupon"
                               name="coupon"
                               type="text"
@@ -425,12 +539,117 @@ const CheckoutContent = ({ restaurantSlug }: CheckoutContentProps) => {
                           </div>
                         </div>
 
+                        {/* Guest member lookup — only shown when user is NOT authenticated */}
+                        {!member && (
+                          <div className="form-group mb-4">
+                            <label className="mb-2 d-block" style={{ fontWeight: "600" }}>
+                              <i className="fas fa-user-check me-2" style={{ color: "var(--color-primary)" }}></i>
+                              Member ID <span style={{ color: "var(--color-primary)" }}>*</span>
+                            </label>
+                            <p className="text-muted mb-2" style={{ fontSize: "13px" }}>
+                              Enter the club Member ID to place an order. An OTP will be sent to the member's registered email for confirmation.
+                            </p>
+
+                            {/* Input row */}
+                            {!verifiedGuestMember && (
+                              <div className="input-group">
+                                <input
+                                  className="form-control checkout-input"
+                                  type="text"
+                                  placeholder="e.g. MBR-0042"
+                                  value={guestMemberIdInput}
+                                  onChange={(e) => setGuestMemberIdInput(e.target.value)}
+                                  onKeyDown={(e) => { if (e.key === "Enter") e.preventDefault(); }}
+                                />
+                                <button
+                                  type="button"
+                                  className="btn btn-theme secondary btn-sm px-3"
+                                  onClick={handleVerifyGuestMember}
+                                  disabled={verifyingGuestMember}
+                                >
+                                  {verifyingGuestMember ? (
+                                    <><i className="fas fa-spinner fa-spin me-1"></i>Checking...</>
+                                  ) : "Verify"}
+                                </button>
+                              </div>
+                            )}
+
+                            {/* Verified member card */}
+                            {verifiedGuestMember && (
+                              <div
+                                className="d-flex align-items-center gap-3 mt-2 p-3"
+                                style={{
+                                  backgroundColor: "rgba(40,167,69,0.08)",
+                                  border: "1.5px solid #28a745",
+                                  borderRadius: "8px"
+                                }}
+                              >
+                                <div
+                                  style={{
+                                    width: "40px", height: "40px", borderRadius: "50%",
+                                    backgroundColor: "#28a745", display: "flex",
+                                    alignItems: "center", justifyContent: "center", flexShrink: 0
+                                  }}
+                                >
+                                  <i className="fas fa-check" style={{ color: "#fff", fontSize: "16px" }}></i>
+                                </div>
+                                <div style={{ flex: 1 }}>
+                                  <div style={{ fontWeight: "700", color: "#28a745", fontSize: "14px" }}>
+                                    Member Verified
+                                  </div>
+                                  <div className="verified-member-name" style={{ fontSize: "13px", color: "var(--color-heading)" }}>
+                                    {verifiedGuestMember.full_name}{" "}
+                                    <span style={{ color: "var(--color-primary)", fontWeight: "600" }}>
+                                      ({verifiedGuestMember.member_ID})
+                                    </span>
+                                  </div>
+                                  <div className="verified-member-hint" style={{ fontSize: "12px", color: "#777" }}>
+                                    OTP will be sent to: {verifiedGuestMember.email_hint}
+                                  </div>
+                                </div>
+                                <button
+                                  type="button"
+                                  onClick={() => { setVerifiedGuestMember(null); setGuestMemberIdInput(""); }}
+                                  title="Clear and re-enter"
+                                  style={{
+                                    background: "none",
+                                    border: "none",
+                                    cursor: "pointer",
+                                    width: "32px",
+                                    height: "32px",
+                                    borderRadius: "50%",
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "center",
+                                    padding: 0,
+                                    color: "#dc3545",
+                                    fontSize: "16px",
+                                    transition: "background 0.2s, color 0.2s",
+                                    flexShrink: 0,
+                                  }}
+                                  onMouseEnter={(e) => {
+                                    e.currentTarget.style.backgroundColor = "#dc3545";
+                                    e.currentTarget.style.color = "#fff";
+                                  }}
+                                  onMouseLeave={(e) => {
+                                    e.currentTarget.style.backgroundColor = "transparent";
+                                    e.currentTarget.style.color = "#dc3545";
+                                  }}
+                                >
+                                  <i className="fas fa-times"></i>
+                                </button>
+                              </div>
+                            )}
+                          </div>
+                        )}
+
                         {/* Action buttons */}
                         <div className="mt-5">
                           <button
                             type="submit"
                             className="btn btn-theme secondary w-100 py-3"
-                            disabled={placing}
+                            disabled={placing || !canPlaceOrder}
+                            style={{ opacity: canPlaceOrder ? 1 : 0.5, cursor: canPlaceOrder ? "pointer" : "not-allowed" }}
                           >
                             {placing ? (
                               <>
@@ -441,12 +660,17 @@ const CheckoutContent = ({ restaurantSlug }: CheckoutContentProps) => {
                               "Place Order"
                             )}
                           </button>
+                          {!member && !verifiedGuestMember && (
+                            <p className="text-center mt-2 mb-0" style={{ fontSize: "12px", color: "#999" }}>
+                              Verify a Member ID above to enable placing an order.
+                            </p>
+                          )}
                         </div>
                       </form>
                     </div>
                   ) : (
                     <div
-                      className="card-order-otp p-4 text-center"
+                      className="card-order-otp checkout-card p-4 text-center"
                       style={{
                         backgroundColor: "var(--white)",
                         borderRadius: "8px",
@@ -478,7 +702,7 @@ const CheckoutContent = ({ restaurantSlug }: CheckoutContentProps) => {
                         <div className="form-group mb-5" style={{ position: "relative" }}>
                           <div className="d-flex gap-2 justify-content-center" style={{ pointerEvents: "none" }}>
                             {otp.padEnd(6, " ").split("").map((char, i) => (
-                              <div key={i} style={{ 
+                              <div key={i} className="otp-digit-box" style={{ 
                                 width: "50px", 
                                 height: "60px", 
                                 border: (otp.length === i || (otp.length === 6 && i === 5)) ? "2px solid var(--color-primary)" : "2px solid rgba(0,0,0,0.1)", 

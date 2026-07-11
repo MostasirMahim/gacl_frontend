@@ -49,10 +49,12 @@ export default function CartSideSheet({ restaurantSlug }: CartSideSheetProps) {
         setIsOpen(false);
         router.push(`/restaurant/${restaurantSlug}/checkout`);
       } else {
-        toast.error("You are not signed in yet");
+        setIsOpen(false);
+        router.push(`/restaurant/${restaurantSlug}/checkout`);
       }
     } catch (err) {
-      toast.error("You are not signed in yet");
+      setIsOpen(false);
+        router.push(`/restaurant/${restaurantSlug}/checkout`);
     } finally {
       setCheckingAuth(false);
     }
@@ -64,6 +66,53 @@ export default function CartSideSheet({ restaurantSlug }: CartSideSheetProps) {
   return (
     <>
       <style>{`
+        /* ── Dark mode overrides ── */
+        body.bg-dark .cart-sheet {
+          background-color: #2b2b2b;
+          color: #e8e8e8;
+        }
+        body.bg-dark .cart-sheet-header {
+          border-bottom-color: rgba(255,255,255,0.08);
+        }
+        body.bg-dark .cart-sheet-close-btn {
+          color: #e8e8e8;
+        }
+        body.bg-dark .cart-item-row {
+          border-bottom-color: rgba(255,255,255,0.07);
+        }
+        body.bg-dark .cart-item-img {
+          background-color: rgba(255,255,255,0.06);
+          border-color: rgba(255,255,255,0.1);
+        }
+        body.bg-dark .cart-item-title {
+          color: #e8e8e8;
+        }
+        body.bg-dark .cart-item-price {
+          color: #aaaaaa;
+        }
+        body.bg-dark .cart-item-portion-badge.full {
+          background-color: rgba(255,255,255,0.1);
+          color: #cccccc;
+        }
+        body.bg-dark .qty-adjust-btn {
+          background-color: rgba(255,255,255,0.08);
+          border-color: rgba(255,255,255,0.15);
+          color: #e8e8e8;
+        }
+        body.bg-dark .cart-sheet-footer {
+          background-color: rgba(0,0,0,0.25);
+          border-top-color: rgba(255,255,255,0.08);
+        }
+        body.bg-dark .cart-checkout-btn:hover {
+          background-color: #1a1a1a;
+          border-color: var(--color-primary);
+          color: var(--white);
+        }
+        body.bg-dark .empty-cart-text {
+          color: #888888;
+        }
+
+        /* ── Original light-mode styles ── */
         .floating-cart-btn {
           position: fixed;
           bottom: 50px;
@@ -299,7 +348,7 @@ export default function CartSideSheet({ restaurantSlug }: CartSideSheetProps) {
         }
         .cart-checkout-btn:hover {
           background-color: var(--white);
-          color: var(--white);
+          color: var(--dark);
           border-color: var(--color-primary);
         }
         .cart-checkout-btn:disabled {

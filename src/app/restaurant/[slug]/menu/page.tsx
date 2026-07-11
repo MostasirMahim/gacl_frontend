@@ -6,6 +6,7 @@ import LayoutV6 from "../_components/LayoutV6";
 import ReservationV1 from "../_components/ReservationV1";
 import TestimonialV1 from "../_components/TestimonialV1";
 import staticData from "../assets/staticData.json";
+import BodyDark from "../_components/BodyDark";
 
 interface Params {
     slug: string;
@@ -62,6 +63,7 @@ const FoodMenuPage = async ({ params }: PageProps) => {
                 <FoodMenuV5 sections={sections} restaurantSlug={slug} />
                 <TestimonialV1 testimonials={testimonials} />
                 <ReservationV1 sectionClass="mb-120 mb-xs-60" restaurant={restaurant} />
+                <BodyDark/>
             </LayoutV6>
         </>
     );
