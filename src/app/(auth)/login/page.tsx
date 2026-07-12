@@ -50,7 +50,17 @@ export default function page() {
       if (data.code === 200 && data.status === "success") {
         await queryClient.invalidateQueries({ queryKey: ["authUser"] });
         toast.success("Login successful.");
-        router.replace("/");
+        if (data.must_change_password) {
+          // Freshly-approved member accounts (and anyone else flagged by
+          // an admin) log in with a temporary password and must set a
+          // real one before doing anything else. Reuses the existing
+          // authenticated reset-password screen/flow -- current_password
+          // there is simply the temp password they just logged in with.
+          toast.info("Please set a new password to continue.");
+          router.replace("/reset-password");
+        } else {
+          router.replace("/");
+        }
         router.refresh();
       }
     },

@@ -13,6 +13,8 @@ import {
   UserRoundSearch,
   RefreshCcwIcon,
   Settings2,
+  Check,
+  X,
 } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
@@ -69,6 +71,7 @@ interface FilterState {
   date_of_birth?: Date;
   membership_type?: string;
   membership_status?: string;
+  application_status?: string;
   blood_group?: string;
   gender?: string;
   institute_name?: string;
@@ -83,7 +86,8 @@ interface FilterState {
 const initialFilters: FilterState = {
   date_of_birth: undefined,
   membership_type: "",
-  membership_status: "pending",
+  membership_status: "",
+  application_status: "pending",
   blood_group: "",
   gender: "",
   institute_name: "",
@@ -103,6 +107,9 @@ function PendingMembers() {
   const router = useRouter();
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [selectedMemberId, setSelectedMemberId] = useState<string | null>(null);
+  const [approveDialogOpen, setApproveDialogOpen] = useState(false);
+  const [rejectDialogOpen, setRejectDialogOpen] = useState(false);
+  const [selectedMember, setSelectedMember] = useState<{ id: number; member_ID: string } | null>(null);
   const countries = getNames();
   const [filters, setFilters] = useState<FilterState>(initialFilters);
   const [isFilterOpen, setIsFilterOpen] = useState(false);
@@ -162,6 +169,60 @@ function PendingMembers() {
   const handleDelete = (member_ID: string) => {
     deleteMember(member_ID);
   };
+
+  const { mutate: approveMember, isPending: isApproving } = useMutation({
+    mutationFn: async (id: number) => {
+      const res = await axiosInstance.post(
+        `/api/member/v1/members/${id}/approve/`
+      );
+      return res.data;
+    },
+    onSuccess: () => {
+      toast.success("Member approved and login credentials sent");
+      refetch();
+      setApproveDialogOpen(false);
+      setSelectedMember(null);
+    },
+    onError: (error: any) => {
+      const { message, errors, detail } = error?.response?.data || {};
+      if (errors && typeof errors === "object") {
+        Object.entries(errors).forEach(([field, messages]) => {
+          if (Array.isArray(messages)) {
+            toast.error(`${field}: ${messages[0]}`);
+          }
+        });
+      } else {
+        toast.error(detail || message || "Failed to approve member");
+      }
+    },
+  });
+
+  const { mutate: rejectMember, isPending: isRejecting } = useMutation({
+    mutationFn: async (id: number) => {
+      const res = await axiosInstance.post(
+        `/api/member/v1/members/${id}/reject/`
+      );
+      return res.data;
+    },
+    onSuccess: () => {
+      toast.success("Member application rejected");
+      refetch();
+      setRejectDialogOpen(false);
+      setSelectedMember(null);
+    },
+    onError: (error: any) => {
+      const { message, errors, detail } = error?.response?.data || {};
+      if (errors && typeof errors === "object") {
+        Object.entries(errors).forEach(([field, messages]) => {
+          if (Array.isArray(messages)) {
+            toast.error(`${field}: ${messages[0]}`);
+          }
+        });
+      } else {
+        toast.error(detail || message || "Failed to reject member");
+      }
+    },
+  });
 
   const updateFilter = (
     key: keyof FilterState,
@@ -674,9 +735,17 @@ function PendingMembers() {
                   <TableCell onClick={() => handleMemberClick(user.member_ID)}>
                     <Badge
                       variant={"default"}
-                      className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300"
+                      className={
+                        user.application_status === "approved"
+                          ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300"
+                          : user.application_status === "rejected"
+                          ? "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300"
+                          : user.application_status === "pending"
+                          ? "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300"
+                          : "bg-gray-100 text-gray-800 dark:bg-gray-900 dark:text-gray-300"
+                      }
                     >
-                      {user.membership_status}
+                      {user.application_status || "draft"}
                     </Badge>
                   </TableCell>
                   <TableCell onClick={() => handleMemberClick(user.member_ID)}>
@@ -710,6 +779,29 @@ function PendingMembers() {
                       <DropdownMenuContent align="end">
                         <DropdownMenuLabel>Actions</DropdownMenuLabel>
                         <DropdownMenuSeparator />
+                        {user.application_status === "pending" && (
+                          <>
+                            <DropdownMenuItem
+                              className="gap-2 text-green-700"
+                              onClick={() => {
+                                setSelectedMember({ id: user.id, member_ID: user.member_ID });
+                                setApproveDialogOpen(true);
+                              }}
+                            >
+                              <Check className="h-4 w-4" /> Approve
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                              className="gap-2 text-destructive"
+                              onClick={() => {
+                                setSelectedMember({ id: user.id, member_ID: user.member_ID });
+                                setRejectDialogOpen(true);
+                              }}
+                            >
+                              <X className="h-4 w-4" /> Reject
+                            </DropdownMenuItem>
+                            <DropdownMenuSeparator />
+                          </>
+                        )}
                         <DropdownMenuItem
                           className="gap-2"
                           onClick={() => handleUpdate(user.member_ID)}
@@ -756,6 +848,34 @@ function PendingMembers() {
           if (selectedMemberId) handleDelete(selectedMemberId);
         }}
         confirmText="Delete"
+        cancelText="Cancel"
+      />
+      <CustomAlertDialog
+        open={approveDialogOpen}
+        title="Approve this member?"
+        description={`This creates a login account for ${selectedMember?.member_ID} and emails them their credentials.`}
+        onCancel={() => {
+          setApproveDialogOpen(false);
+          setSelectedMember(null);
+        }}
+        onConfirm={() => {
+          if (selectedMember) approveMember(selectedMember.id);
+        }}
+        confirmText={isApproving ? "Approving..." : "Approve"}
+        cancelText="Cancel"
+      />
+      <CustomAlertDialog
+        open={rejectDialogOpen}
+        title="Reject this application?"
+        description={`${selectedMember?.member_ID}'s application will be marked as rejected. No login account will be created.`}
+        onCancel={() => {
+          setRejectDialogOpen(false);
+          setSelectedMember(null);
+        }}
+        onConfirm={() => {
+          if (selectedMember) rejectMember(selectedMember.id);
+        }}
+        confirmText={isRejecting ? "Rejecting..." : "Reject"}
         cancelText="Cancel"
       />
     </div>

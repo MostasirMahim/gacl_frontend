@@ -6,6 +6,7 @@ type Filters = {
   date_of_birth?: Date;
   membership_type?: string;
   membership_status?: string;
+  application_status?: string;
   blood_group?: string;
   gender?: string;
   institute_name?: string;
@@ -23,7 +24,7 @@ function useGetAllMembers(
   routes: number = 1,
 ) {
   return useQuery({
-    queryKey: ["getAllMembers", page, routes],
+    queryKey: ["getAllMembers", page, routes, filters],
     queryFn: async () => {
       try {
         const params = new URLSearchParams();

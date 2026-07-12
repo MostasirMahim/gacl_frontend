@@ -18,8 +18,9 @@ export function usePermissions() {
           );
           return {
             username: item.username,
-            isAdmin: item.is_superuser || item.is_admin || item.username === "admin" || item.groups?.some((g: any) => g.name === "super_admin" || g.name === "executive_admin"),
-            isMember: item.is_member === true,
+            role: item.role ?? null,
+            isAdmin: item.role === "SUPERADMIN",
+            isMember: item.role === "MEMBER",
             memberId: item.member_id ?? null,
             memberID: item.member_ID ?? null,
             memberName: item.member_name ?? null,
@@ -29,12 +30,13 @@ export function usePermissions() {
       } catch (err) {
         console.error("Error fetching permissions:", err);
       }
-      return { username: null, isAdmin: false, isMember: false, memberId: null, memberID: null, memberName: null, permissions: [] };
+      return { username: null, role: null, isAdmin: false, isMember: false, memberId: null, memberID: null, memberName: null, permissions: [] };
     },
     staleTime: 5 * 60 * 1000,
   });
 
   const permissions = permissionData?.permissions || [];
+  const role = permissionData?.role || null;
   const isAdmin = permissionData?.isAdmin || false;
   const isMember = permissionData?.isMember || false;
   const memberId = permissionData?.memberId || null;
@@ -56,6 +58,7 @@ export function usePermissions() {
 
   return {
     permissions,
+    role,
     isAdmin,
     isMember,
     memberId,

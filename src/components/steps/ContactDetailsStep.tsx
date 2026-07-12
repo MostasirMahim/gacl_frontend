@@ -33,6 +33,19 @@ const validationSchema = Yup.object({
     .min(1, "At least one contact is required"),
 });
 
+// Lightweight input formatter: strips anything that isn't a digit or a
+// single leading '+' as the user types, so what reaches the backend is
+// already close to normalized. This is defense-in-depth only -- the real
+// normalization/duplicate-check happens server-side via normalize_phone()
+// (backend/member/utils/phone.py), which is the source of truth.
+const formatPhoneInput = (value: string) => {
+  let cleaned = value.replace(/[^\d+]/g, "");
+  // '+' is only meaningful as the very first character
+  const hasLeadingPlus = cleaned.startsWith("+");
+  cleaned = cleaned.replace(/\+/g, "");
+  return hasLeadingPlus ? `+${cleaned}` : cleaned;
+};
+
 export default function ContactDetailsStep() {
   const path = usePathname();
   const isUpdateMode = path?.startsWith("/member/update/");
@@ -349,7 +362,7 @@ export default function ContactDetailsStep() {
                   placeholder="Enter contact number"
                   value={contact.number}
                   onChange={(e) =>
-                    updateContact(index, "number", e.target.value)
+                    updateContact(index, "number", formatPhoneInput(e.target.value))
                   }
                   onBlur={formik.handleBlur}
                   name={`contacts.${index}.number`}
