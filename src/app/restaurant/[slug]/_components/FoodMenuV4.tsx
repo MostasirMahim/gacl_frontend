@@ -52,7 +52,12 @@ const FoodMenuV4 = ({ sections, restaurantSlug }: FoodMenuV4Props) => {
               <div className="row">
                 <div
                   className="col-lg-5 thumb"
-                  style={{ background: `url(${sec1Img})` }}
+                  style={{
+                    backgroundImage: `url(${sec1Img})`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    backgroundRepeat: 'no-repeat'
+                  }}
                 >
                   <div className="discount-badge">
                     <strong>{staticData.ui.foodMenu.badgeLabel}</strong> {sec1Title}
@@ -100,7 +105,12 @@ const FoodMenuV4 = ({ sections, restaurantSlug }: FoodMenuV4Props) => {
               <div className="row">
                 <div
                   className="col-lg-5 thumb order-lg-last"
-                  style={{ background: `url(${sec2Img})` }}
+                  style={{
+                    backgroundImage: `url(${sec2Img})`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    backgroundRepeat: 'no-repeat'
+                  }}
                 >
                   <div className="discount-badge">
                     <strong>{staticData.ui.foodMenu.badgeLabel}</strong> {sec2Title}

@@ -19,7 +19,7 @@ const HeaderTopV1 = ({ sectionClass }: DataType) => {
                             <li>
                                 <a href={`tel:${staticData.ui.headerTopV1.phone}`} className="d-flex align-items-center">
                                     <Image
-                                        src="/assets/img/icon/6.png"
+                                        src="/assets/restaurent_images/icon/6.png"
                                         alt="Phone"
                                         width={64}
                                         height={64}
@@ -31,7 +31,7 @@ const HeaderTopV1 = ({ sectionClass }: DataType) => {
                             <li>
                                 <a href={`mailto:${staticData.ui.headerTopV1.email}`} className="d-flex align-items-center">
                                     <Image
-                                        src="/assets/img/icon/7.png"
+                                        src="/assets/restaurent_images/icon/7.png"
                                         alt="Email"
                                         width={64}
                                         height={64}

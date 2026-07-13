@@ -696,7 +696,7 @@
      content: "";
      height: 100%;
      width: 100%;
-     /* background: url(/assets/img/shape/35.png); */
+     /* background: url(/assets/restaurent_images/shape/35.png); */
      background-size: contain;
      background-repeat: no-repeat;
      background-position: bottom center;
@@ -751,7 +751,7 @@
      content: "";
      height: 100%;
      width: 100%;
-     background: url(/assets/img/shape/17.png);
+     background: url(/assets/restaurent_images/shape/17.png);
      background-repeat: no-repeat;
      background-size: 100px;
      background-position: right center;
@@ -759,7 +759,7 @@
  }
 
  .color-style-two .sub-title::after {
-     background: url(/assets/img/shape/17-2.png);
+     background: url(/assets/restaurent_images/shape/17-2.png);
      background-repeat: no-repeat;
      background-size: 100px;
      background-position: right center;
@@ -772,7 +772,7 @@
      content: "";
      height: 100%;
      width: 100%;
-     background: url(/assets/img/shape/18.png);
+     background: url(/assets/restaurent_images/shape/18.png);
      background-repeat: no-repeat;
      background-size: 100px;
      background-position: left center;
@@ -780,7 +780,7 @@
  }
 
  .color-style-two .sub-title::before {
-     background: url(/assets/img/shape/18-2.png);
+     background: url(/assets/restaurent_images/shape/18-2.png);
      background-repeat: no-repeat;
      background-size: 100px;
      background-position: left center;
@@ -915,7 +915,7 @@
      content: "";
      height: 100%;
      width: 100%;
-     background: url(/assets/img/shape/18.png);
+     background: url(/assets/restaurent_images/shape/18.png);
      background-repeat: no-repeat;
      background-size: 100px;
      background-position: left center;
@@ -923,7 +923,7 @@
  }
 
  .color-style-two .sub-heading::before {
-     background: url(/assets/img/shape/18-2.png);
+     background: url(/assets/restaurent_images/shape/18-2.png);
      background-repeat: no-repeat;
      background-size: 100px;
      background-position: left center;
@@ -4098,7 +4098,7 @@
      content: "";
      height: 15px;
      width: 100%;
-     background: url(/assets/img/shape/17.png);
+     background: url(/assets/restaurent_images/shape/17.png);
      background-size: contain;
      background-repeat: no-repeat;
      background-position: right center;
@@ -4112,7 +4112,7 @@
      content: "";
      height: 15px;
      width: 100%;
-     background: url(/assets/img/shape/18.png);
+     background: url(/assets/restaurent_images/shape/18.png);
      background-size: contain;
      background-repeat: no-repeat;
      background-position: left center;
@@ -4989,7 +4989,7 @@
      content: "";
      height: 50%;
      width: 100%;
-     background: url(/assets/img/shape/3.png);
+     background: url(/assets/restaurent_images/shape/3.png);
      min-height: 500px;
  }
 
@@ -5000,7 +5000,7 @@
      content: "";
      height: 50%;
      width: 100%;
-     background: url(/assets/img/shape/3-dark.png);
+     background: url(/assets/restaurent_images/shape/3-dark.png);
      min-height: 500px;
  }
 
@@ -5286,7 +5286,7 @@
      content: "";
      height: 600%;
      width: 400%;
-     background: url(/assets/img/shape/3.png);
+     background: url(/assets/restaurent_images/shape/3.png);
  }
 
  .nav.nav-tabs.food-menu-nav.style-two h2 {
@@ -8274,7 +8274,7 @@
      content: "";
      height: 50%;
      width: 100%;
-     background: url(/assets/img/shape/map.png);
+     background: url(/assets/restaurent_images/shape/map.png);
      z-index: -1;
      background-size: contain;
      opacity: 0.8;
@@ -8353,7 +8353,7 @@
      right: 0;
      content: "";
      height: 30px;
-     background: url(/assets/img/shape/8.png);
+     background: url(/assets/restaurent_images/shape/8.png);
      top: -11px;
      background-size: 500px;
      background-repeat: repeat-x;
@@ -8768,7 +8768,7 @@
      right: 0;
      content: "";
      height: 30px;
-     background: url(/assets/img/shape/8-alt.png);
+     background: url(/assets/restaurent_images/shape/8-alt.png);
      top: -11px;
      background-size: 500px;
      background-repeat: repeat-x;
@@ -9038,7 +9038,7 @@
  }
 
  .bg-dark .food-menu-area.shape-less::before {
-     background: url(/assets/img/shape/3-light.png);
+     background: url(/assets/restaurent_images/shape/3-light.png);
  }
 
  .bg-dark .shape-less .nav.nav-tabs.food-menu-nav button {
@@ -11282,14 +11282,14 @@
      content: "";
      height: 100%;
      width: 100%;
-     background: url(/assets/img/logo-icon.png);
+     background: url(/assets/restaurent_images/logo-icon.png);
      transform: translate(-50%, -50%);
      background-repeat: no-repeat;
      background-position: center;
  }
 
  .bg-dark .restan-preloader .animation-preloader::after {
-     background: url(/assets/img/logo-icon-light.png);
+     background: url(/assets/restaurent_images/logo-icon-light.png);
      background-repeat: no-repeat;
      background-position: center;
  }

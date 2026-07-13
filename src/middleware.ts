@@ -97,21 +97,19 @@ export async function middleware(req: NextRequest) {
 
   // ---- Mandatory password change ----
   // Freshly-approved members (and any other account an admin flags) must
-  // set a real password before doing anything else. Only enforced here
-  // for non-MEMBER roles for now: the /reset-password page lives in the
-  // (dashboard) route group and hasn't been verified to render sanely
-  // inside the member /portal experience yet. MEMBER accounts still get
-  // must_change_password=True and are prompted immediately after login
-  // (see the login page), but aren't hard-gated by middleware here --
-  // flagging this as a known gap rather than risking a redirect loop
-  // between /portal and /reset-password.
-  if (
-    mustChangePassword &&
-    role !== "MEMBER" &&
-    pathname !== "/reset-password"
-  ) {
-    url.pathname = "/reset-password";
-    return NextResponse.redirect(url);
+  // set a real password before doing anything else.
+  if (mustChangePassword) {
+    if (role === "MEMBER") {
+      if (pathname !== "/portal/reset-password") {
+        url.pathname = "/portal/reset-password";
+        return NextResponse.redirect(url);
+      }
+    } else {
+      if (pathname !== "/reset-password") {
+        url.pathname = "/reset-password";
+        return NextResponse.redirect(url);
+      }
+    }
   }
 
   // ---- Member portal routing ----

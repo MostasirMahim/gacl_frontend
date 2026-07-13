@@ -6,7 +6,17 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function getMediaUrl(path: string | null | undefined): string {
-  if (!path) return "";
+  if (!path || path === "null" || path === "undefined" || path.trim() === "") {
+    return "/placeholder.jpg";
+  }
+  
+  // Handle nested/encoded full URLs from seed data
+  const decoded = decodeURIComponent(path);
+  const match = decoded.match(/(https?):\/+(.*)/);
+  if (match) {
+    return `${match[1]}://${match[2]}`;
+  }
+
   if (path.startsWith("http://") || path.startsWith("https://") || path.startsWith("data:")) {
     return path;
   }

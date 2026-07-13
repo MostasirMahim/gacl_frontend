@@ -50,7 +50,8 @@ const SingleProductGrid = ({
 
   const addItem = useRestaurantCartStore((state) => state.addItem);
 
-  const displayTitle = name || title || staticData.ui.singleProductGrid.defaultTitle;
+  const displayTitle =
+    name || title || staticData.ui.singleProductGrid.defaultTitle;
   const displayNewPrice =
     selling_price !== undefined && selling_price !== null
       ? Number(selling_price)
@@ -60,7 +61,8 @@ const SingleProductGrid = ({
       ? Number(half_price)
       : oldPrice;
   const displayTags = tags || productTag || [];
-  const displayBtnText = btnText || staticData.ui.singleProductGrid.defaultBtnText;
+  const displayBtnText =
+    btnText || staticData.ui.singleProductGrid.defaultBtnText;
 
   const newP = Math.floor(displayNewPrice).toFixed(2);
   const oldP = displayOldPrice?.toFixed(2) ?? "";
@@ -105,7 +107,9 @@ const SingleProductGrid = ({
       1,
     );
 
-    toast.success(`${displayTitle} ${staticData.ui.singleProductGrid.toastSuffix}`);
+    toast.success(
+      `${displayTitle} ${staticData.ui.singleProductGrid.toastSuffix}`,
+    );
   };
 
   return (
@@ -115,7 +119,18 @@ const SingleProductGrid = ({
           <div className="product-image">
             {badge && <span className="onsale">{badge}</span>}
             <Link href={itemDetailLink}>
-              <Image src={imageSrc} alt="Product" width={450} height={450} />
+              <Image
+                src={imageSrc}
+                alt="Product"
+                width={450}
+                height={450}
+                style={{
+                  objectFit: "cover",
+                  aspectRatio: "1/1",
+                  width: "100%",
+                  height: "100%",
+                }}
+              />
             </Link>
             <div className="shop-action">
               <ul>
@@ -126,7 +141,9 @@ const SingleProductGrid = ({
                 </li>
                 <li className="quick-view">
                   <Link href="#" scroll={false}>
-                    <span>{staticData.ui.singleProductGrid.quickViewLabel}</span>
+                    <span>
+                      {staticData.ui.singleProductGrid.quickViewLabel}
+                    </span>
                   </Link>
                 </li>
               </ul>
@@ -144,9 +161,9 @@ const SingleProductGrid = ({
               <Link href={itemDetailLink}>{displayTitle}</Link>
             </h4>
             <div className="price">
-              <span className={displayOldPrice ? "" : "d-none"}>
+              {/* <span className={displayOldPrice ? "" : "d-none"}>
                 <del>${displayOldPrice ? oldP : ""}</del>
-              </span>
+              </span> */}
               <span className="ms-2">${newP}</span>
             </div>
             <Link

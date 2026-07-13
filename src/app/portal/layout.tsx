@@ -26,6 +26,7 @@ import {
   ClipboardList,
   LogOut,
   User,
+  Key,
   Menu,
   History,
 } from "lucide-react";
@@ -161,6 +162,12 @@ export default function PortalLayout({
                   <DropdownMenuItem asChild>
                     <Link href="/portal/profile" className="w-full cursor-pointer flex items-center gap-2">
                       <User className="w-4 h-4" /> My Profile
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem asChild>
+                    <Link href="/portal/reset-password" className="w-full cursor-pointer flex items-center gap-2">
+                      <Key className="w-4 h-4" /> Reset Password
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />

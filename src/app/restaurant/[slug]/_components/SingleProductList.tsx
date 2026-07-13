@@ -34,7 +34,7 @@ const SingleProductList = ({ product }: { product: DataType }) => {
                                     <span className="onsale">{badge}</span>
                                 }
                                 <Link href={`/resturent/shop-single/${id}`} scroll={false}>
-                                    <Image src={`/assets/img/shop/${thumb}`} alt="Product" width={450} height={450} />
+                                    <Image src={`/assets/restaurent_images/shop/${thumb}`} alt="Product" width={450} height={450} />
                                 </Link>
                                 <div className="shop-action">
                                     <ul>

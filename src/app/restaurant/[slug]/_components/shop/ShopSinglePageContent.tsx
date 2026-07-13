@@ -110,7 +110,7 @@ const ShopSinglePageContent = ({
       }))
     : staticData.productCarouselData.innerCarousel.map((data) => ({
         ...data,
-        thumb: `/assets/img/shop/${data.thumb}`,
+        thumb: `/assets/restaurent_images/shop/${data.thumb}`,
       }));
 
   const outerCarouselImages = hasMedia
@@ -122,7 +122,7 @@ const ShopSinglePageContent = ({
       }))
     : staticData.productCarouselData.outerCarousel.map((data) => ({
         ...data,
-        thumb: `/assets/img/shop/${data.thumb}`,
+        thumb: `/assets/restaurent_images/shop/${data.thumb}`,
       }));
 
   const handleAddToCart = (e: React.MouseEvent) => {
@@ -186,8 +186,14 @@ const ShopSinglePageContent = ({
                             <Image
                               src={data.thumb}
                               alt="Thumb"
-                              width={450}
-                              height={450}
+                              width={650}
+                              height={488}
+                              style={{
+                                objectFit: "cover",
+                                aspectRatio: "650/488",
+                                width: "100%",
+                                height: "100%",
+                              }}
                             />
                           </Link>
                           <span className="onsale theme">{data.badge}</span>
@@ -229,7 +235,13 @@ const ShopSinglePageContent = ({
                                 alt="thumb"
                                 width={450}
                                 height={450}
-                                style={{ width: "100%", height: "auto" }}
+                                style={{
+                                  objectFit: "cover",
+                                  aspectRatio: "1/1",
+                                  width: "100%",
+                                  height: "100%",
+                                  cursor: "pointer",
+                                }}
                               />
                             </div>
                           </SwiperSlide>
@@ -347,7 +359,9 @@ const ShopSinglePageContent = ({
                           ).style.borderColor = "var(--color-primary)";
                         }}
                       >
-                        {portion === "half" ? staticData.ui.shopSingle.seeFullLabel : staticData.ui.shopSingle.seeHalfLabel}
+                        {portion === "half"
+                          ? staticData.ui.shopSingle.seeFullLabel
+                          : staticData.ui.shopSingle.seeHalfLabel}
                       </button>
                     )}
                   </div>
@@ -384,7 +398,9 @@ const ShopSinglePageContent = ({
                       <ul>
                         <li className="wishlist">
                           <Link href="#" scroll={false}>
-                            <span>{staticData.ui.shopSingle.wishlistLabel}</span>
+                            <span>
+                              {staticData.ui.shopSingle.wishlistLabel}
+                            </span>
                           </Link>
                         </li>
                         <li className="compare">
@@ -408,7 +424,8 @@ const ShopSinglePageContent = ({
                       <strong>{staticData.ui.shopSingle.categoryLabel}</strong>
                       {isDynamic ? (
                         <Link href="#">
-                          {productInfo.category || staticData.ui.shopSingle.generalCategory}
+                          {productInfo.category ||
+                            staticData.ui.shopSingle.generalCategory}
                         </Link>
                       ) : (
                         <>

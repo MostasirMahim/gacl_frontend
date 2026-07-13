@@ -100,7 +100,7 @@ const ShopProductTab = ({ itemId, reviews, additionalInfo }: ShopProductTabProps
                                             <div className="item" key={rev.id}>
                                                 <div className="thumb">
                                                     <Image 
-                                                        src={rev.reviewer_avatar ? getMediaUrl(rev.reviewer_avatar) : "/assets/img/team/1.jpg"} 
+                                                        src={rev.reviewer_avatar ? getMediaUrl(rev.reviewer_avatar) : "/assets/restaurent_images/team/1.jpg"} 
                                                         width={800} 
                                                         height={800} 
                                                         alt="Thumb" 
