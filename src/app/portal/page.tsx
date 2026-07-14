@@ -3,6 +3,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { useMyDashboard, useRestaurants } from "@/hooks/data/usePortal";
+import { getMediaUrl } from "@/lib/utils";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { LoadingDots } from "@/components/ui/loading";
@@ -112,12 +113,12 @@ export default function PortalDashboardPage() {
             ) : (
               <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
                 {restaurants?.map((restaurant: any) => (
-                  <Link key={restaurant.id} href={`/restaurant/${restaurant.slug}/menu`}>
+                  <Link key={restaurant.id} href={`/restaurant/${restaurant.slug}/menu`} target="_blank">
                     <Card className="group overflow-hidden border-border/40 bg-card hover:shadow-xl transition-all duration-300 hover:-translate-y-1 h-full flex flex-col cursor-pointer">
                       <div className="relative h-48 w-full overflow-hidden bg-muted">
                         {restaurant.banner_bg_image ? (
                           <Image
-                            src={restaurant.banner_bg_image}
+                            src={getMediaUrl(restaurant.banner_bg_image)}
                             alt={restaurant.name}
                             fill
                             className="object-cover transition-transform duration-500 group-hover:scale-105"

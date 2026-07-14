@@ -103,11 +103,6 @@ export default function CartSideSheet({ restaurantSlug }: CartSideSheetProps) {
           background-color: rgba(0,0,0,0.25);
           border-top-color: rgba(255,255,255,0.08);
         }
-        body.bg-dark .cart-checkout-btn:hover {
-          background-color: #1a1a1a;
-          border-color: var(--color-primary);
-          color: var(--white);
-        }
         body.bg-dark .empty-cart-text {
           color: #888888;
         }
@@ -347,8 +342,8 @@ export default function CartSideSheet({ restaurantSlug }: CartSideSheetProps) {
           transition: all 0.3s;
         }
         .cart-checkout-btn:hover {
-          background-color: var(--white);
-          color: var(--dark);
+          background-color: transparent;
+          color: var(--color-primary);
           border-color: var(--color-primary);
         }
         .cart-checkout-btn:disabled {

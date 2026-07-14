@@ -534,12 +534,7 @@ export default function PortalResetPasswordPage() {
               </p>
             </div>
             <div className="pt-2">
-              <Button
-                className="w-full"
-                onClick={() => {
-                  window.location.href = "/portal";
-                }}
-              >
+              <Button className="w-full" onClick={() => router.push("/portal")}>
                 Go to Dashboard
               </Button>
             </div>
