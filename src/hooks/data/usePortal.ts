@@ -46,3 +46,13 @@ export function useMyInvoices(unpaidOnly = false) {
     },
   });
 }
+
+export function useRestaurants() {
+  return useQuery({
+    queryKey: ["portalRestaurants"],
+    queryFn: async () => {
+      const res = await axiosInstance.get("/api/restaurants/v1/restaurants/");
+      return res?.data?.results || res?.data?.data || res?.data || [];
+    },
+  });
+}

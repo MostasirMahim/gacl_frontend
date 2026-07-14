@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useMyDashboard } from "@/hooks/data/usePortal";
+import Image from "next/image";
+import { useMyDashboard, useRestaurants } from "@/hooks/data/usePortal";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { LoadingDots } from "@/components/ui/loading";
@@ -12,6 +13,9 @@ import {
   ReceiptText,
   Wallet,
   ClipboardList,
+  Store,
+  Clock,
+  ArrowRight,
 } from "lucide-react";
 
 function Stat({
@@ -43,6 +47,7 @@ function Stat({
 
 export default function PortalDashboardPage() {
   const { data, isLoading } = useMyDashboard();
+  const { data: restaurants, isLoading: isRestaurantsLoading } = useRestaurants();
 
   return (
     <div className="space-y-6">
@@ -93,8 +98,66 @@ export default function PortalDashboardPage() {
             />
           </div>
 
-          {/* Quick actions */}
+          {/* Explore Restaurants */}
           <div>
+            <div className="flex items-center justify-between mb-4">
+              <div>
+                <h2 className="text-xl font-bold tracking-tight">Explore Our Dining</h2>
+                <p className="text-sm text-muted-foreground">Discover exquisite flavors at our premier restaurants</p>
+              </div>
+            </div>
+            
+            {isRestaurantsLoading ? (
+              <LoadingDots />
+            ) : (
+              <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                {restaurants?.map((restaurant: any) => (
+                  <Link key={restaurant.id} href={`/restaurant/${restaurant.slug}/menu`}>
+                    <Card className="group overflow-hidden border-border/40 bg-card hover:shadow-xl transition-all duration-300 hover:-translate-y-1 h-full flex flex-col cursor-pointer">
+                      <div className="relative h-48 w-full overflow-hidden bg-muted">
+                        {restaurant.banner_bg_image ? (
+                          <Image
+                            src={restaurant.banner_bg_image}
+                            alt={restaurant.name}
+                            fill
+                            className="object-cover transition-transform duration-500 group-hover:scale-105"
+                          />
+                        ) : (
+                          <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-primary/10 flex items-center justify-center">
+                            <UtensilsCrossed className="w-12 h-12 text-primary/40" />
+                          </div>
+                        )}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+                        <div className="absolute bottom-4 left-4 right-4">
+                          <h3 className="text-lg font-semibold text-white line-clamp-1">{restaurant.name}</h3>
+                          <div className="flex items-center gap-2 text-white/80 text-xs mt-1">
+                            <Store className="w-3 h-3" />
+                            <span className="capitalize">{restaurant.status}</span>
+                            <span className="mx-1">•</span>
+                            <Clock className="w-3 h-3" />
+                            <span>
+                              {restaurant.opening_time ? restaurant.opening_time.slice(0,5) : "00:00"} - {restaurant.closing_time ? restaurant.closing_time.slice(0,5) : "23:59"}
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                      <div className="p-4 flex flex-col flex-grow">
+                        <p className="text-sm text-muted-foreground line-clamp-2 mb-4 flex-grow">
+                          {restaurant.description || "Experience the finest culinary delights crafted with passion and served with excellence."}
+                        </p>
+                        <div className="flex items-center text-primary font-medium text-sm group-hover:text-primary/80 transition-colors mt-auto">
+                          View Menu <ArrowRight className="w-4 h-4 ml-1 transition-transform group-hover:translate-x-1" />
+                        </div>
+                      </div>
+                    </Card>
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Quick actions */}
+          <div className="mt-8">
             <h2 className="font-semibold mb-3">Quick Actions</h2>
             <div className="grid gap-4 sm:grid-cols-3">
               <Link href="/portal/order/restaurant">
