@@ -11,9 +11,10 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import useAuthUser from "@/hooks/data/useAuthUser";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { LoadingDots } from "@/components/ui/loading";
+import { Eye, EyeOff } from "lucide-react";
 import axiosInstance from "@/lib/axiosInstance";
 import { toast } from "react-toastify";
 import { BRAND_CONFIG } from "@/config/brand";
@@ -33,6 +34,8 @@ export default function page() {
   const queryClient = useQueryClient();
   const router = useRouter();
   const { data: user, isLoading } = useAuthUser();
+  const [showPassword, setShowPassword] = useState(false);
+
 
   useEffect(() => {
     if (!isLoading && user) {
@@ -147,20 +150,31 @@ export default function page() {
             </div>
             <div className="space-y-2">
               <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                name="password"
-                placeholder="Enter your password"
-                type="password"
-                onChange={formik.handleChange}
-                onBlur={formik.handleBlur}
-                value={formik.values.password}
-                className={
-                  formik.touched.password && formik.errors.password
-                    ? "border-red-500"
-                    : ""
-                }
-              />
+              <div className="relative">
+                <Input
+                  id="password"
+                  name="password"
+                  placeholder="Enter your password"
+                  type={showPassword ? "text" : "password"}
+                  onChange={formik.handleChange}
+                  onBlur={formik.handleBlur}
+                  value={formik.values.password}
+                  className={
+                    `pr-10 ${
+                      formik.touched.password && formik.errors.password
+                        ? "border-red-500"
+                        : ""
+                    }`
+                  }
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+                >
+                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                </button>
+              </div>
               {formik.touched.password && formik.errors.password ? (
                 <div className="text-red-500 text-xs pl-3">
                   {formik.errors.password}
