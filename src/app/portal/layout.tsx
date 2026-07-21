@@ -6,6 +6,7 @@ import { usePermissions } from "@/hooks/usePermissions";
 import axiosInstance from "@/lib/axiosInstance";
 import { BRAND_CONFIG } from "@/config/brand";
 import { Button } from "@/components/ui/button";
+import ThemeToggle from "@/components/home/ThemeToggle";
 import { useState } from "react";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import {
@@ -29,6 +30,7 @@ import {
   Key,
   Menu,
   History,
+  Settings,
 } from "lucide-react";
 
 const NAV = [
@@ -80,7 +82,7 @@ export default function PortalLayout({
                 <SheetContent side="left" className="w-[280px] p-0 flex flex-col">
                   <div className="p-4 border-b border-border/60">
                     <div className="flex items-center gap-3">
-                      <div className="w-9 h-9 rounded-lg bg-white overflow-hidden grid place-items-center">
+                      <div className="w-9 h-9 rounded-lg bg-background overflow-hidden grid place-items-center">
                         <img src={BRAND_CONFIG.logoUrl} alt={BRAND_CONFIG.shortName} className="w-full h-full object-contain" />
                       </div>
                       <div>
@@ -123,7 +125,7 @@ export default function PortalLayout({
 
             {/* Desktop & Mobile Logo (Left) */}
             <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-lg bg-white overflow-hidden hidden md:grid place-items-center">
+              <div className="w-9 h-9 rounded-lg bg-background overflow-hidden hidden md:grid place-items-center">
                 <img src={BRAND_CONFIG.logoUrl} alt={BRAND_CONFIG.shortName} className="w-full h-full object-contain" />
               </div>
               <div className="flex flex-col">
@@ -134,6 +136,7 @@ export default function PortalLayout({
           </div>
           
           <div className="flex items-center gap-4">
+            <ThemeToggle />
             {/* Desktop Avatar Menu on Right */}
             <div className="hidden md:flex items-center">
               <DropdownMenu>
@@ -171,7 +174,13 @@ export default function PortalLayout({
                     </Link>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
-                  <DropdownMenuItem className="text-red-600 cursor-pointer flex items-center gap-2" onClick={logout}>
+                  <DropdownMenuItem asChild>
+                    <Link href="/portal/settings" className="w-full cursor-pointer flex items-center gap-2">
+                      <Settings className="w-4 h-4" /> Settings
+                    </Link>
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem className="text-destructive cursor-pointer flex items-center gap-2" onClick={logout}>
                     <LogOut className="w-4 h-4" /> Logout
                   </DropdownMenuItem>
                 </DropdownMenuContent>

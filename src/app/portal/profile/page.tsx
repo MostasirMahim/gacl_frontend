@@ -211,16 +211,16 @@ export default function PortalProfilePage() {
             </div>
           </div>
         </div>
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700">
+        <div className="bg-card rounded-lg shadow-sm border border-border">
           <Tabs defaultValue="personal" className="w-full">
-            <div className="border-b border-gray-200 dark:border-gray-700">
+            <div className="border-b border-border">
               <div className="relative">
                 <div className="overflow-x-scroll no-scrollbar">
                   <TabsList className="w-full justify-start h-auto p-0 bg-transparent rounded-t-lg ">
                     <div className="flex justify-around min-w-max w-full p-2 gap-2 bg-muted rounded-t-lg">
                       <TabsTrigger
                         value="personal"
-                        className="gap-2 border-b-2 border-transparent bg-background dark:bg-gray-700 rounded-lg data-[state=active]:border-primary data-[state=active]:bg-primary/10 data-[state=active]:text-primary hover:bg-muted transition-all duration-200 "
+                        className="gap-2 border-b-2 border-transparent bg-background rounded-lg data-[state=active]:border-primary data-[state=active]:bg-primary/10 data-[state=active]:text-primary hover:bg-muted transition-all duration-200 "
                       >
                         <User className="h-4 w-4" />
                         <span className="hidden sm:inline">Personal Info</span>
@@ -228,7 +228,7 @@ export default function PortalProfilePage() {
                       </TabsTrigger>
                       <TabsTrigger
                         value="contact"
-                        className="gap-2  bg-background dark:bg-gray-700 rounded-lg border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-primary/10 data-[state=active]:text-primary hover:bg-muted transition-all duration-200"
+                        className="gap-2  bg-background rounded-lg border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-primary/10 data-[state=active]:text-primary hover:bg-muted transition-all duration-200"
                       >
                         <Phone className="h-4 w-4" />
                         <span className="hidden sm:inline">Contact Info</span>
@@ -236,7 +236,7 @@ export default function PortalProfilePage() {
                       </TabsTrigger>
                       <TabsTrigger
                         value="family"
-                        className="gap-2 bg-background dark:bg-gray-700 rounded-lg  border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-primary/10 data-[state=active]:text-primary hover:bg-muted transition-all duration-200"
+                        className="gap-2 bg-background rounded-lg  border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-primary/10 data-[state=active]:text-primary hover:bg-muted transition-all duration-200"
                       >
                         <Heart className="h-4 w-4" />
                         <span className="hidden sm:inline">Family</span>
@@ -244,7 +244,7 @@ export default function PortalProfilePage() {
                       </TabsTrigger>
                       <TabsTrigger
                         value="work"
-                        className="gap-2 bg-background dark:bg-gray-700 rounded-lg border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-primary/10 data-[state=active]:text-primary hover:bg-muted transition-all duration-200"
+                        className="gap-2 bg-background rounded-lg border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-primary/10 data-[state=active]:text-primary hover:bg-muted transition-all duration-200"
                       >
                         <Briefcase className="h-4 w-4" />
                         <span className="hidden sm:inline">Work History</span>
@@ -253,7 +253,7 @@ export default function PortalProfilePage() {
 
                       <TabsTrigger
                         value="documents"
-                        className="gap-2 bg-background dark:bg-gray-700 rounded-lg border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-primary/10 data-[state=active]:text-primary hover:bg-muted transition-all duration-200"
+                        className="gap-2 bg-background rounded-lg border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-primary/10 data-[state=active]:text-primary hover:bg-muted transition-all duration-200"
                       >
                         <FileText className="h-4 w-4" />
                         <span className="hidden sm:inline">Documents</span>
@@ -261,7 +261,7 @@ export default function PortalProfilePage() {
                       </TabsTrigger>
                       <TabsTrigger
                         value="companions"
-                        className="gap-2 bg-background dark:bg-gray-700 rounded-lg border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-primary/10 data-[state=active]:text-primary hover:bg-muted transition-all duration-200"
+                        className="gap-2 bg-background rounded-lg border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-primary/10 data-[state=active]:text-primary hover:bg-muted transition-all duration-200"
                       >
                         <Users className="h-4 w-4" />
                         <span className="hidden sm:inline">Companions</span>
@@ -269,7 +269,7 @@ export default function PortalProfilePage() {
                       </TabsTrigger>
                       <TabsTrigger
                         value="special"
-                        className="gap-2 bg-background dark:bg-gray-700 rounded-lg border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-primary/10 data-[state=active]:text-primary hover:bg-muted transition-all duration-200"
+                        className="gap-2 bg-background rounded-lg border-b-2 border-transparent data-[state=active]:border-primary data-[state=active]:bg-primary/10 data-[state=active]:text-primary hover:bg-muted transition-all duration-200"
                       >
                         <Calendar className="h-4 w-4" />
                         <span className="hidden sm:inline">Special Days</span>
@@ -589,7 +589,7 @@ export default function PortalProfilePage() {
                                 className={`mt-1 ${
                                   s.current_status === 1
                                     ? "bg-primary/10 text-primary border-primary/20"
-                                    : "bg-gray-100 text-gray-700 dark:bg-gray-800 dark:text-gray-200"
+                                    : "bg-muted text-muted-foreground"
                                 }`}
                               >
                                 {s.current_status === 1 ? "Active" : "Inactive"}
@@ -685,7 +685,7 @@ export default function PortalProfilePage() {
                           className={`${
                             jobItem.is_active
                               ? "border-l-4 border-slate-500 dark:border-slate-400 bg-slate-50 dark:bg-slate-900/30"
-                              : "border-l-4 border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-900/20"
+                              : "border-l-4 border-muted-foreground/30 bg-muted/50"
                           } pl-6 py-4 rounded-r-lg`}
                         >
                           <h3 className="text-lg font-semibold text-foreground">
