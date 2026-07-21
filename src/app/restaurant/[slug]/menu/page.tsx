@@ -1,3 +1,4 @@
+import { redirect } from 'next/navigation';
 import axiosInstance from "@/lib/axiosInstance";
 import DeliveryV1 from "../_components/DeliveryV1";
 import FoodMenuV4 from "../_components/FoodMenuV4";
@@ -35,11 +36,17 @@ const FoodMenuPage = async ({ params }: PageProps) => {
     const { slug } = await params;
 
     let data: any = null;
+    let isValid = true;
     try {
         const res = await axiosInstance.get(`/api/restaurants/v1/public/by-slug/${slug}/menu/`);
         data = res.data.data;
     } catch (error) {
         console.error("Failed to fetch dynamic restaurant data, using static mock-up defaults:", error);
+        isValid = false;
+    }
+
+    if (!isValid) {
+        redirect('/restaurant');
     }
 
     const restaurant = data?.restaurant;
