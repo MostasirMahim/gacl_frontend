@@ -7,6 +7,11 @@ import 'aos/dist/aos.css';
 const Dependency = () => {
 
     useEffect(() => {
+        // Set a flag to indicate we've loaded heavy legacy CSS (Bootstrap etc)
+        // so that returning to Tailwind pages can trigger a hard reload.
+        if (typeof window !== "undefined") {
+            sessionStorage.setItem("polluted_css_from_slug", "true");
+        }
 
         // Dynamically import Bootstrap JS to avoid SSR issues
         import('bootstrap/dist/js/bootstrap.bundle.min.js')

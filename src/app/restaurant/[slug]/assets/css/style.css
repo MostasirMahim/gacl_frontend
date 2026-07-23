@@ -2760,13 +2760,13 @@
      margin-right: 30px;
  }
 
- .top-bar-area .social li:first-child {
+ .top-bar-area .social li:last-child {
      margin-right: 0;
  }
 
  .top-bar-area .text-end .social li {
      margin-right: 0;
-     margin-left: 20px;
+     margin-left: 10px;
  }
 
  .top-bar-area .text-end .social li:first-child {

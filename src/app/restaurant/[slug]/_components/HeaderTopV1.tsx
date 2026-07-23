@@ -1,7 +1,9 @@
+"use client";
+
 import SocialShare from './SocialShare';
-import Image from 'next/image';
 import ThemeToggle from './ThemeToggle';
-import staticData from "../assets/staticData.json";
+import { User } from 'lucide-react';
+import Link from 'next/link';
 
 interface DataType {
     sectionClass?: string;
@@ -13,51 +15,62 @@ const HeaderTopV1 = ({ sectionClass }: DataType) => {
             <div className="container">
                 <div className="row align-center">
 
-                    {/* Left — contact info */}
+                    {/* Left — Social icons */}
                     <div className="col-lg-7">
-                        <ul className="item-flex">
-                            <li>
-                                <a href={`tel:${staticData.ui.headerTopV1.phone}`} className="d-flex align-items-center">
-                                    <Image
-                                        src="/assets/restaurent_images/icon/6.png"
-                                        alt="Phone"
-                                        width={64}
-                                        height={64}
-                                        style={{ height: "23px", width: "auto", marginRight: "5px" }}
-                                    />
-                                    {staticData.ui.headerTopV1.phoneLabel}&nbsp;{staticData.ui.headerTopV1.phone}
-                                </a>
-                            </li>
-                            <li>
-                                <a href={`mailto:${staticData.ui.headerTopV1.email}`} className="d-flex align-items-center">
-                                    <Image
-                                        src="/assets/restaurent_images/icon/7.png"
-                                        alt="Email"
-                                        width={64}
-                                        height={64}
-                                        style={{ height: "23px", width: "auto", marginRight: "5px" }}
-                                    />
-                                    {staticData.ui.headerTopV1.emailLabel}&nbsp;{staticData.ui.headerTopV1.email}
-                                </a>
-                            </li>
-                        </ul>
+                        <div className="social">
+                            <ul>
+                                <SocialShare />
+                            </ul>
+                        </div>
                     </div>
 
-                    {/* Right — theme toggle + social */}
+                    {/* Right — Theme toggle + Login */}
                     <div className="col-lg-5 text-end">
                         <div className="item-flex" style={{ justifyContent: "flex-end", gap: "12px" }}>
 
-                            {/* Theme toggle (replaces language dropdown) */}
+                            {/* Theme toggle */}
                             <div className="d-flex align-items-center">
                                 <ThemeToggle />
                             </div>
 
-                            {/* Social icons */}
-                            <div className="social">
-                                <ul>
-                                    <SocialShare />
-                                </ul>
+                            {/* Login Button */}
+                            <div className="d-flex align-items-center">
+                                <Link
+                                    href="/login"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    aria-label="Login"
+                                    title="Login"
+                                    style={{
+                                        position: "relative",
+                                        display: "inline-flex",
+                                        alignItems: "center",
+                                        justifyContent: "center",
+                                        width: "1.9em",
+                                        height: "1.9em",
+                                        padding: 0,
+                                        border: "none",
+                                        borderRadius: 6,
+                                        background: "transparent",
+                                        cursor: "pointer",
+                                        color: "inherit",
+                                        flexShrink: 0,
+                                        fontSize: "inherit",
+                                        lineHeight: 1,
+                                        boxShadow: "inset 0 0 0 1px rgba(255,255,255,0.25)",
+                                        transition: "box-shadow 0.2s ease",
+                                    }}
+                                    onMouseEnter={(e) => {
+                                        e.currentTarget.style.boxShadow = "inset 0 0 0 1px rgba(255,255,255,0.7)";
+                                    }}
+                                    onMouseLeave={(e) => {
+                                        e.currentTarget.style.boxShadow = "inset 0 0 0 1px rgba(255,255,255,0.25)";
+                                    }}
+                                >
+                                    <User style={{ width: "1em", height: "1em" }} />
+                                </Link>
                             </div>
+
                         </div>
                     </div>
 
