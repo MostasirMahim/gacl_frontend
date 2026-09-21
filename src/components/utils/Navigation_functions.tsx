@@ -434,7 +434,7 @@ export const navigationPermissions: Record<string, string | null> = {
 
   "All Users": "user:view_list",
   "All Groups": "group:view",
-  "Add Choices": "choices:manage",
+  "Add Choices": "choice:create",
   Onboarding: "employee:onboard",
   "Activity Logs": "activity_log:view",
   "My activity logs": null,
@@ -546,7 +546,6 @@ const sectionMasterMap: Record<string, string> = {
   "email:": "bulk_emails_management",
   "product:": "product_management",
   "promo_code:": "promo_code_management",
-  "choices:": "member_management",
 };
 
 export const filterNavigationByPermissions = (

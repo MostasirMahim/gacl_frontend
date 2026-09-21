@@ -92,12 +92,14 @@ export default function ManageChoicesPage() {
     },
     onError: (error: any) => {
       console.log("error", error?.response);
-      const { message, errors, detail } = error?.response.data;
-      if (errors) {
-        const allErrors = Object.values(errors).flat().join("\n");
+      const data = error?.response?.data;
+      if (data?.errors) {
+        const allErrors = Object.values(data.errors).flat().join("\n");
         toast.error(allErrors || "An error occurred during Choice Added");
+      } else if (data?.detail) {
+        toast.error(data.detail);
       } else {
-        toast.error(message || "An error occurred during Choice Added");
+        toast.error(data?.message || "An error occurred during Choice Added");
       }
     },
   });
