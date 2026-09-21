@@ -51,11 +51,20 @@ export async function middleware(req: NextRequest) {
   const now = Date.now();
   const oneMinute = 60 * 1000;
 
-  if (cachedData && now - cachedData.timestamp < oneMinute) {
+  // If the user is navigating away from a reset-password page, bust the
+  // cache so the fresh must_change_password=false is picked up immediately.
+  const isLeavingResetPassword =
+    cachedData?.mustChangePassword === true &&
+    pathname !== "/portal/reset-password" &&
+    pathname !== "/reset-password";
+
+  if (cachedData && now - cachedData.timestamp < oneMinute && !isLeavingResetPassword) {
     user_permissions = cachedData.permissions;
     role = cachedData.role || "";
     mustChangePassword = cachedData.mustChangePassword || false;
   } else {
+    // Bust the stale cache entry so we re-fetch fresh data
+    permissionCache.delete(cacheKey);
     try {
       const baseURL =
         process.env.NEXT_PUBLIC_BACKEND_API_URL || "http://localhost:8000";
@@ -95,20 +104,13 @@ export async function middleware(req: NextRequest) {
     }
   }
 
-  // ---- Mandatory password change ----
-  // Freshly-approved members (and any other account an admin flags) must
-  // set a real password before doing anything else.
-  if (mustChangePassword) {
-    if (role === "MEMBER") {
-      if (pathname !== "/portal/reset-password") {
-        url.pathname = "/portal/reset-password";
-        return NextResponse.redirect(url);
-      }
-    } else {
-      if (pathname !== "/reset-password") {
-        url.pathname = "/reset-password";
-        return NextResponse.redirect(url);
-      }
+  // ---- Mandatory password change (MEMBERS ONLY) ----
+  // Freshly-approved members must set a real password before doing anything
+  // else. Staff and admin are NEVER blocked by this flag.
+  if (mustChangePassword && role === "MEMBER") {
+    if (pathname !== "/portal/reset-password") {
+      url.pathname = "/portal/reset-password";
+      return NextResponse.redirect(url);
     }
   }
 
