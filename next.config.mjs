@@ -2,26 +2,23 @@
 const nextConfig = {
   images: {
     remotePatterns: [
-      {
-        protocol: "http",
-        hostname: "127.0.0.1",
-        port: "8000",
-        pathname: "/**",
-      },
+      // ── Local development ──────────────────────────────────────────
       {
         protocol: "http",
         hostname: "localhost",
         port: "8000",
         pathname: "/**",
       },
-      {
-        protocol: "https",
-        hostname: "images.unsplash.com",
-        pathname: "/**",
-      },
+      // ── Production VPS (images served via Nginx on port 80) ───────
       {
         protocol: "http",
         hostname: "172.237.141.11",
+        pathname: "/**",
+      },
+      // ── External image hosts ───────────────────────────────────────
+      {
+        protocol: "https",
+        hostname: "images.unsplash.com",
         pathname: "/**",
       },
     ],
@@ -29,3 +26,4 @@ const nextConfig = {
 };
 
 export default nextConfig;
+
