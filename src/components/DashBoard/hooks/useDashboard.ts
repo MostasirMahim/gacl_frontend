@@ -3,9 +3,87 @@
 import { useState, useEffect, useRef, useCallback } from "react";
 import axiosInstance from "@/lib/axiosInstance";
 
+export interface RoleOverviewSection {
+  role_key: string;
+  role_title: string;
+  kpi_cards: Array<{
+    title: string;
+    value: number;
+    trend: number;
+    trendLabel: string;
+    icon: string;
+    actions?: Array<{ label: string; href: string }>;
+  }>;
+  spline_chart: {
+    title: string;
+    series_name: string;
+    data: Array<{ label: string; value: number }>;
+  };
+  donut_chart: {
+    title: string;
+    data: Array<{ name: string; value: number }>;
+  };
+  item_list: {
+    title: string;
+    items: Array<{
+      id: number | string;
+      name: string;
+      subtitle: string;
+      tag: string;
+      initials: string;
+    }>;
+  };
+  action_table: {
+    title: string;
+    action_button_label: string;
+    headers: [string, string, string];
+    rows: Array<{
+      id: number | string;
+      col1: string;
+      col2: string;
+      col3: string;
+      link_url?: string;
+    }>;
+  };
+  hourly_bar_chart: {
+    title: string;
+    unit_label: string;
+    data: Array<{ hour: string; value: number }>;
+  };
+  radial_gauge: {
+    title: string;
+    value: number;
+    max: number;
+    percentage: number;
+    center_label: string;
+    subtext: string;
+  };
+  activity_feed: {
+    title: string;
+    items: Array<{
+      id: number | string;
+      title: string;
+      subtitle: string;
+      time_ago: string;
+      icon: string;
+    }>;
+  };
+  status_table: {
+    title: string;
+    headers: [string, string, string];
+    rows: Array<{
+      id: number | string;
+      name: string;
+      type: string;
+      status: string;
+    }>;
+  };
+}
+
 export interface DashboardSummary {
   sections: string[];
   data: {
+    overview?: RoleOverviewSection;
     member?: MemberSection;
     finance?: FinanceSection;
     restaurant?: RestaurantSection;
@@ -164,6 +242,22 @@ export interface PayrollSection {
     active_loans_count: number;
     total_loan_outstanding: number;
   };
+  recent_runs: {
+    id: number;
+    name: string;
+    period_month: number;
+    period_year: number;
+    status: string;
+    total_amount: number;
+  }[];
+  active_loans_list: {
+    id: number;
+    principal: number;
+    outstanding: number;
+    monthly_deduction: number;
+    "staff__user__first_name": string;
+    "staff__user__last_name": string;
+  }[];
 }
 
 export interface VendorSection {
@@ -174,6 +268,22 @@ export interface VendorSection {
     total_service_categories: number;
     total_active_products: number;
   };
+  pending_offers_list: {
+    id: number;
+    title: string;
+    price: number;
+    billing_cycle: string;
+    "vendor__name": string;
+    "category__name": string;
+    created_at: string;
+  }[];
+  recent_payments: {
+    amount: number;
+    paid_on: string;
+    reference: string;
+    payment_type: string;
+    "offer__vendor__name": string;
+  }[];
 }
 
 export interface SystemSection {

@@ -115,18 +115,18 @@ const navigation_sidebar_links = [
   },
   {
     icon: <SquareUser className="h-5 w-5" />,
-    label: "All Users",
+    label: "Users",
     href: "/users",
   },
   {
     icon: <Layers className="h-5 w-5" />,
-    label: "All Groups",
+    label: "Groups",
     href: "/groups",
     urls: ["/groups/"],
   },
   {
     icon: <NotepadText className="h-5 w-5" />,
-    label: "Add Choices",
+    label: "Choices",
     href: "/choices",
   },
   {
@@ -142,12 +142,12 @@ const navigation_sidebar_links = [
   },
   {
     icon: <List className="h-5 w-5" />,
-    label: "My activity logs",
+    label: "My Activity",
     href: "/my-activity-logs",
   },
   {
     icon: <Mails className="h-5 w-5" />,
-    label: "Email management",
+    label: "Emails",
     href: "",
     subItems: [
       {
@@ -163,12 +163,12 @@ const navigation_sidebar_links = [
       },
       {
         icon: <BetweenHorizonalStart className="h-4 w-4" />,
-        label: "Add email to group",
+        label: "Add to Group",
         href: "/emails/add_email",
       },
       {
         icon: <SquarePen className="h-4 w-4" />,
-        label: "Compose email",
+        label: "Compose",
         href: "/emails/compose",
       },
       {
@@ -178,14 +178,14 @@ const navigation_sidebar_links = [
       },
       {
         icon: <Settings className="h-4 w-4" />,
-        label: "View all composes",
+        label: "Sent History",
         href: "/emails/compose/view",
       },
     ],
   },
   {
     icon: <HandPlatter className="h-5 w-5" />,
-    label: "Restaurant management",
+    label: "Restaurant",
     href: "#",
     subItems: [
       {
@@ -195,32 +195,32 @@ const navigation_sidebar_links = [
       },
       {
         icon: <BookCheck className="h-4 w-4" />,
-        label: "Add restaurants choices",
+        label: "Menu Choices",
         href: "/restaurants/choices",
       },
       {
         icon: <ShoppingCart className="h-4 w-4" />,
-        label: "Add restaurant item",
+        label: "Add Item",
         href: "/restaurants/items/add",
       },
       {
         icon: <ListTodo className="h-4 w-4" />,
-        label: "Add item category",
+        label: "Categories",
         href: "/restaurants/items/add/category",
       },
       {
         icon: <Upload className="h-4 w-4" />,
-        label: "Upload restaurant sales",
+        label: "Upload Sales",
         href: "/restaurants/sales/upload",
       },
       {
         icon: <ShoppingCart className="h-4 w-4" />,
-        label: "View cart",
+        label: "Cart / POS",
         href: "/restaurants/checkout",
       },
       {
         icon: <ChefHat className="h-4 w-4" />,
-        label: "Kitchen & Orders",
+        label: "Kitchen Orders",
         href: "/restaurant-orders",
       },
     ],
@@ -232,7 +232,7 @@ const navigation_sidebar_links = [
   },
   {
     icon: <GlassWater className="h-5 w-5" />,
-    label: "Outlets (Bar/Lounge)",
+    label: "Outlets & Bars",
     href: "/outlets",
   },
   {
@@ -247,17 +247,17 @@ const navigation_sidebar_links = [
   },
   {
     icon: <Component className="h-5 w-5" />,
-    label: "Vendor Management",
+    label: "Vendors",
     href: "/vendors",
   },
   {
     icon: <FileChartColumn className="h-5 w-5" />,
-    label: "Finance & Reports",
+    label: "Finance",
     href: "/finance",
   },
   {
     icon: <Package className="h-5 w-5" />,
-    label: "Products Management",
+    label: "Products",
     href: "#",
     subItems: [
       {
@@ -328,29 +328,29 @@ const navigation_sidebar_links = [
         subItems: [
           {
             icon: <Plus className="h-3 w-3" />,
-            label: "Add Product Price",
+            label: "Add Price",
             href: "/products/prices/add",
           },
           {
             icon: <Eye className="h-3 w-3" />,
-            label: "View Product Price",
+            label: "Prices",
             href: "/products/prices",
           },
         ],
       },
       {
         icon: <ShoppingCart className="h-4 w-4" />,
-        label: "Product Buy",
+        label: "Purchases",
         href: "#",
         subItems: [
           {
             icon: <Plus className="h-3 w-3" />,
-            label: "Add Product Cart",
+            label: "New Purchase",
             href: "/products/buy/add",
           },
           {
             icon: <Eye className="h-3 w-3" />,
-            label: "View Product Cart",
+            label: "Purchase Orders",
             href: "/products/buy",
           },
         ],
@@ -359,22 +359,22 @@ const navigation_sidebar_links = [
   },
   {
     icon: <PercentCircle className="h-5 w-5" />,
-    label: "Promo code",
+    label: "Promo Codes",
     href: "#",
     subItems: [
       {
         icon: <Code className="h-4 w-4" />,
-        label: "All promo codes",
+        label: "All Promos",
         href: "/promo_codes",
       },
       {
         icon: <CirclePlus className="h-4 w-4" />,
-        label: "Add promo code",
+        label: "New Promo",
         href: "/promo_codes/add",
       },
       {
         icon: <TicketCheck className="h-4 w-4" />,
-        label: "Promo codes category",
+        label: "Categories",
         href: "/promo_codes/categories",
       },
       {
@@ -384,14 +384,14 @@ const navigation_sidebar_links = [
       },
       {
         icon: <Eye className="h-4 w-4" />,
-        label: "Applied promo codes",
+        label: "Applied Promos",
         href: "/promo_codes/applied_promo_codes",
       },
     ],
   },
   {
     icon: <Wallet className="h-5 w-5" />,
-    label: "Member financial",
+    label: "Member Finance",
     href: "#",
     subItems: [
       {
@@ -401,7 +401,7 @@ const navigation_sidebar_links = [
         subItems: [
           {
             icon: <FileText className="h-3 w-3" />,
-            label: "View all invoices",
+            label: "All Invoices",
             href: "/mfm/invoices",
           },
           {
@@ -418,12 +418,12 @@ const navigation_sidebar_links = [
         subItems: [
           {
             icon: <CreditCard className="h-4 w-4" />,
-            label: "View all incomes",
+            label: "All Incomes",
             href: "/mfm/income",
           },
           {
             icon: <ListChecks className="h-4 w-4" />,
-            label: "Income Particulars",
+            label: "Particulars",
             href: "/mfm/income_particulars",
           },
           {
@@ -435,78 +435,78 @@ const navigation_sidebar_links = [
       },
       {
         icon: <CreditCard className="h-4 w-4" />,
-        label: "Invoice Payment Options",
+        label: "Payment Options",
         href: "/mfm/payment_options",
       },
       {
         icon: <WalletCards className="h-4 w-4" />,
-        label: "View all Sales",
+        label: "All Sales",
         href: "/mfm/sales",
       },
       {
         icon: <FilePlus className="h-4 w-4" />,
-        label: "View all Transactions",
+        label: "Transactions",
         href: "/mfm/transections",
       },
       {
         icon: <ListChecks className="h-4 w-4" />,
-        label: "View all Payments",
+        label: "Payments",
         href: "/mfm/payments",
       },
       {
         icon: <HandCoins className="h-4 w-4" />,
-        label: "View member dues",
+        label: "Member Dues",
         href: "/mfm/view_member_dues",
       },
       {
         icon: <UserCheck className="h-4 w-4" />,
-        label: "View member accounts",
+        label: "Member Accounts",
         href: "/mfm/view_member_accounts",
       },
     ],
   },
   {
     icon: <Upload className="h-5 w-5" />,
-    label: "Upload sales",
+    label: "Upload Sales",
     href: "#",
     subItems: [
       {
         icon: <FileChartColumn className="h-4 w-4" />,
-        label: "upload restaurant sale",
+        label: "Restaurant Sales",
         href: "/restaurants/sales/upload",
       },
       {
         icon: <FileChartColumn className="h-4 w-4" />,
-        label: "Upload lounge sale",
+        label: "Lounge Sales",
         href: "/upload/sales/lounge",
       },
       {
         icon: <FileChartColumn className="h-4 w-4" />,
-        label: "Upload others sales",
+        label: "Other Sales",
         href: "/upload/sales/others",
       },
     ],
   },
   {
     icon: <CombineIcon className="h-5 w-5" />,
-    label: "Facility management",
+    label: "Facilities",
     href: "#",
     subItems: [
       {
         icon: <CirclePlus className="h-4 w-4" />,
-        label: "Create facility",
+        label: "New Facility",
         href: "/facilities/create",
       },
       {
         icon: <Eye className="h-4 w-4" />,
-        label: "View facilities",
+        label: "All Facilities",
         href: "/facilities",
       },
     ],
   },
   {
     icon: <Component className="h-5 w-5" />,
-    label: "Event Management",
+    label: "Events",
     href: "#",
     subItems: [
       {
@@ -624,12 +624,12 @@ function DashboardLayout({ children }: { children: React.ReactNode }) {
   return (
     <SidebarProvider>
       <div className="min-h-screen flex bg-muted/30 mx-auto">
-        <aside className="hidden lg:block w-64 min-w-64 border-r min-h-screen border-border h-full overflow-y-auto sticky top-0 mx-auto shadow-sm">
+        <aside className="hidden lg:block w-56 min-w-56 border-r min-h-screen border-border h-full overflow-y-auto sticky top-0 mx-auto shadow-sm">
           <Sidebar navigation={navigation} />
         </aside>
 
         <Sheet open={isMobileOpen} onOpenChange={setIsMobileOpen}>
-          <SheetContent side="left" className="p-0 w-64 bg-card border-border">
+          <SheetContent side="left" className="p-0 w-56 bg-card border-border">
             <SheetHeader>
               <SheetTitle></SheetTitle>
               <SheetDescription></SheetDescription>
@@ -641,7 +641,7 @@ function DashboardLayout({ children }: { children: React.ReactNode }) {
         <div className="flex-1 flex flex-col min-w-0">
           <Navbar userData={userData} onLogout={() => logOutFunc()} onMenuClick={() => setIsMobileOpen(true)} />
           <main className="flex-1 overflow-y-auto overflow-x-hidden p-2 sm:p-3 lg:p-4">
-          <div className="bg-primary/5 w-full h-full p-2 sm:p-3 lg:p-4 rounded-xl shadow-lg border border-border">
+          <div className="bg-primary/5 dark:bg-card/40 w-full h-full p-2 sm:p-3 lg:p-4 rounded-xl shadow-sm border border-primary/15 dark:border-border/60">
             {children}</div></main>
         </div>
       </div>

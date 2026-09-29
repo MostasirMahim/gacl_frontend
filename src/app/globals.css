@@ -56,6 +56,25 @@
   scrollbar-width: none;
 }
 
+/* Custom Sleek Scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--border) / 0.8);
+  border-radius: 6px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground) / 0.5);
+}
+
 
 .theme-zinc {
   --background: 0 0% 100%;
@@ -842,8 +861,8 @@
   --secondary: 240 4.8% 95.9%;
   --secondary-foreground: 240 5.9% 10%;
 
-  --accent: 142, 71%, 45%;
-  --accent-foreground: 355.7 100% 97.3%;
+  --accent: 240 4.8% 95.9%;
+  --accent-foreground: 240 5.9% 10%;
 
   --destructive: 0 84.2% 60.2%;
   --destructive-foreground: 0 0% 98%;
@@ -883,10 +902,10 @@
 }
 
 .theme-blue {
-  --background: 0 0% 100%;
+  --background: 214 45% 97.5%;
   --foreground: 222.2 84% 4.9%;
 
-  --muted: 210 40% 96.1%;
+  --muted: 214 35% 94.5%;
   --muted-foreground: 215.4 16.3% 46.9%;
 
   --popover: 0 0% 100%;
@@ -895,8 +914,8 @@
   --card: 0 0% 100%;
   --card-foreground: 222.2 84% 4.9%;
 
-  --border: 214.3 31.8% 91.4%;
-  --input: 214.3 31.8% 91.4%;
+  --border: 214.3 32% 90%;
+  --input: 214.3 32% 90%;
 
   --primary-50: 213.8 100% 96.9%;
   --primary-100: 214.3 94.6% 92.7%;
@@ -912,11 +931,11 @@
   --primary: 221.2 83.2% 53.3%;
   --primary-foreground: 210 40% 98%;
 
-  --secondary: 210 40% 96.1%;
+  --secondary: 214 35% 94.5%;
   --secondary-foreground: 222.2 47.4% 11.2%;
 
-  --accent: 217.2 91.2% 59.8%;
-  --accent-foreground: 210 40% 98%;
+  --accent: 214 35% 94.5%;
+  --accent-foreground: 222.2 47.4% 11.2%;
 
   --destructive: 0 84.2% 60.2%;
   --destructive-foreground: 210 40% 98%;
@@ -937,34 +956,40 @@
 }
 
 .dark .theme-blue {
-  --background: 222.2 47.4% 11.2%;
+  /* ── Modern Refined Slate ──────────────────────────────────────────
+     Background:  hsl(222 18% 7.5%)  — deep desaturated canvas, barely-blue
+     Card:        hsl(222 16% 11.5%) — clearly elevated surface
+     Muted:       hsl(222 14% 15%)   — inner wells & table rows
+     Border:      hsl(222 14% 20%)   — crisp separator without noise
+  ─────────────────────────────────────────────────────────────────── */
+  --background: 222 18% 7.5%;
   --foreground: 210 40% 98%;
 
-  --muted: 215 27.9% 16.9%;
-  --muted-foreground: 217.9 10.6% 64.9%;
+  --muted: 222 14% 15%;
+  --muted-foreground: 215 16% 63%;
 
-  --popover: 215 27.9% 16.9%;
+  --popover: 222 16% 11.5%;
   --popover-foreground: 210 40% 98%;
 
-  --card: 215 27.9% 16.9%;
+  --card: 222 16% 11.5%;
   --card-foreground: 210 40% 98%;
 
-  --border: 215.3 25% 26.7%;
-  --input: 215 27.9% 16.9%;
+  --border: 222 14% 20%;
+  --input: 222 14% 15%;
 
   --primary: 217.2 91.2% 59.8%;
-  --primary-foreground: 222.2 47.4% 11.2%;
+  --primary-foreground: 222 18% 7.5%;
 
-  --secondary: 215.3 25% 26.7%;
+  --secondary: 222 14% 18%;
   --secondary-foreground: 210 40% 98%;
 
-  --accent: 215.3 25% 26.7%;
+  --accent: 222 14% 18%;
   --accent-foreground: 210 40% 98%;
 
   --destructive: 0 62.8% 30.6%;
   --destructive-foreground: 210 40% 98%;
 
-  --ring: 224.3 76.3% 48%;
+  --ring: 217.2 91.2% 59.8%;
 
   --default-950: 210 40% 98%;
   --default-900: 210 40% 96.1%;
@@ -973,9 +998,9 @@
   --default-600: 215 20.2% 65.1%;
   --default-500: 215.4 16.3% 46.9%;
   --default-300: 215.3 19.3% 34.5%;
-  --default-200: 215.3 25% 26.7%;
-  --default-100: 217.2 32.6% 17.5%;
-  --default-50: 222.2 47.4% 11.2%;
+  --default-200: 222 14% 20%;
+  --default-100: 222 14% 15%;
+  --default-50: 222 18% 7.5%;
 }
 
 .theme-yellow {
@@ -1011,8 +1036,8 @@
   --secondary: 20 5.9% 90%;
   --secondary-foreground: 24 9.8% 10%;
 
-  --accent: 45.4 93.4% 47.5%;
-  --accent-foreground: 26 83.3% 14.1%;
+  --accent: 60 4.8% 95.9%;
+  --accent-foreground: 24 9.8% 10%;
 
   --destructive: 0 84.2% 60.2%;
   --destructive-foreground: 60 9.1% 97.8%;
@@ -1107,8 +1132,8 @@
   --secondary: 214.3 31.8% 91.4%;
   --secondary-foreground: 222.2 47.4% 11.2%;
 
-  --accent: 258, 90%, 66%;
-  --accent-foreground: 240 100% 98%;
+  --accent: 214.3 31.8% 91.4%;
+  --accent-foreground: 222.2 47.4% 11.2%;
 
   --destructive: 0 84.2% 60.2%;
   --destructive-foreground: 0 85.7% 97.3;

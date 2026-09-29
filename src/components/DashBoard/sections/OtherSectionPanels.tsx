@@ -127,7 +127,7 @@ export function ReservationsSectionPanel({ data }: { data: ReservationsSection }
 
 // ─── Payroll Section ─────────────────────────────────────────────────────────
 export function PayrollSectionPanel({ data }: { data: PayrollSection }) {
-  const { kpi } = data;
+  const { kpi, recent_runs, active_loans_list } = data;
   const statusColor: Record<string, string> = {
     paid: "text-emerald-500",
     processed: "text-primary",
@@ -153,20 +153,181 @@ export function PayrollSectionPanel({ data }: { data: PayrollSection }) {
           </DashCard>
         </SectionMotion>
       </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <SectionMotion delay={0.3}>
+          <DashCard className="p-4">
+            <SectionTitle title="Recent Payroll Runs" subtitle="Last 5 processed months" action={
+              <Link href="/payroll" className="text-xs text-primary hover:underline">View all →</Link>
+            } />
+            {recent_runs && recent_runs.length > 0 ? (
+              <div className="divide-y divide-border">
+                {recent_runs.map((r, i) => (
+                  <div key={i} className="flex items-center justify-between py-3">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0">
+                        <FileText size={14} />
+                      </div>
+                      <div>
+                        <p className="text-xs font-medium text-foreground">{r.name}</p>
+                        <p className="text-xs text-muted-foreground">Month: {r.period_month} / {r.period_year}</p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-sm font-bold text-foreground">৳{r.total_amount.toLocaleString()}</p>
+                      <div className="flex items-center gap-1 justify-end mt-0.5">
+                        <StatusDot status={r.status} />
+                        <span className="text-xs text-muted-foreground capitalize">{r.status}</span>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : <EmptyState message="No recent payroll runs" />}
+          </DashCard>
+        </SectionMotion>
+
+        <SectionMotion delay={0.35}>
+          <DashCard className="p-4">
+            <SectionTitle title="Top Active Loans" subtitle="Staff with highest outstanding balance" />
+            {active_loans_list && active_loans_list.length > 0 ? (
+              <div className="divide-y divide-border">
+                {active_loans_list.map((l, i) => (
+                  <div key={i} className="flex items-center justify-between py-3">
+                    <div>
+                      <p className="text-xs font-medium text-foreground">{l.staff__user__first_name} {l.staff__user__last_name}</p>
+                      <p className="text-xs text-muted-foreground">Deduction: ৳{l.monthly_deduction.toLocaleString()}/mo</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-sm font-bold text-foreground">৳{l.outstanding.toLocaleString()}</p>
+                      <p className="text-xs text-muted-foreground">of ৳{l.principal.toLocaleString()}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : <EmptyState message="No active loans" />}
+          </DashCard>
+        </SectionMotion>
+      </div>
     </div>
   );
 }
 
 // ─── Vendor Section ──────────────────────────────────────────────────────────
 export function VendorSectionPanel({ data }: { data: VendorSection }) {
-  const { kpi } = data;
+  const { kpi, pending_offers_list, recent_payments } = data;
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
-      <KpiCard icon={Store} label="Total Vendors" value={kpi.total_vendors} delay={0} />
-      <KpiCard icon={Store} label="Active Contracts" value={kpi.active_contracts} delay={0.05} />
-      <KpiCard icon={Clock} label="Pending Offers" value={kpi.pending_offers} delay={0.1} />
-      <KpiCard icon={Layers} label="Service Categories" value={kpi.total_service_categories} delay={0.15} />
-      <KpiCard icon={Package} label="Active Products" value={kpi.total_active_products} delay={0.2} />
+    <div className="space-y-4">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+        <KpiCard icon={Store} label="Total Vendors" value={kpi.total_vendors} delay={0} />
+        <KpiCard icon={Store} label="Active Contracts" value={kpi.active_contracts} delay={0.05} />
+        <KpiCard icon={Clock} label="Pending Offers" value={kpi.pending_offers} delay={0.1} />
+        <KpiCard icon={Layers} label="Service Categories" value={kpi.total_service_categories} delay={0.15} />
+        <KpiCard icon={Package} label="Active Products" value={kpi.total_active_products} delay={0.2} />
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        <SectionMotion delay={0.25}>
+          <DashCard className="p-4">
+            <SectionTitle title="Recent Vendor Payments" subtitle="Last 5 processed payments" action={
+              <Link href="/vendors" className="text-xs text-primary hover:underline">View all →</Link>
+            } />
+            {recent_payments && recent_payments.length > 0 ? (
+              <div className="divide-y divide-border">
+                {recent_payments.map((p, i) => (
+                  <div key={i} className="flex items-center justify-between py-3">
+                    <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 rounded-lg bg-emerald-500/10 text-emerald-600 flex items-center justify-center shrink-0">
+                        <TrendingUp size={14} />
+                      </div>
+                      <div>
+                        <p className="text-xs font-medium text-foreground">{p.offer__vendor__name}</p>
+                        <p className="text-xs text-muted-foreground capitalize">{p.payment_type.replace("_", " ")}</p>
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-sm font-bold text-foreground">৳{p.amount.toLocaleString()}</p>
+                      <p className="text-xs text-muted-foreground">{p.paid_on ? new Date(p.paid_on).toLocaleDateString() : "—"}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : <EmptyState message="No recent payments" />}
+          </DashCard>
+        </SectionMotion>
+
+        <SectionMotion delay={0.3}>
+          <DashCard className="p-4">
+            <SectionTitle title="Pending Offers" subtitle="Latest service quotes under review" />
+            {pending_offers_list && pending_offers_list.length > 0 ? (
+              <div className="divide-y divide-border">
+                {pending_offers_list.map((o, i) => (
+                  <div key={i} className="flex items-center justify-between py-3">
+                    <div>
+                      <p className="text-xs font-medium text-foreground">{o.title}</p>
+                      <p className="text-xs text-muted-foreground">{o.vendor__name} • {o.category__name}</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-sm font-bold text-foreground">৳{o.price.toLocaleString()}</p>
+                      <p className="text-xs text-muted-foreground capitalize">{o.billing_cycle.replace("_", " ")}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            ) : <EmptyState message="No pending offers" />}
+          </DashCard>
+        </SectionMotion>
+      </div>
+    </div>
+  );
+}
+
+// ─── Outlet Section ──────────────────────────────────────────────────────────
+import { OutletSection } from "../hooks/useDashboard";
+export function OutletSectionPanel({ data }: { data: OutletSection }) {
+  const { kpi, per_outlet_today } = data;
+  return (
+    <div className="space-y-4">
+      <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
+        <KpiCard icon={Store} label="Total Outlets" value={kpi.total_outlets} delay={0} />
+        <KpiCard icon={Store} label="Open Outlets" value={kpi.open_outlets} delay={0.05} />
+        <KpiCard icon={Activity} label="Orders Today" value={kpi.orders_today} delay={0.1} />
+        <KpiCard icon={Clock} label="Active Orders Now" value={kpi.active_orders_now} delay={0.15} />
+        <KpiCard icon={TrendingUp} label="Revenue Today" value={kpi.revenue_today} prefix="৳" delay={0.2} />
+      </div>
+
+      <SectionMotion delay={0.25}>
+        <DashCard className="p-4">
+          <SectionTitle title="Outlet Performance Today" subtitle="Revenue and orders by outlet" />
+          {per_outlet_today && per_outlet_today.length > 0 ? (
+            <div className="divide-y divide-border">
+              {per_outlet_today.map((o, i) => (
+                <div key={i} className="flex items-center justify-between py-3">
+                  <div className="flex items-center gap-3">
+                    <div className="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0">
+                      <Store size={14} />
+                    </div>
+                    <div>
+                      <p className="text-xs font-medium text-foreground">{o.outlet}</p>
+                      <p className="text-xs text-muted-foreground capitalize">{o.type.replace("_", " ")}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center gap-6">
+                    <div className="text-right">
+                      <p className="text-xs text-muted-foreground mb-0.5">Orders</p>
+                      <p className="text-sm font-bold text-foreground">{o.orders}</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-xs text-muted-foreground mb-0.5">Revenue</p>
+                      <p className="text-sm font-bold text-emerald-500">৳{o.revenue.toLocaleString()}</p>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : <EmptyState message="No outlet performance data for today" />}
+        </DashCard>
+      </SectionMotion>
     </div>
   );
 }

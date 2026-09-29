@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useDashboardSummary, useDashboardLive } from "@/components/DashBoard/hooks/useDashboard";
 import { DashHeader } from "@/components/DashBoard/ui/DashHeader";
 import { Skeleton } from "@/components/DashBoard/ui/DashAtoms";
+import { OverviewSectionPanel } from "@/components/DashBoard/sections/OverviewSectionPanel";
 import { MemberSectionPanel } from "@/components/DashBoard/sections/MemberSectionPanel";
 import { FinanceSectionPanel } from "@/components/DashBoard/sections/FinanceSectionPanel";
 import { RestaurantSectionPanel } from "@/components/DashBoard/sections/RestaurantSectionPanel";
@@ -15,6 +16,7 @@ import {
   PayrollSectionPanel,
   VendorSectionPanel,
   SystemSectionPanel,
+  OutletSectionPanel,
 } from "@/components/DashBoard/sections/OtherSectionPanels";
 
 // Determine if any operational section exists (gate/restaurant) to enable live polling
@@ -73,11 +75,18 @@ export default function DashboardPage() {
   // Determine active section from the first returned section
   const [activeSection, setActiveSection] = useState<string>("");
 
-  const sections = data?.sections ?? [];
+  const sections = useMemo(() => {
+    const raw = data?.sections ?? [];
+    if (raw.length > 0) {
+      return Array.from(new Set(["overview", ...raw]));
+    }
+    return raw;
+  }, [data?.sections]);
+
   const resolvedActive =
     activeSection && sections.includes(activeSection)
       ? activeSection
-      : sections[0] ?? "";
+      : sections[0] ?? "overview";
 
   // Enable live feed only when operational sections are present
   const liveEnabled = useMemo(
@@ -109,6 +118,9 @@ export default function DashboardPage() {
           exit={{ opacity: 0, y: -6 }}
           transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
         >
+          {resolvedActive === "overview" && (
+            <OverviewSectionPanel data={d} live={liveData} />
+          )}
           {resolvedActive === "member" && d.member && (
             <MemberSectionPanel data={d.member} />
           )}
@@ -137,20 +149,7 @@ export default function DashboardPage() {
             <SystemSectionPanel data={d.system} />
           )}
           {resolvedActive === "outlet" && d.outlet && (
-            <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
-              {/* Outlet section is minimal, render KPIs inline */}
-              {Object.entries(d.outlet.kpi).map(([key, val], i) => (
-                <div
-                  key={key}
-                  className="bg-card border border-border border-l-2 border-l-primary rounded-xl p-4"
-                >
-                  <p className="text-2xl font-bold text-foreground">{typeof val === "number" ? val.toLocaleString() : val}</p>
-                  <p className="text-xs text-muted-foreground mt-1 capitalize">
-                    {key.replace(/_/g, " ")}
-                  </p>
-                </div>
-              ))}
-            </div>
+            <OutletSectionPanel data={d.outlet} />
           )}
         </motion.div>
       </AnimatePresence>
