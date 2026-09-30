@@ -2,14 +2,23 @@
 
 import SocialShare from './SocialShare';
 import ThemeToggle from './ThemeToggle';
-import { User, Home } from 'lucide-react';
+import { User, Home, LayoutDashboard } from 'lucide-react';
 import Link from 'next/link';
+import { usePermissions } from '@/hooks/usePermissions';
 
 interface DataType {
     sectionClass?: string;
 }
 
 const HeaderTopV1 = ({ sectionClass }: DataType) => {
+    const { isAuthenticated, isMember } = usePermissions();
+
+    const authTarget = !isAuthenticated
+        ? { href: "/login", label: "Login" }
+        : isMember
+        ? { href: "/portal", label: "Portal" }
+        : { href: "/", label: "Dashboard" };
+
     return (
         <div className={`top-bar-area top-bar-style-one bg-theme text-light ${sectionClass ?? ""}`}>
             <div className="container">
@@ -24,14 +33,16 @@ const HeaderTopV1 = ({ sectionClass }: DataType) => {
                         </div>
                     </div>
 
-                    {/* Right — Home + Theme toggle + Login */}
+                    {/* Right — Home + Theme toggle + Login / Portal */}
                     <div className="col-lg-5 text-end">
                         <div className="item-flex" style={{ justifyContent: "flex-end", gap: "12px" }}>
 
-                            {/* Restaurant Home Button */}
+                            {/* Restaurant Home Button (Opens in new tab to prevent CSS bleeding) */}
                             <div className="d-flex align-items-center">
                                 <Link
                                     href="/restaurant"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
                                     aria-label="Restaurant Home"
                                     title="Restaurant Home"
                                     style={{
@@ -71,14 +82,14 @@ const HeaderTopV1 = ({ sectionClass }: DataType) => {
                                 <ThemeToggle />
                             </div>
 
-                            {/* Login Button */}
+                            {/* Login / Portal / Dashboard Button (Opens in new tab to load clean CSS) */}
                             <div className="d-flex align-items-center">
                                 <Link
-                                    href="/login"
+                                    href={authTarget.href}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    aria-label="Login"
-                                    title="Login"
+                                    aria-label={authTarget.label}
+                                    title={authTarget.label}
                                     style={{
                                         position: "relative",
                                         display: "inline-flex",
@@ -106,8 +117,12 @@ const HeaderTopV1 = ({ sectionClass }: DataType) => {
                                         e.currentTarget.style.boxShadow = "inset 0 0 0 1px rgba(255,255,255,0.25)";
                                     }}
                                 >
-                                    <User style={{ width: "1em", height: "1em" }} />
-                                    <span style={{ fontSize: "12px", fontWeight: 500, lineHeight: 1 }}>Login</span>
+                                    {authTarget.label === "Dashboard" ? (
+                                        <LayoutDashboard style={{ width: "1em", height: "1em" }} />
+                                    ) : (
+                                        <User style={{ width: "1em", height: "1em" }} />
+                                    )}
+                                    <span style={{ fontSize: "12px", fontWeight: 500, lineHeight: 1 }}>{authTarget.label}</span>
                                 </Link>
                             </div>
 

@@ -19,11 +19,13 @@ import {
   Star,
   ChevronDown,
   CornerDownLeft,
+  LayoutDashboard,
 } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { getMediaUrl } from "@/lib/utils";
 import { BRAND_CONFIG } from "@/config/brand";
+import { usePermissions } from "@/hooks/usePermissions";
 
 interface Restaurant {
   id: number;
@@ -114,6 +116,13 @@ export default function RestaurantLandingPage() {
   const [favorites, setFavorites] = useState<Set<number>>(new Set());
   const [selectedLocation, setSelectedLocation] = useState("Dhaka");
   const [showLocationMenu, setShowLocationMenu] = useState(false);
+  const { isAuthenticated, isMember } = usePermissions();
+
+  const authTarget = !isAuthenticated
+    ? { href: "/login", label: "Login" }
+    : isMember
+    ? { href: "/portal", label: "Portal" }
+    : { href: "/", label: "Dashboard" };
 
   useEffect(() => {
     if (typeof window !== "undefined" && sessionStorage.getItem("polluted_css_from_slug")) {
@@ -303,13 +312,19 @@ export default function RestaurantLandingPage() {
               )}
             </div>
 
-            {/* Login button */}
+            {/* Login / Portal / Dashboard button */}
             <Link
-              href="/login"
+              href={authTarget.href}
+              target="_blank"
+              rel="noopener noreferrer"
               className="flex items-center gap-1.5 bg-[#d4a43d] hover:bg-[#c4932e] text-[#0d0d0d] font-bold text-xs px-4 py-2 rounded-full transition-all duration-200 shadow-md shadow-[#d4a43d]/20 shrink-0"
             >
-              <User className="w-3.5 h-3.5" />
-              <span>Login</span>
+              {authTarget.label === "Dashboard" ? (
+                <LayoutDashboard className="w-3.5 h-3.5" />
+              ) : (
+                <User className="w-3.5 h-3.5" />
+              )}
+              <span>{authTarget.label}</span>
             </Link>
           </div>
         </div>

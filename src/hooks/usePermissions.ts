@@ -19,8 +19,9 @@ export function usePermissions() {
           return {
             username: item.username,
             role: item.role ?? null,
-            isAdmin: item.role === "SUPERADMIN",
-            isMember: item.role === "MEMBER",
+            isAdmin: item.role === "SUPERADMIN" || item.is_admin === true,
+            isStaff: item.is_staff === true || item.is_admin === true,
+            isMember: item.role === "MEMBER" || item.is_member === true,
             memberId: item.member_id ?? null,
             memberID: item.member_ID ?? null,
             memberName: item.member_name ?? null,
@@ -30,7 +31,7 @@ export function usePermissions() {
       } catch (err) {
         console.error("Error fetching permissions:", err);
       }
-      return { username: null, role: null, isAdmin: false, isMember: false, memberId: null, memberID: null, memberName: null, permissions: [] };
+      return { username: null, role: null, isAdmin: false, isStaff: false, isMember: false, memberId: null, memberID: null, memberName: null, permissions: [] };
     },
     staleTime: 5 * 60 * 1000,
     retry: (failureCount, error: any) => {
@@ -44,7 +45,10 @@ export function usePermissions() {
   const permissions = permissionData?.permissions || [];
   const role = permissionData?.role || null;
   const isAdmin = permissionData?.isAdmin || false;
+  const isStaff = permissionData?.isStaff || false;
   const isMember = permissionData?.isMember || false;
+  const username = permissionData?.username || null;
+  const isAuthenticated = !!username;
   const memberId = permissionData?.memberId || null;
   const memberID = permissionData?.memberID || null;
   const memberName = permissionData?.memberName || null;
@@ -65,7 +69,10 @@ export function usePermissions() {
   return {
     permissions,
     role,
+    username,
+    isAuthenticated,
     isAdmin,
+    isStaff,
     isMember,
     memberId,
     memberID,
