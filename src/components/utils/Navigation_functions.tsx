@@ -452,6 +452,13 @@ export const navigationPermissions: Record<string, string | null> = {
   Emails: "email:view_logs",
   Configurations: "email:template_edit",
   "Email Groups": "email:view_logs",
+  // Explicit parent > child keys to prevent wrong fallback to group:view
+  "Emails > Groups": "email:view_logs",
+  "Emails > Configurations": "email:template_edit",
+  "Emails > Add to Group": "email:send_bulk",
+  "Emails > Compose": "email:send_single",
+  "Emails > Outbox": "email:view_logs",
+  "Emails > Sent History": "email:view_logs",
   "Add email to group": "email:send_bulk",
   "Add to Group": "email:send_bulk",
   "Compose email": "email:send_single",
@@ -469,6 +476,12 @@ export const navigationPermissions: Record<string, string | null> = {
   "Add restaurant item": "restaurant:menu_edit",
   "Add Item": "restaurant:menu_edit",
   "Add item category": "restaurant:menu_edit",
+  // Explicit parent > child to prevent Categories fallback collision
+  "Restaurant > Categories": "restaurant:menu_edit",
+  "Restaurant > Menu Choices": "restaurant:menu_edit",
+  "Restaurant > Add Item": "restaurant:menu_edit",
+  "Restaurant > Kitchen Orders": "restaurant:order_create",
+  "Restaurant > Cart / POS": "restaurant:order_create",
   Categories: "restaurant:menu_edit",
   "Upload restaurant sales": "restaurant:menu_edit",
   "Restaurant > Upload Sales": "restaurant:menu_edit",
@@ -484,6 +497,11 @@ export const navigationPermissions: Record<string, string | null> = {
   "Add Product": "product:create",
   "View Products": "product:view",
   "All Products": "product:view",
+  // Explicit parent > child keys to prevent Categories fallback to restaurant:menu_edit
+  "Products > Categories": "product:view",
+  "Products > Brands": "product:view",
+  "Products > Purchases": "product:view",
+  "Products > Prices": "product:view",
   "Add Category": "product:create",
   "View Categories": "product:view",
   "All Categories": "product:view",
@@ -519,6 +537,12 @@ export const navigationPermissions: Record<string, string | null> = {
   "New Promo": "promo_code:create",
   "Promo codes category": "promo_code:view",
   "promo codes category": "promo_code:view",
+  // Explicit parent > child to prevent Categories fallback to restaurant:menu_edit
+  "Promo Codes > Categories": "promo_code:view",
+  "Promo Codes > Add category": "promo_code:create",
+  "Promo Codes > Applied Promos": "promo_code:view",
+  "Promo Codes > New Promo": "promo_code:create",
+  "Promo Codes > All Promos": "promo_code:view",
   "Add category": "promo_code:create",
   "Applied promo codes": "promo_code:view",
   "Applied Promos": "promo_code:view",
@@ -614,6 +638,8 @@ const sectionMasterMap: Record<string, string> = {
   "email:": "bulk_emails_management",
   "product:": "product_management",
   "promo_code:": "promo_code_management",
+  // Allows Choices item to fall back to a master permission if granular 'choice:create' is not assigned
+  "choice:": "group_permission_management",
 };
 
 export const filterNavigationByPermissions = (

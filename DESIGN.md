@@ -710,7 +710,81 @@ Whenever a member account is selected (POS checkout, reservations, attendance, R
 ```
 - **Full Width Responsive Data**: Long lists or data grids must span full page width with horizontal scroll safety (`overflow-x-auto`) so content never gets abruptly truncated.
 
+### 18.7 Enterprise Toast & Notification System (Toaster UI/UX Standard)
+Feedback toasts are a primary interaction channel across 170+ modules. Never use raw, unstyled browser notifications or jarring default bounce alerts.
+
+- **Placement**: Always positioned at `bottom-right` (`position="bottom-right"`).
+  - *Rationale*: Top-center toasts collide with the global navbar search (`Ctrl+K`), masking critical inputs and action headers. Bottom-right toasts remain completely non-intrusive.
+- **Glassmorphic Surface**:
+  - `bg-card/94` with `backdrop-filter: blur(20px) saturate(180%)`, framed in `border border-border/85` and `rounded-2xl` (16px).
+  - Enhanced elevation shadow: `box-shadow: 0 14px 38px -6px rgba(0, 0, 0, 0.16)`.
+- **Status Accent Pillars**:
+  - A 4px vertical pill on the left border with outer glow:
+    - **Success**: `#10b981` (Emerald) + `box-shadow: 0 0 10px rgba(16, 185, 129, 0.5)`
+    - **Error**: `#ef4444` (Destructive Red) + `box-shadow: 0 0 10px rgba(239, 68, 68, 0.5)`
+    - **Warning**: `#f59e0b` (Amber) + `box-shadow: 0 0 10px rgba(245, 158, 11, 0.5)`
+    - **Info**: `#0ea5e9` (Sky Blue) + `box-shadow: 0 0 10px rgba(14, 165, 233, 0.5)`
+- **Icon Halos**:
+  - Icons are encapsulated in a 32×32px `rounded-xl` halo with tinted background and matching border ring.
+- **Animation & Transitions**:
+  - Smooth horizontal `Slide` transition (`transition={Slide}`) replacing the outdated `Bounce`.
+  - Max visible limit: `limit={4}` with `autoClose={3500}`.
+- **Universal Dual Support**:
+  - Standard `react-toastify` calls (`toast.success()`, `toast.error()`) automatically inherit the enterprise CSS.
+  - `SonnerToaster` (`@/components/ui/sonner`) is also pre-configured and mounted for modern shadcn-style sonner toasts.
+
+### 18.8 Enterprise Sidebar Navigation & Hierarchy Standards
+The dashboard sidebar organizes 22 functional modules into 6 clear enterprise operational domains. Navigation items must never be displayed as a chaotic, unorganized flat list with mismatched iconography.
+
+#### 🏛️ Functional Domain Hierarchy
+Navigation items are grouped under crisp uppercase tracking headers (`text-[10px] font-bold text-muted-foreground/60 uppercase tracking-widest font-secondary`):
+```
+1. OVERVIEW
+   └── Dashboard (/)
+2. MEMBERSHIP & SERVICES
+   ├── MemberSphere (View, Pending, Add, Transfer History, Recycle Bin)
+   ├── Attendance
+   ├── Reservations
+   └── Facilities (All Facilities, New Facility)
+3. HOSPITALITY & DINING
+   ├── Restaurant (Venues Hub, Cart / POS, Kitchen Orders, Add Item, Categories, Menu Choices, Upload Sales)
+   ├── Outlets & Bars
+   └── Events (All Events, Venues, Tickets, Fees, Media)
+4. FINANCIALS & COMMERCE
+   ├── Finance
+   ├── Member Finance (Invoices, Payment Invoices, Member Accounts, Member Dues, Transactions, Incomes, Payment Options, Sales, Payments)
+   ├── Products (View, Add, Categories, Brands, Purchases, Prices, Media)
+   ├── Upload Sales (Restaurant, Lounge, Others)
+   ├── Promo Codes (All Promos, New Promo, Categories, Add Category, Applied)
+   └── Vendors
+5. HUMAN RESOURCES
+   ├── Payroll
+   └── Onboarding
+6. ADMINISTRATION & SECURITY
+   ├── Emails (Compose, Groups, Add to Group, Outbox, Sent History, Configurations)
+   ├── Users
+   ├── Groups
+   ├── Choices
+   ├── Activity Logs
+   └── My Activity
+```
+
+#### 🎯 Semantic Icon Harmony
+Icons must strictly reflect the enterprise business function rather than developer placeholders:
+- **Taxonomies & Categories**: Use `FolderTree` (never car icons 🚗 or generic lists).
+- **Brands & Certifications**: Use `Award` (never tech brand icons like `Slack`).
+- **Discounts & Promotions**: Use `Tag` (never developer `< />` `Code` icons).
+- **Supply Chain & Vendors**: Use `Truck` (never abstract `Component`).
+- **Culinary Operations**: Use `UtensilsCrossed` for venue root, `Store` for venues hub, `Utensils` for add item, `ChefHat` for kitchen orders, `Receipt` for Cart / POS, and `SlidersHorizontal` for choices.
+- **Physical Estates**: Use `Building2` and `Building` for facilities.
+- **Ticketing & Schedules**: Use `CalendarRange` and `Ticket`.
+
+#### 🔐 Role-Based Permission Compatibility
+- All sidebar navigation elements pass through `filterNavigationByPermissions()` in `Navigation_functions.tsx`.
+- **Golden Rule**: NavItem `label` strings are primary permission keys. Never alter item label strings without updating `navigationPermissions` in `Navigation_functions.tsx`, ensuring zero disruption to granular role-based access control.
+
 ---
 
 *GACL v2 Enterprise Dashboard — Design System v2.0 | 2026-09-30*
+
 

@@ -24,7 +24,6 @@ export default function CheckoutTabs({ memberData, promoCodeData }: Props) {
             { label: "Restaurants", href: "/restaurants" },
             { label: "POS & Checkout" },
           ]}
-          icon={UtensilsCrossed}
           actions={
             <div className="flex items-center gap-2">
               <TabsList className="bg-muted/60 p-1 border border-border/50 h-9">

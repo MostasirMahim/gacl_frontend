@@ -1,7 +1,6 @@
 "use client"
 
-import type React from "react"
-import { useEffect } from "react"
+import React, { useEffect, Fragment } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { ChevronDown, ChevronRight, Settings } from "lucide-react"
@@ -19,6 +18,7 @@ interface SubItem {
   badge?: number
   subItems?: SubItem[]
   urls?: string[]
+  sectionTitle?: string
 }
 
 interface NavItemProps extends SubItem {
@@ -259,9 +259,18 @@ const Sidebar = ({ navigation }: { navigation: NavItemProps[] }) => {
 
       {/* ── Navigation scroll area ────────────────────────── */}
       <ScrollArea className="flex-1 overflow-y-auto no-scrollbar">
-        <nav className="space-y-0.5 px-2.5 py-3">
+        <nav className="space-y-0.5 px-2.5 py-2.5">
           {navigation.map((item, index) => (
-            <NavItem key={index} {...item} />
+            <Fragment key={index}>
+              {item.sectionTitle && (
+                <div className={cn("px-3 pb-1 pt-3.5 select-none", index === 0 && "pt-1")}>
+                  <p className="text-[10px] font-bold text-muted-foreground/60 dark:text-muted-foreground/50 uppercase tracking-widest font-secondary">
+                    {item.sectionTitle}
+                  </p>
+                </div>
+              )}
+              <NavItem {...item} />
+            </Fragment>
           ))}
         </nav>
       </ScrollArea>

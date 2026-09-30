@@ -5,7 +5,8 @@ import Providers from "@/providers/QueryProviders";
 import { Toaster } from "@/components/ui/toaster";
 import { ThemeProvider } from "@/providers/ThemeProviders";
 import "react-toastify/ReactToastify.css";
-import { Bounce, ToastContainer } from "react-toastify";
+import { Slide, ToastContainer } from "react-toastify";
+import { SonnerToaster } from "@/components/ui/sonner";
 import { BRAND_CONFIG } from "@/config/brand";
 
 const geistSans = localFont({
@@ -48,18 +49,19 @@ export default function RootLayout({
 
           <Toaster />
           <ToastContainer
-            position="top-center"
-            autoClose={3000}
+            position="bottom-right"
+            autoClose={3500}
             hideProgressBar={false}
             newestOnTop
-            closeOnClick={false}
+            closeOnClick
             rtl={false}
             pauseOnFocusLoss
             draggable
             pauseOnHover
-            theme="light"
-            transition={Bounce}
+            transition={Slide}
+            limit={4}
           />
+          <SonnerToaster />
         </Providers>
       </body>
     </html>
