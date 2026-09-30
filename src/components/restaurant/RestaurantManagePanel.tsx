@@ -23,6 +23,8 @@ import {
 } from "@/components/ui/dialog";
 import { Switch } from "@/components/ui/switch";
 import { LoadingDots } from "@/components/ui/loading";
+import Link from "next/link";
+import KitchenDisplay from "@/components/restaurant_ordering/KitchenDisplay";
 import {
   Pencil,
   Plus,
@@ -35,6 +37,16 @@ import {
   ListCollapse,
   Settings,
   UserCheck,
+  ChefHat,
+  Clock,
+  MapPin,
+  Users,
+  UtensilsCrossed,
+  ExternalLink,
+  ShoppingCart,
+  Sparkles,
+  ArrowLeft,
+  Store,
 } from "lucide-react";
 import { getMediaUrl } from "@/lib/utils";
 
@@ -45,8 +57,9 @@ export default function RestaurantManagePanel({
 }) {
   const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState<
-    "overview" | "menu" | "testimonials" | "reviews" | "footer"
+    "overview" | "kitchen" | "menu" | "testimonials" | "reviews" | "footer"
   >("overview");
+  const [togglingStatus, setTogglingStatus] = useState(false);
 
   const [footerVal, setFooterVal] = useState<any>({
     aboutText: "",
@@ -707,61 +720,288 @@ export default function RestaurantManagePanel({
     }
   }
 
+  async function toggleVenueStatus() {
+    if (!restaurant) return;
+    const newStatus = restaurant.status === "open" ? "closed" : "open";
+    try {
+      setTogglingStatus(true);
+      await axiosInstance.patch(
+        `/api/restaurants/v1/restaurants/${restaurantId}/detail/`,
+        { status: newStatus }
+      );
+      toast.success(`Venue is now marked as ${newStatus.toUpperCase()}`);
+      queryClient.invalidateQueries({
+        queryKey: ["restaurantDetail", restaurantId],
+      });
+      queryClient.invalidateQueries({ queryKey: ["getRestaurant"] });
+    } catch (err: any) {
+      toast.error("Failed to update venue status");
+    } finally {
+      setTogglingStatus(false);
+    }
+  }
+
+  const heroImage = restaurant?.banner_bg_image
+    ? getMediaUrl(restaurant.banner_bg_image)
+    : restaurant?.cover_image
+    ? getMediaUrl(restaurant.cover_image)
+    : "/assets/restaurant_cover.jpg";
+
   return (
     <div className="space-y-6">
+      {/* Top Breadcrumb & Quick Actions */}
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex items-center gap-2 text-xs text-muted-foreground">
+          <Link
+            href="/restaurants"
+            className="hover:text-foreground transition-colors flex items-center gap-1 font-medium"
+          >
+            <ArrowLeft className="w-3.5 h-3.5" /> Venues Hub
+          </Link>
+          <span>/</span>
+          <span className="text-foreground font-semibold">
+            {restaurant?.name || `Venue #${restaurantId}`}
+          </span>
+        </div>
+        <div className="flex items-center gap-2">
+          <Link href="/restaurants/checkout">
+            <Button
+              size="sm"
+              variant="outline"
+              className="gap-1.5 text-xs h-8 font-medium shadow-xs"
+            >
+              <ShoppingCart className="w-3.5 h-3.5 text-primary" /> Touch POS
+            </Button>
+          </Link>
+          <Button
+            size="sm"
+            variant="outline"
+            onClick={() => setActiveTab("kitchen")}
+            className="gap-1.5 text-xs h-8 font-medium shadow-xs"
+          >
+            <ChefHat className="w-3.5 h-3.5 text-amber-500" /> Kitchen Queue
+          </Button>
+        </div>
+      </div>
+
+      {/* VENUE HERO CARD */}
+      <div className="relative overflow-hidden rounded-2xl border border-border/60 bg-card shadow-sm">
+        {/* Cover banner image */}
+        <div className="relative h-44 sm:h-52 w-full overflow-hidden bg-muted">
+          <img
+            src={heroImage}
+            alt={restaurant?.name || "Venue Cover"}
+            className="w-full h-full object-cover"
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-card via-card/65 to-transparent" />
+        </div>
+
+        {/* Hero Info Overlay */}
+        <div className="relative px-6 pb-6 pt-0 -mt-16 sm:-mt-12 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+          <div className="flex items-end gap-4">
+            {/* Venue Avatar */}
+            <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl border-4 border-card bg-primary/10 shadow-lg flex items-center justify-center shrink-0 overflow-hidden relative backdrop-blur-sm">
+              <span className="font-extrabold text-2xl sm:text-3xl text-primary font-mono">
+                {(restaurant?.name || "R").substring(0, 2).toUpperCase()}
+              </span>
+            </div>
+
+            <div className="space-y-1">
+              <div className="flex flex-wrap items-center gap-2">
+                <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground font-[family-name:var(--font-heading)]">
+                  {restaurant?.name || "Loading Venue..."}
+                </h1>
+                {/* Status pill */}
+                <Badge
+                  variant={
+                    restaurant?.status === "open" ? "default" : "secondary"
+                  }
+                  className={
+                    restaurant?.status === "open"
+                      ? "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border-emerald-500/30 gap-1.5 font-medium"
+                      : "gap-1.5 font-medium"
+                  }
+                >
+                  <span
+                    className={`w-2 h-2 rounded-full ${
+                      restaurant?.status === "open"
+                        ? "bg-emerald-500 animate-pulse"
+                        : "bg-muted-foreground"
+                    }`}
+                  />
+                  {restaurant?.status === "open" ? "Open Now" : "Closed"}
+                </Badge>
+
+                {restaurant?.cuisine_type_name && (
+                  <Badge variant="outline" className="text-xs bg-card/60">
+                    {restaurant.cuisine_type_name}
+                  </Badge>
+                )}
+              </div>
+
+              <p className="text-xs text-muted-foreground line-clamp-1 max-w-xl">
+                {restaurant?.description ||
+                  restaurant?.slogan_1 ||
+                  "Fine Dining & Club Hospitality Management"}
+              </p>
+            </div>
+          </div>
+
+          {/* Quick Status Toggle & Edit */}
+          <div className="flex items-center gap-3 shrink-0">
+            <div className="flex items-center gap-2 bg-muted/40 border border-border/50 rounded-xl px-3 py-1.5">
+              <span className="text-xs font-medium text-muted-foreground">
+                {restaurant?.status === "open"
+                  ? "Orders Active"
+                  : "Orders Paused"}
+              </span>
+              <Switch
+                checked={restaurant?.status === "open"}
+                disabled={togglingStatus}
+                onCheckedChange={toggleVenueStatus}
+              />
+            </div>
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={startEditRestaurant}
+              className="gap-1.5 text-xs h-9 font-medium"
+            >
+              <Pencil className="w-3.5 h-3.5" /> Edit Venue
+            </Button>
+          </div>
+        </div>
+
+        {/* Telemetry Metrics Ribbon */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 divide-x divide-border/40 border-t border-border/40 bg-muted/20">
+          <div className="p-3.5 text-center sm:text-left sm:px-6">
+            <span className="text-[11px] font-medium text-muted-foreground flex items-center justify-center sm:justify-start gap-1">
+              <Users className="w-3 h-3 text-primary" /> Seating Capacity
+            </span>
+            <span className="text-base sm:text-lg font-bold text-foreground font-mono">
+              {restaurant?.capacity || 0} seats
+            </span>
+          </div>
+          <div className="p-3.5 text-center sm:text-left sm:px-6">
+            <span className="text-[11px] font-medium text-muted-foreground flex items-center justify-center sm:justify-start gap-1">
+              <Clock className="w-3 h-3 text-blue-500" /> Operating Hours
+            </span>
+            <span className="text-xs font-semibold text-foreground truncate block">
+              {restaurant?.operating_hours ||
+                (restaurant?.opening_time && restaurant?.closing_time
+                  ? `${restaurant.opening_time} - ${restaurant.closing_time}`
+                  : "10:00 AM - 11:00 PM")}
+            </span>
+          </div>
+          <div className="p-3.5 text-center sm:text-left sm:px-6">
+            <span className="text-[11px] font-medium text-muted-foreground flex items-center justify-center sm:justify-start gap-1">
+              <UtensilsCrossed className="w-3 h-3 text-amber-500" /> Menu Catalog
+            </span>
+            <span className="text-base sm:text-lg font-bold text-foreground font-mono">
+              {items.length} items
+            </span>
+          </div>
+          <div className="p-3.5 text-center sm:text-left sm:px-6">
+            <span className="text-[11px] font-medium text-muted-foreground flex items-center justify-center sm:justify-start gap-1">
+              <MessageSquare className="w-3 h-3 text-purple-500" /> Reviews
+            </span>
+            <span className="text-base sm:text-lg font-bold text-foreground font-mono">
+              {reviews.length} reviews
+            </span>
+          </div>
+        </div>
+      </div>
+
       {/* Navigation Tabs */}
-      <div className="flex border-b border-border/60 space-x-2">
+      <div className="flex border-b border-border/60 gap-1 overflow-x-auto pb-px">
         <button
           onClick={() => setActiveTab("overview")}
-          className={`flex items-center gap-2 px-4 py-2.5 font-medium text-sm transition-all border-b-2 -mb-[2px] ${
+          className={`flex items-center gap-2 px-4 py-2.5 font-medium text-xs sm:text-sm transition-all border-b-2 whitespace-nowrap -mb-[2px] ${
             activeTab === "overview"
-              ? "border-primary text-primary"
+              ? "border-primary text-primary font-semibold"
               : "border-transparent text-muted-foreground hover:text-foreground"
           }`}
         >
-          <Settings className="w-4 h-4" /> Overview & Layouts
+          <Settings className="w-4 h-4" /> Overview & Settings
+        </button>
+        <button
+          onClick={() => setActiveTab("kitchen")}
+          className={`flex items-center gap-2 px-4 py-2.5 font-medium text-xs sm:text-sm transition-all border-b-2 whitespace-nowrap -mb-[2px] ${
+            activeTab === "kitchen"
+              ? "border-primary text-primary font-semibold"
+              : "border-transparent text-muted-foreground hover:text-foreground"
+          }`}
+        >
+          <ChefHat className="w-4 h-4 text-amber-500" /> Kitchen Orders
+          <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
         </button>
         <button
           onClick={() => setActiveTab("menu")}
-          className={`flex items-center gap-2 px-4 py-2.5 font-medium text-sm transition-all border-b-2 -mb-[2px] ${
+          className={`flex items-center gap-2 px-4 py-2.5 font-medium text-xs sm:text-sm transition-all border-b-2 whitespace-nowrap -mb-[2px] ${
             activeTab === "menu"
-              ? "border-primary text-primary"
+              ? "border-primary text-primary font-semibold"
               : "border-transparent text-muted-foreground hover:text-foreground"
           }`}
         >
           <ListCollapse className="w-4 h-4" /> Sections & Items
+          <Badge variant="secondary" className="text-[10px] px-1.5 py-0 h-4">
+            {items.length}
+          </Badge>
         </button>
         <button
           onClick={() => setActiveTab("testimonials")}
-          className={`flex items-center gap-2 px-4 py-2.5 font-medium text-sm transition-all border-b-2 -mb-[2px] ${
+          className={`flex items-center gap-2 px-4 py-2.5 font-medium text-xs sm:text-sm transition-all border-b-2 whitespace-nowrap -mb-[2px] ${
             activeTab === "testimonials"
-              ? "border-primary text-primary"
+              ? "border-primary text-primary font-semibold"
               : "border-transparent text-muted-foreground hover:text-foreground"
           }`}
         >
           <UserCheck className="w-4 h-4" /> Testimonials
+          <Badge variant="secondary" className="text-[10px] px-1.5 py-0 h-4">
+            {testimonials.length}
+          </Badge>
         </button>
         <button
           onClick={() => setActiveTab("reviews")}
-          className={`flex items-center gap-2 px-4 py-2.5 font-medium text-sm transition-all border-b-2 -mb-[2px] ${
+          className={`flex items-center gap-2 px-4 py-2.5 font-medium text-xs sm:text-sm transition-all border-b-2 whitespace-nowrap -mb-[2px] ${
             activeTab === "reviews"
-              ? "border-primary text-primary"
+              ? "border-primary text-primary font-semibold"
               : "border-transparent text-muted-foreground hover:text-foreground"
           }`}
         >
           <MessageSquare className="w-4 h-4" /> Reviews Moderation
+          <Badge variant="secondary" className="text-[10px] px-1.5 py-0 h-4">
+            {reviews.length}
+          </Badge>
         </button>
         <button
           onClick={() => setActiveTab("footer")}
-          className={`flex items-center gap-2 px-4 py-2.5 font-medium text-sm transition-all border-b-2 -mb-[2px] ${
+          className={`flex items-center gap-2 px-4 py-2.5 font-medium text-xs sm:text-sm transition-all border-b-2 whitespace-nowrap -mb-[2px] ${
             activeTab === "footer"
-              ? "border-primary text-primary"
+              ? "border-primary text-primary font-semibold"
               : "border-transparent text-muted-foreground hover:text-foreground"
           }`}
         >
           <ImageIcon className="w-4 h-4" /> Footer Configuration
         </button>
       </div>
+
+      {/* KITCHEN DISPLAY TAB */}
+      {activeTab === "kitchen" && (
+        <div className="space-y-4">
+          <div className="flex items-center justify-between p-4 bg-card rounded-xl border border-border/50">
+            <div>
+              <h3 className="font-semibold text-base flex items-center gap-2 text-foreground">
+                <ChefHat className="w-5 h-5 text-amber-500" /> Live Kitchen Prep Queue — {restaurant?.name}
+              </h3>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                Real-time prep tickets for this venue. Advance tickets as chefs prepare and serve orders.
+              </p>
+            </div>
+          </div>
+          <KitchenDisplay restaurantId={Number(restaurantId)} />
+        </div>
+      )}
 
       {/* OVERVIEW TAB */}
       {activeTab === "overview" && (

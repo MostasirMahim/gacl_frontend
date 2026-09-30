@@ -151,6 +151,7 @@ export default function RFIDCardManager() {
                     : null
                 }
                 onSelect={(m) => setSelMember(m)}
+                onClear={() => setSelMember(null)}
               />
             </div>
           )}

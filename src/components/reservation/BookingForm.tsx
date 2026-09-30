@@ -120,6 +120,10 @@ function BookingForm() {
               setSelectedMember(m);
               setMemberId(String(m.id));
             }}
+            onClear={() => {
+              setSelectedMember(null);
+              setMemberId("");
+            }}
             triggerLabel="Search & select member"
           />
         </div>

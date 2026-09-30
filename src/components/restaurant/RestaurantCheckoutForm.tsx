@@ -116,37 +116,34 @@ function RestaurantCheckoutForm({ memberData, promoCodeData }: Props) {
 
   return (
     <div className="space-y-6 font-primary">
-      <div className="space-y-1">
-        <h1 className="text-3xl font-bold tracking-tight">Checkout</h1>
-        <p className="text-muted-foreground">
-          Review your selected items and complete the purchase.
-        </p>
-      </div>
-      <div className="p-4  rounded-2xl shadow-md border">
-        <h2 className="text-xl font-bold border-b pb-2">🛒 Selected Items</h2>
+      <div className="p-5 bg-card rounded-2xl shadow-xs border border-border/60">
+        <h2 className="text-base font-bold text-foreground border-b border-border/50 pb-3 flex items-center gap-2">
+          <span>🛒</span> Selected Order Items
+        </h2>
 
-        <div className="space-y-3">
+        <div className="space-y-2.5 mt-3">
           {!mounted ? (
-            <p className="text-gray-500 italic">Loading cart...</p>
+            <p className="text-muted-foreground text-xs italic">Loading cart...</p>
           ) : cart.length > 0 ? (
             cart.map((item: any) => (
               <div
                 key={item.id}
-                className="flex items-center justify-between rounded-xl p-3 hover:shadow-sm transition"
+                className="flex items-center justify-between rounded-xl p-3 bg-muted/30 border border-border/40 hover:border-border transition-colors"
               >
-                <div className="space-y-1">
-                  <p className="font-semibold ">{item.name}</p>
-                  <p className="text-sm ">
-                    Qty: <span className="font-medium">{item.quantity}</span>
+                <div className="space-y-0.5">
+                  <p className="font-semibold text-sm text-foreground">{item.name}</p>
+                  <p className="text-xs text-muted-foreground">
+                    Quantity: <span className="font-mono font-medium text-foreground">{item.quantity}</span>
                   </p>
-                  <p className="text-green-600 font-bold">
-                    ${item.selling_price * item.quantity}
+                  <p className="text-primary font-mono font-bold text-sm">
+                    ৳{Number(item.selling_price * item.quantity).toFixed(2)}
                   </p>
                 </div>
 
                 <Button
-                  variant="destructive"
+                  variant="outline"
                   size="sm"
+                  className="text-red-500 hover:text-red-700 hover:bg-red-500/10 text-xs h-8"
                   onClick={() => removeItem(item.id)}
                 >
                   Remove
@@ -154,11 +151,13 @@ function RestaurantCheckoutForm({ memberData, promoCodeData }: Props) {
               </div>
             ))
           ) : (
-            <p className="text-gray-500 italic">No items in the cart</p>
+            <div className="text-center py-6 text-muted-foreground text-xs">
+              No items in the direct checkout cart
+            </div>
           )}
         </div>
       </div>
-      <div className=" p-4 rounded-2xl shadow-md border">
+      <div className="p-5 bg-card rounded-2xl shadow-xs border border-border/60">
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}

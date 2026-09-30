@@ -1,6 +1,7 @@
 {
-  "name": "standerd-project",
-  "version": "0.1.0",
+  "name": "saint-club-erp",
+  "author": "pepoltek ltd.",
+  "version": "2.0.1",
   "private": true,
   "scripts": {
     "dev": "next dev",

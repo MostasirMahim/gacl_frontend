@@ -1,24 +1,23 @@
 "use client";
 
-export default function Error({
+import EnterpriseErrorState from "@/components/common/EnterpriseErrorState";
+
+export default function RestaurantError({
   error,
   reset,
 }: {
-  error: Error;
+  error: Error & { digest?: string };
   reset: () => void;
 }) {
   return (
-    <div className="text-center mt-10">
-      <h2 className="text-2xl font-bold text-red-500">
-        Something went wrong 😓
-      </h2>
-      <p className="font-bold">{error.message}</p>
-      <button
-        onClick={() => reset()}
-        className="mt-4 px-4 py-2 bg-blue-500 text-white rounded"
-      >
-        Try again
-      </button>
-    </div>
+    <EnterpriseErrorState
+      error={error}
+      reset={reset}
+      title="Restaurant Operations Error"
+      description="An issue occurred while loading this restaurant service or dataset. You can retry the request or return to the restaurants dashboard."
+      backHref="/restaurants"
+      backLabel="Return to Venues Hub"
+      featureName="Restaurant Management"
+    />
   );
 }

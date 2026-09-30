@@ -52,7 +52,7 @@ const Navbar: React.FC<NavbarProps> = ({ userData, onLogout, onMenuClick }) => {
         <input
           type="text"
           placeholder="Search members, transactions, orders..."
-          className="w-full h-9 bg-card/90 border border-border/85 dark:border-border/70 rounded-lg pl-9 pr-12 text-xs text-foreground placeholder:text-muted-foreground/70 focus:bg-card focus:outline-none focus:ring-1.5 focus:ring-primary/40 focus:border-primary shadow-xs transition-all font-medium"
+          className="w-full h-9 bg-card/90 border border-border/85 dark:border-border/70 rounded-lg pl-9 pr-12 text-xs text-foreground placeholder:text-muted-foreground/70 focus:bg-card outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary shadow-xs transition-colors font-medium"
         />
         <kbd className="absolute right-2.5 top-2 hidden sm:inline-flex items-center px-1.5 py-0.5 text-[10px] font-semibold text-foreground/60 bg-muted/80 border border-border/70 rounded select-none shadow-2xs">
           ⌘K

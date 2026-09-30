@@ -181,6 +181,10 @@ function GuestRegisterForm({ membersData, staffData }: Props) {
                         setSelectedHostMember(m);
                         field.onChange(String(m.id));
                       }}
+                      onClear={() => {
+                        setSelectedHostMember(null);
+                        field.onChange("");
+                      }}
                       triggerLabel="Search & select host member"
                     />
                   </FormControl>

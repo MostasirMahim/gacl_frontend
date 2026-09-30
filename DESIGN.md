@@ -557,6 +557,160 @@ space-y-6  → page section rhythm
 space-y-8  → settings page sections
 ```
 
+```
+
 ---
 
-*GACL v2 Enterprise Dashboard — Design System v1.0 | 2026-09-29*
+## 18. Enterprise Page Modernization & Refactoring Workflow (v2)
+
+When updating legacy pages or building new module views (e.g. Restaurants, Reservations, Orders, Member Management), strictly adhere to the following verified patterns:
+
+### 18.1 Universal PageHeader Standard & Best Practices
+Every top-level dashboard and module page MUST use the shared `<PageHeader>` component (`@/components/common/PageHeader`) instead of ad-hoc custom headers or plain text `<h1>`.
+
+- **Import**:
+  ```tsx
+  import PageHeader from "@/components/common/PageHeader";
+  ```
+
+#### 🛡️ Golden Rule: Icons & Action Buttons are Optional-First
+- **Omit `icon` when not strictly necessary (Recommended)**:
+  - If a page doesn't strictly need an icon, **do not pass an icon**.
+  - Omitting the icon produces an ultra-clean, modern, distraction-free typographic layout.
+  - Omission eliminates any risk of React Server Component (RSC) boundary serialization errors or object-child runtime crashes.
+- **Omit `actions` when no primary action is required**:
+  - Do not add buttons or empty wrapper `div`s just to fill space.
+  - Only provide `actions` if there is a contextually necessary operation (e.g. `Cancel & Return` on create forms, or a primary `Register Venue` CTA).
+- **If an `icon` IS required**:
+  - In **Server Components** (`async function Page()` without `"use client"`): ALWAYS pass an instantiated JSX element, e.g. `icon={<UtensilsCrossed className="w-5 h-5" />}`. Never pass un-instantiated component functions across boundaries.
+  - In **Client Components** (`"use client"`): You can safely pass either `icon={<UtensilsCrossed className="w-5 h-5" />}` or `icon={UtensilsCrossed}`.
+
+#### 📋 Complete Props Reference
+| Prop | Type | Default | Description |
+|---|---|---|---|
+| `title` | `string \| ReactNode` | **Required** | Primary page heading (refined H1 with tracking-tight) |
+| `subtitle` / `description` | `string \| ReactNode` | `undefined` | 1–2 sentence contextual explanation |
+| `breadcrumbs` | `BreadcrumbItem[]` | `undefined` | Navigation path `[{ label: "...", href?: "..." }]`. Last item is current active page. |
+| `icon` | `LucideIcon \| ReactNode` | `undefined` | **Optional.** Decorative hero icon. Omit if not strictly needed. |
+| `badge` | `ReactNode` | `undefined` | **Optional.** Status pill, active record counter, or tag placed adjacent to title. |
+| `actions` | `ReactNode` | `undefined` | **Optional.** Right-aligned CTAs, action buttons, or tabs. Omit if not needed. |
+| `variant` | `"card" \| "plain"` | `"card"` | `"card"` renders organic SVG shades, soft glow, and border. `"plain"` renders minimal line divider. |
+| `illustration` | `ReactNode` | `undefined` | **Optional.** Decorative illustration rendered on desktop viewports. |
+| `children` | `ReactNode` | `undefined` | **Optional.** Sub-header row for secondary tabs, search bars, or inline filters. |
+
+#### 💡 Standard Usage Patterns
+
+**1. Clean Minimalist Header (Recommended Default — No Icon, No Actions)**:
+```tsx
+<PageHeader
+  title="Member Accounts Directory"
+  subtitle="Manage active club memberships, KYC statuses, and biometric RFID allocations."
+  breadcrumbs={[
+    { label: "Members", href: "/members" },
+    { label: "Directory" },
+  ]}
+/>
+```
+
+**2. Form / Create Page (With Breadcrumbs and Return Button, No Icon)**:
+```tsx
+<PageHeader
+  title="Create Menu Dish"
+  subtitle="Add a new culinary item, set portion pricing, stock levels, and assign to a venue."
+  breadcrumbs={[
+    { label: "Restaurants", href: "/restaurants" },
+    { label: "New Menu Item" },
+  ]}
+  actions={
+    <Link href="/restaurants">
+      <Button variant="outline" size="sm" className="gap-1.5 text-xs h-9 font-medium shadow-xs">
+        <ArrowLeft className="w-3.5 h-3.5" /> Cancel & Return
+      </Button>
+    </Link>
+  }
+/>
+```
+
+**3. Module Hero Header (With Status Badge, Safe Icon, and Primary CTA)**:
+```tsx
+<PageHeader
+  title="Dining Venues & Restaurants"
+  subtitle="Club dining lounges, live service operational status, and kitchen feeds."
+  breadcrumbs={[
+    { label: "Restaurants", href: "/restaurants" },
+    { label: "Venues Hub" },
+  ]}
+  badge={
+    <span className="inline-flex items-center gap-1.5 text-xs px-2.5 py-1 rounded-full bg-primary/10 text-primary border border-primary/20 font-medium">
+      <Sparkles className="w-3.5 h-3.5" />
+      {venues.length} Venues Active
+    </span>
+  }
+  icon={<Store className="w-5 h-5" />}
+  actions={
+    <Link href="/restaurants/add">
+      <Button size="sm" className="gap-1.5 text-xs h-9 font-semibold shadow-xs">
+        Register Venue
+      </Button>
+    </Link>
+  }
+/>
+```
+
+### 18.2 Alternating Background Hierarchy Pattern (Avoid Monotone Canvas)
+Never apply the same root background color across every adjacent card, section, and input well. Maintain visual depth through disciplined surface alternation:
+```
+1. Canvas Page Level   → bg-background (lowest level, clean white in light mode / deep slate in dark)
+2. Card / Panel Level  → bg-card border border-border/80 shadow-xs rounded-xl (elevated surface)
+3. Inner Wells / Tables → bg-muted/30 to bg-muted/40 (inset wells, filter bars, table headers)
+4. Active States / Badges → bg-primary/10 border-primary/20 text-primary (harmonious brand tint)
+5. Popovers / Modals   → bg-card border border-border/80 shadow-2xl rounded-2xl
+```
+
+### 18.3 Input & Search Field Focus Rules (Preventing the "Black Flash" Glitch)
+**CRITICAL RULE**: Never combine `transition-all` with `focus:ring` or `focus:outline-none` on form inputs. Doing so causes the browser to animate its native black focus outline, creating an unsightly black flash glitch before turning to the primary theme color.
+- ❌ **Forbidden Pattern**:
+  `className="focus:outline-none focus:ring-1.5 focus:ring-primary transition-all"`
+- ✅ **Required Enterprise Pattern**:
+  `className="outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary transition-colors font-medium"`
+- **Padding with Icons**:
+  - When an icon is placed at `left-3` (12px), use standard `pl-9` (36px) or `pl-10` (40px). **Never use non-standard Tailwind fractions like `pl-8.5`** which get ignored by the browser.
+  - When a clear button (`✕`) is placed on the right, use `pr-9` or `pr-12`.
+
+### 18.4 Universal Member Selection Modal (`MemberSelectModal`)
+Whenever a member account is selected (POS checkout, reservations, attendance, RFID assignment, sales):
+- **Import**: `import MemberSelectModal from "@/components/shared/MemberSelectModal";`
+- **Features**:
+  - **Tokenized Universal Search**: Backend queries full concatenated name (`Concat('first_name', Value(' '), 'last_name')`), ID, phone, email, status, and category case-insensitively. Out-of-order terms (e.g. `"0001 sandra"`) match instantly.
+  - **Zero-Latency Client Filter**: Pre-filters loaded results instantly on keystroke before debounced server query completes.
+  - **Compact Proportions**: Container uses `max-w-xl max-h-[78vh] flex flex-col gap-0 rounded-2xl`. No oversized fullscreen stretch.
+  - **Clean Header Count**: Member count is integrated cleanly as a pill badge next to the title (`[ 40 members ]`), eliminating loose, dangling text lines.
+  - **Rich Card Metadata**: Avatars with initials palette, monospaced ID badge (`GACL-M0001`), emerald status pill, category tag, and phone/email metadata.
+  - **One-Click Deselection**: Supports `onClear={() => setMember(null)}` directly on the trigger.
+
+### 18.5 Motion, Micro-Interactions & Smooth UX
+- **Card Entrance Animations**: Wrap page sections in Framer Motion:
+```tsx
+<motion.div
+  initial={{ opacity: 0, y: 12 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+>
+```
+- **Interactive Micro-Lifts**: Cards should exhibit subtle lift on hover (`whileHover={{ y: -1 }}` or `hover:border-primary/40 hover:shadow-sm transition-all`).
+- **Interactive Cursors**: Every clickable trigger, button, tab, and card must explicitly declare `cursor-pointer`.
+
+### 18.6 Custom Scrollbar & Full-Width Data Handling
+- **Visible, Elegant Scrollbars**: Never leave browser default invisible scrollbars on long lists or tables. Use the shared `.custom-scrollbar` class:
+```css
+/* Visible, smooth scrollbar matching theme */
+.custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
+.custom-scrollbar::-webkit-scrollbar-thumb { background: hsl(var(--border) / 0.8); border-radius: 9999px; }
+.custom-scrollbar::-webkit-scrollbar-thumb:hover { background: hsl(var(--primary) / 0.5); }
+```
+- **Full Width Responsive Data**: Long lists or data grids must span full page width with horizontal scroll safety (`overflow-x-auto`) so content never gets abruptly truncated.
+
+---
+
+*GACL v2 Enterprise Dashboard — Design System v2.0 | 2026-09-30*
+

@@ -157,6 +157,7 @@ export default function OutletOrderCreate({ onSuccess }: OutletOrderCreateProps 
               member ? { member_ID: member.member_ID, name: member.name } : null
             }
             onSelect={(m) => setMember(m)}
+            onClear={() => setMember(null)}
           />
         </div>
         <div>
