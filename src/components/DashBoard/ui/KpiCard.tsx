@@ -34,8 +34,11 @@ export function KpiCard({
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay, ease: [0.22, 1, 0.36, 1] }}
       whileHover={{ y: -2 }}
-      className="relative bg-card border border-border border-l-2 border-l-primary rounded-xl p-4 flex flex-col gap-3 overflow-hidden group cursor-default"
+      className="relative bg-card border border-border/80 rounded-2xl p-4 flex flex-col gap-3 overflow-hidden group cursor-default shadow-xs hover:shadow-sm transition-all duration-300"
     >
+      {/* Short top-left glowing primary accent pill matching design plan */}
+      <div className="absolute top-3.5 left-0 w-1.5 h-8 bg-primary rounded-r-full shadow-[0_0_12px_hsl(var(--primary))]" />
+
       {/* subtle background glow */}
       <div className="absolute -right-4 -top-4 w-20 h-20 bg-primary/5 rounded-full blur-xl pointer-events-none group-hover:bg-primary/10 transition-colors duration-500" />
 
@@ -66,7 +69,8 @@ export function KpiCard({
 
 export function KpiCardSkeleton() {
   return (
-    <div className="bg-card border border-border rounded-xl p-4 flex flex-col gap-3">
+    <div className="relative bg-card border border-border/80 rounded-2xl p-4 flex flex-col gap-3 overflow-hidden shadow-xs">
+      <div className="absolute top-3.5 left-0 w-1.5 h-8 bg-primary/40 rounded-r-full" />
       <div className="flex items-start justify-between">
         <Skeleton className="w-10 h-10" />
         <Skeleton className="w-16 h-4" />

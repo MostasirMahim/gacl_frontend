@@ -2,7 +2,7 @@
 
 import SocialShare from './SocialShare';
 import ThemeToggle from './ThemeToggle';
-import { User } from 'lucide-react';
+import { User, Home } from 'lucide-react';
 import Link from 'next/link';
 
 interface DataType {
@@ -24,9 +24,47 @@ const HeaderTopV1 = ({ sectionClass }: DataType) => {
                         </div>
                     </div>
 
-                    {/* Right — Theme toggle + Login */}
+                    {/* Right — Home + Theme toggle + Login */}
                     <div className="col-lg-5 text-end">
                         <div className="item-flex" style={{ justifyContent: "flex-end", gap: "12px" }}>
+
+                            {/* Restaurant Home Button */}
+                            <div className="d-flex align-items-center">
+                                <Link
+                                    href="/restaurant"
+                                    aria-label="Restaurant Home"
+                                    title="Restaurant Home"
+                                    style={{
+                                        position: "relative",
+                                        display: "inline-flex",
+                                        alignItems: "center",
+                                        justifyContent: "center",
+                                        height: "1.9em",
+                                        padding: "0 10px",
+                                        gap: "6px",
+                                        border: "none",
+                                        borderRadius: 6,
+                                        background: "transparent",
+                                        cursor: "pointer",
+                                        color: "inherit",
+                                        flexShrink: 0,
+                                        fontSize: "inherit",
+                                        lineHeight: 1,
+                                        textDecoration: "none",
+                                        boxShadow: "inset 0 0 0 1px rgba(255,255,255,0.25)",
+                                        transition: "box-shadow 0.2s ease",
+                                    }}
+                                    onMouseEnter={(e) => {
+                                        e.currentTarget.style.boxShadow = "inset 0 0 0 1px rgba(255,255,255,0.7)";
+                                    }}
+                                    onMouseLeave={(e) => {
+                                        e.currentTarget.style.boxShadow = "inset 0 0 0 1px rgba(255,255,255,0.25)";
+                                    }}
+                                >
+                                    <Home style={{ width: "1em", height: "1em" }} />
+                                    <span style={{ fontSize: "12px", fontWeight: 500, lineHeight: 1 }}>Home</span>
+                                </Link>
+                            </div>
 
                             {/* Theme toggle */}
                             <div className="d-flex align-items-center">
@@ -46,9 +84,9 @@ const HeaderTopV1 = ({ sectionClass }: DataType) => {
                                         display: "inline-flex",
                                         alignItems: "center",
                                         justifyContent: "center",
-                                        width: "1.9em",
                                         height: "1.9em",
-                                        padding: 0,
+                                        padding: "0 10px",
+                                        gap: "6px",
                                         border: "none",
                                         borderRadius: 6,
                                         background: "transparent",
@@ -57,6 +95,7 @@ const HeaderTopV1 = ({ sectionClass }: DataType) => {
                                         flexShrink: 0,
                                         fontSize: "inherit",
                                         lineHeight: 1,
+                                        textDecoration: "none",
                                         boxShadow: "inset 0 0 0 1px rgba(255,255,255,0.25)",
                                         transition: "box-shadow 0.2s ease",
                                     }}
@@ -68,6 +107,7 @@ const HeaderTopV1 = ({ sectionClass }: DataType) => {
                                     }}
                                 >
                                     <User style={{ width: "1em", height: "1em" }} />
+                                    <span style={{ fontSize: "12px", fontWeight: 500, lineHeight: 1 }}>Login</span>
                                 </Link>
                             </div>
 

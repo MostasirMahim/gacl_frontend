@@ -29,6 +29,14 @@ export function RestaurantVenueCard({ restaurant, delay = 0 }: RestaurantVenueCa
   const cuisineName = restaurant.cuisine_type?.name || "Continental";
   const typeName = restaurant.restaurant_type?.name || "Fine Dining";
   const capacity = Number(restaurant.capacity) || 50;
+  const restaurantSlug =
+    restaurant.slug ||
+    restaurant.name
+      ?.toLowerCase()
+      .trim()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/(^-|-$)/g, "") ||
+    "menu";
 
   return (
     <motion.div
@@ -48,26 +56,23 @@ export function RestaurantVenueCard({ restaurant, delay = 0 }: RestaurantVenueCa
         {/* Ambient Top & Bottom Gradients */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
 
-        {/* Top Badges: Status & Cuisine */}
+        {/* Top Badges: Cuisine on Left & Menu Navigation on Right */}
         <div className="absolute top-3 left-3 right-3 flex items-center justify-between gap-2 z-10">
-          <span
-            className={`inline-flex items-center gap-1.5 text-xs px-2.5 py-0.5 rounded-full font-semibold border backdrop-blur-md shadow-xs ${
-              isOpen
-                ? "bg-emerald-500/20 text-emerald-300 border-emerald-500/40"
-                : "bg-rose-500/20 text-rose-300 border-rose-500/40"
-            }`}
-          >
-            <span
-              className={`w-1.5 h-1.5 rounded-full ${
-                isOpen ? "bg-emerald-400 animate-pulse" : "bg-rose-400"
-              }`}
-            />
-            {isOpen ? "Open Now" : "Closed"}
-          </span>
-
-          <span className="inline-flex items-center text-[11px] font-medium px-2 py-0.5 rounded-full bg-black/50 text-white/90 border border-white/20 backdrop-blur-md">
+          <span className="inline-flex items-center text-xs font-semibold px-2.5 py-1 rounded-full bg-black/60 text-white/95 border border-white/20 backdrop-blur-md shadow-xs">
             {cuisineName}
           </span>
+
+          <Link
+            href={`/restaurant/${restaurantSlug}/menu`}
+            target="_blank"
+            rel="noopener noreferrer"
+            title="Open restaurant menu in new tab"
+            aria-label="Open restaurant menu in new tab"
+            onClick={(e) => e.stopPropagation()}
+            className="w-7 h-7 rounded-full bg-black/60 hover:bg-black/85 text-white/90 hover:text-white border border-white/20 backdrop-blur-md flex items-center justify-center transition-all hover:scale-110 shadow-xs cursor-pointer group/nav"
+          >
+            <ExternalLink className="w-3.5 h-3.5 group-hover/nav:translate-x-0.5 group-hover/nav:-translate-y-0.5 transition-transform" />
+          </Link>
         </div>
 
         {/* Bottom Banner Title & Category */}
@@ -91,7 +96,13 @@ export function RestaurantVenueCard({ restaurant, delay = 0 }: RestaurantVenueCa
               <Clock className="w-3.5 h-3.5 text-primary/70 shrink-0" />
               Hours:
             </span>
-            <span className="font-semibold text-foreground">
+            <span className="font-semibold text-foreground flex items-center gap-1.5">
+              <span
+                className={`w-1.5 h-1.5 rounded-full ${
+                  isOpen ? "bg-emerald-500 animate-pulse" : "bg-rose-500"
+                }`}
+                title={isOpen ? "Open Now" : "Closed"}
+              />
               {restaurant.opening_time && restaurant.closing_time
                 ? `${restaurant.opening_time.slice(0, 5)} – ${restaurant.closing_time.slice(0, 5)}`
                 : `${restaurant.operating_hours || 12} hrs / day`}
@@ -148,27 +159,12 @@ export function RestaurantVenueCard({ restaurant, delay = 0 }: RestaurantVenueCa
               variant="outline"
               size="sm"
               title="Kitchen Display Orders"
+              aria-label="Kitchen Display Orders"
               className="h-8 px-2.5 text-xs text-muted-foreground hover:text-foreground border-border/80 hover:bg-accent cursor-pointer"
             >
               <ChefHat className="w-3.5 h-3.5" />
             </Button>
           </Link>
-
-          {restaurant.slug && (
-            <Link
-              href={`/restaurant/${restaurant.slug}`}
-              target="_blank"
-              title="View Public Storefront"
-            >
-              <Button
-                variant="outline"
-                size="sm"
-                className="h-8 px-2.5 text-xs text-muted-foreground hover:text-foreground border-border/80 hover:bg-accent cursor-pointer"
-              >
-                <ExternalLink className="w-3.5 h-3.5" />
-              </Button>
-            </Link>
-          )}
         </div>
       </div>
     </motion.div>

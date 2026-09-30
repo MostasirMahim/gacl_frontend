@@ -52,4 +52,5 @@ export const protected_routes: {
   { path: "/payroll", permission_name: "payroll:view_structures" },
   { path: "/vendors", permission_name: "vendor:view" },
   { path: "/finance", permission_name: "member_financial:view_invoices" },
+  { path: "/settings", permission_name: null },
 ];

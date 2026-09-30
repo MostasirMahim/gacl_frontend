@@ -17,6 +17,14 @@ import { useState } from "react";
 interface NavbarProps {
   userData: {
     username?: string;
+    first_name?: string;
+    last_name?: string;
+    full_name?: string;
+    role?: string;
+    role_name?: string;
+    email?: string;
+    is_admin?: boolean;
+    groups?: Array<{ group_id: number; group_name: string; display_name?: string }>;
   };
   onLogout: () => void;
   onMenuClick?: () => void;
@@ -24,6 +32,35 @@ interface NavbarProps {
 
 const Navbar: React.FC<NavbarProps> = ({ userData, onLogout, onMenuClick }) => {
   const [isFullScreen, setIsFullScreen] = useState(false);
+
+  const fullName =
+    userData?.full_name ||
+    [userData?.first_name, userData?.last_name].filter(Boolean).join(" ") ||
+    userData?.username ||
+    "Admin User";
+
+  const firstName =
+    userData?.first_name ||
+    fullName.split(" ")[0] ||
+    userData?.username ||
+    "Admin";
+
+  const roleName =
+    userData?.role_name ||
+    (userData?.groups && userData.groups.length > 0
+      ? userData.groups[0].display_name ||
+        userData.groups[0].group_name.replace(/_/g, " ").replace(/\b\w/g, (c) => c.toUpperCase())
+      : userData?.is_admin
+      ? "Super Admin"
+      : userData?.role === "SUPERADMIN"
+      ? "Super Admin"
+      : userData?.role === "STAFF"
+      ? "Club Staff"
+      : userData?.role === "MEMBER"
+      ? "Club Member"
+      : "Administrator");
+
+  const avatarInitial = (fullName || userData?.username || "A").charAt(0).toUpperCase();
 
   const toggleFullScreen = async () => {
     if (!isFullScreen) {
@@ -55,7 +92,7 @@ const Navbar: React.FC<NavbarProps> = ({ userData, onLogout, onMenuClick }) => {
           className="w-full h-9 bg-card/90 border border-border/85 dark:border-border/70 rounded-lg pl-9 pr-12 text-xs text-foreground placeholder:text-muted-foreground/70 focus:bg-card outline-none focus:ring-2 focus:ring-primary/30 focus:border-primary shadow-xs transition-colors font-medium"
         />
         <kbd className="absolute right-2.5 top-2 hidden sm:inline-flex items-center px-1.5 py-0.5 text-[10px] font-semibold text-foreground/60 bg-muted/80 border border-border/70 rounded select-none shadow-2xs">
-          ⌘K
+          ⌘
         </kbd>
       </div>
 
@@ -111,16 +148,19 @@ const Navbar: React.FC<NavbarProps> = ({ userData, onLogout, onMenuClick }) => {
                 </div>
                 <span className="absolute -bottom-0.5 -right-0.5 w-2 h-2 rounded-full bg-emerald-500 border border-background shadow-xs" />
               </div>
-              <div className="hidden xl:flex items-center gap-2">
-                <div className="flex flex-col text-left leading-none">
-                  <span className="text-xs font-semibold text-foreground whitespace-nowrap group-hover:text-primary transition-colors">
-                    {userData?.username || "Admin User"}
+              <div className="hidden md:flex items-center gap-2">
+                <div className="flex flex-col text-left leading-none max-w-[135px]">
+                  <span
+                    className="text-xs font-semibold text-foreground truncate group-hover:text-primary transition-colors"
+                    title={fullName}
+                  >
+                    {fullName.length > 16 ? firstName : fullName}
                   </span>
-                  <span className="text-[10px] text-muted-foreground mt-0.5 whitespace-nowrap font-medium">
-                    {userData?.username ? "Club Executive" : "Administrator"}
+                  <span className="text-[10px] text-muted-foreground mt-0.5 truncate font-medium">
+                    {roleName}
                   </span>
                 </div>
-                <ChevronDown className="w-3.5 h-3.5 text-muted-foreground group-hover:text-foreground transition-colors" />
+                <ChevronDown className="w-3.5 h-3.5 text-muted-foreground group-hover:text-foreground transition-colors shrink-0" />
               </div>
             </Button>
           </DropdownMenuTrigger>
@@ -132,14 +172,14 @@ const Navbar: React.FC<NavbarProps> = ({ userData, onLogout, onMenuClick }) => {
             {/* User Account Info Header */}
             <div className="px-2.5 py-2 flex items-center gap-2.5">
               <div className="w-8 h-8 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center text-primary font-bold text-xs shrink-0">
-                {(userData?.username || "A").charAt(0).toUpperCase()}
+                {avatarInitial}
               </div>
               <div className="flex flex-col min-w-0">
-                <span className="text-xs font-semibold text-foreground truncate">
-                  {userData?.username || "Admin User"}
+                <span className="text-xs font-semibold text-foreground truncate" title={fullName}>
+                  {fullName}
                 </span>
                 <span className="text-[10px] text-muted-foreground truncate font-medium">
-                  {userData?.username ? "Club Executive" : "Administrator"}
+                  {roleName}
                 </span>
               </div>
             </div>

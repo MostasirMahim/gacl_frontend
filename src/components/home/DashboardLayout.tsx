@@ -563,32 +563,37 @@ function DashboardLayout({ children }: { children: React.ReactNode }) {
   const router = useRouter()
   const queryClient = useQueryClient()
 
-  const { mutate: logOutFunc, isPending } = useMutation({
-    mutationFn: async () => {
-      const res = await axiosInstance.delete("/api/account/v1/logout/")
-      return res.data
-    },
-    onSuccess: async (data) => {
-      if (data.status === "success") {
-        toast.success(data.message || "You have been logged out successfully.")
-        await queryClient.invalidateQueries({ queryKey: ["authUser"] })
-        router.replace("/login")
-        router.refresh()
-        window.location.reload()
+  const [isLoggingOut, setIsLoggingOut] = useState(false)
+
+  const handleLogout = async () => {
+    if (isLoggingOut) return
+    setIsLoggingOut(true)
+
+    try {
+      await axiosInstance.delete("/api/account/v1/logout/")
+    } catch (error) {
+      console.warn("Backend logout completed with note:", error)
+    } finally {
+      // 1. Manually expire client-side auth cookies immediately
+      document.cookie = "access_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;"
+      document.cookie = "refresh_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;"
+
+      // 2. Clear all cached query state so stale user permissions are purged
+      queryClient.clear()
+
+      // 3. Clear any auth-related storage
+      try {
+        localStorage.removeItem("token")
+        localStorage.removeItem("user")
+        sessionStorage.clear()
+      } catch (e) {
+        // ignore
       }
-    },
-    onError: (error: any) => {
-      console.error("Error in Logout:", error?.response)
-      const { message, errors, details } = error?.response.data
-      if (errors) {
-        errors?.map((error: any) => {
-          toast.error(error?.message)
-        })
-      } else {
-        toast.error(details || message || "Logout Failed")
-      }
-    },
-  })
+
+      // 4. Clean, direct browser redirect to login (no dashboard reload, no glitch)
+      window.location.href = "/login"
+    }
+  }
 
   useEffect(() => {
     setIsMobileOpen(false)
@@ -598,7 +603,18 @@ function DashboardLayout({ children }: { children: React.ReactNode }) {
     setMounted(true)
   }, [])
 
-  const [userData, setUserData] = useState({
+  const [userData, setUserData] = useState<{
+    is_admin: boolean
+    permissions: string[]
+    username: string
+    first_name?: string
+    last_name?: string
+    full_name?: string
+    role?: string
+    role_name?: string
+    email?: string
+    groups?: Array<{ group_id: number; group_name: string; display_name?: string }>
+  }>({
     is_admin: false,
     permissions: [],
     username: "",
@@ -610,21 +626,35 @@ function DashboardLayout({ children }: { children: React.ReactNode }) {
         const response = await axiosInstance.get("/api/account/v1/authorization/get_user_all_permissions/")
         const data = response.data
 
-        if (data.status === "success") {
+        if (data.status === "success" && data.data && data.data.length > 0) {
           const user = data.data[0]
           const permissionsList = user.permissions.map((p: any) => p.permission_name)
           setUserData({
             is_admin: user.is_admin,
             permissions: permissionsList,
-            username: user?.username,
+            username: user?.username || "",
+            first_name: user?.first_name || "",
+            last_name: user?.last_name || "",
+            full_name: user?.full_name || "",
+            role: user?.role || "",
+            role_name: user?.role_name || "",
+            email: user?.email || "",
+            groups: user?.groups || [],
           })
 
           const filteredNav = filterNavigationByPermissions(navigation_sidebar_links, permissionsList, user.is_admin)
           setNavigation(filteredNav)
+        } else {
+          // Response is not success, session is invalid
+          setNavigation([])
+          window.location.href = "/login"
         }
-      } catch (error) {
+      } catch (error: any) {
         console.error("Failed to fetch user permissions:", error)
         setNavigation([])
+        if (error?.response?.status === 401 || error?.response?.status === 403) {
+          window.location.href = "/login"
+        }
       }
     }
 
@@ -635,26 +665,26 @@ function DashboardLayout({ children }: { children: React.ReactNode }) {
     return null
   }
 
-  if (isPending) return <LoadingPage text="Closing secure session and signing out…" />
+  if (isLoggingOut) return <LoadingPage text="Closing secure session and signing out…" />
   return (
     <SidebarProvider>
       <div className="min-h-screen flex bg-muted/30 mx-auto">
-        <aside className="hidden lg:block w-56 min-w-56 border-r min-h-screen border-border h-full overflow-y-auto sticky top-0 mx-auto shadow-sm">
+        <aside className="hidden lg:block w-56 min-w-56 border-r border-border h-screen sticky top-0 shrink-0 z-20 bg-card shadow-sm overflow-hidden">
           <Sidebar navigation={navigation} />
         </aside>
 
         <Sheet open={isMobileOpen} onOpenChange={setIsMobileOpen}>
-          <SheetContent side="left" className="p-0 w-56 bg-card border-border">
-            <SheetHeader>
-              <SheetTitle></SheetTitle>
-              <SheetDescription></SheetDescription>
+          <SheetContent side="left" className="p-0 w-56 bg-card border-border h-full">
+            <SheetHeader className="sr-only">
+              <SheetTitle>Navigation Menu</SheetTitle>
+              <SheetDescription>Main application navigation</SheetDescription>
             </SheetHeader>
             <Sidebar navigation={navigation} />
           </SheetContent>
         </Sheet>
 
         <div className="flex-1 flex flex-col min-w-0">
-          <Navbar userData={userData} onLogout={() => logOutFunc()} onMenuClick={() => setIsMobileOpen(true)} />
+          <Navbar userData={userData} onLogout={handleLogout} onMenuClick={() => setIsMobileOpen(true)} />
           <main className="flex-1 overflow-y-auto overflow-x-hidden p-2 sm:p-3 lg:p-4">
           <div className="bg-primary/5 dark:bg-card/40 w-full h-full p-2 sm:p-3 lg:p-4 rounded-xl shadow-sm border border-primary/15 dark:border-border/60">
             {children}</div></main>

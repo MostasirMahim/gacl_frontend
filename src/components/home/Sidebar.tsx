@@ -222,7 +222,7 @@ const Sidebar = ({ navigation }: { navigation: NavItemProps[] }) => {
   const isSettingsActive = pathname === "/settings"
 
   return (
-    <div className="flex flex-col h-full max-h-screen overflow-hidden font-primary bg-card border-r border-border/50">
+    <div className="flex flex-col h-full overflow-hidden font-primary bg-card">
 
       {/* ── Brand Header ─────────────────────────────────── */}
       <Link
@@ -258,7 +258,7 @@ const Sidebar = ({ navigation }: { navigation: NavItemProps[] }) => {
       </Link>
 
       {/* ── Navigation scroll area ────────────────────────── */}
-      <ScrollArea className="flex-1 overflow-y-auto no-scrollbar">
+      <ScrollArea className="flex-1 min-h-0 overflow-y-auto no-scrollbar">
         <nav className="space-y-0.5 px-2.5 py-2.5">
           {navigation.map((item, index) => (
             <Fragment key={index}>
@@ -276,7 +276,7 @@ const Sidebar = ({ navigation }: { navigation: NavItemProps[] }) => {
       </ScrollArea>
 
       {/* ── Pinned Bottom Settings & Graphic ───────────────── */}
-      <div className="shrink-0 border-t border-border/50 relative overflow-hidden bg-card">
+      <div className="shrink-0 mt-auto border-t border-border/50 relative overflow-hidden bg-card z-10">
         {/* Right side decorative CSS/SVG vector graphic matching the design with native theme colors */}
         <div className="absolute right-0 bottom-0 w-36 h-full pointer-events-none select-none z-0 overflow-hidden">
           <svg

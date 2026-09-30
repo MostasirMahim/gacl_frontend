@@ -53,37 +53,32 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (!isLoading && user) {
-      router.replace("/");
-      router.refresh();
+      window.location.href = "/";
     }
-  }, [user, isLoading, router]);
+  }, [user, isLoading]);
 
   const { mutate: loginFunc, isPending } = useMutation({
     mutationFn: async (formData: LoginFormValues) => {
       const res = await axiosInstance.post("/api/account/v1/login/", formData);
       return res.data;
     },
-    onSuccess: async (data) => {
+    onSuccess: (data) => {
       if (data.code === 200 && data.status === "success") {
-        await queryClient.invalidateQueries({ queryKey: ["authUser"] });
+        // Clear old query cache so incoming session starts totally fresh
+        queryClient.clear();
         toast.success("Login successful.");
 
         const isMember = data.role?.toUpperCase() === "MEMBER";
+        let targetPath = "/";
         if (data.must_change_password) {
           toast.info("Please set a new password to continue.");
-          if (isMember) {
-            router.replace("/portal/reset-password");
-          } else {
-            router.replace("/reset-password");
-          }
-        } else {
-          if (isMember) {
-            router.replace("/portal");
-          } else {
-            router.replace("/");
-          }
+          targetPath = isMember ? "/portal/reset-password" : "/reset-password";
+        } else if (isMember) {
+          targetPath = "/portal";
         }
-        router.refresh();
+
+        // Direct, instantaneous browser transition (no router race condition or double refresh)
+        window.location.href = targetPath;
       }
     },
     onError: (error: any) => {

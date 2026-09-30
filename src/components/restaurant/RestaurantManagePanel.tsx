@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import axiosInstance from "@/lib/axiosInstance";
 import { toast } from "react-toastify";
@@ -47,6 +47,14 @@ import {
   Sparkles,
   ArrowLeft,
   Store,
+  Camera,
+  Building2,
+  Globe,
+  Phone,
+  FileText,
+  Loader2,
+  ChevronLeft,
+  ChevronRight,
 } from "lucide-react";
 import { getMediaUrl } from "@/lib/utils";
 
@@ -205,6 +213,139 @@ export default function RestaurantManagePanel({
   const [editingRestaurant, setEditingRestaurant] = useState(false);
   const [rv, setRv] = useState<any>({});
   const [bannerBgFile, setBannerBgFile] = useState<File | null>(null);
+  const [dpFile, setDpFile] = useState<File | null>(null);
+
+  // Quick Upload refs & states for Cover and DP
+  const coverFileInputRef = useRef<HTMLInputElement>(null);
+  const dpFileInputRef = useRef<HTMLInputElement>(null);
+  const [uploadingCover, setUploadingCover] = useState(false);
+  const [uploadingDp, setUploadingDp] = useState(false);
+
+  // Tabs scroll controls
+  const tabsContainerRef = useRef<HTMLDivElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
+
+  const checkTabsScroll = () => {
+    const el = tabsContainerRef.current;
+    if (el) {
+      setCanScrollLeft(el.scrollLeft > 10);
+      setCanScrollRight(el.scrollLeft < el.scrollWidth - el.clientWidth - 10);
+    }
+  };
+
+  useEffect(() => {
+    checkTabsScroll();
+    window.addEventListener("resize", checkTabsScroll);
+    return () => window.removeEventListener("resize", checkTabsScroll);
+  }, []);
+
+  const scrollTabs = (direction: "left" | "right") => {
+    const el = tabsContainerRef.current;
+    if (el) {
+      const scrollAmount = direction === "left" ? -260 : 260;
+      el.scrollBy({ left: scrollAmount, behavior: "smooth" });
+      setTimeout(checkTabsScroll, 350);
+    }
+  };
+
+  async function handleCoverFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 10 * 1024 * 1024) {
+      toast.error("Cover image exceeds 10MB limit. Please upload a smaller image.");
+      if (coverFileInputRef.current) coverFileInputRef.current.value = "";
+      return;
+    }
+
+    const img = new Image();
+    img.src = URL.createObjectURL(file);
+    img.onload = () => {
+      URL.revokeObjectURL(img.src);
+      if (
+        Math.abs(img.width - 1800) > 150 ||
+        Math.abs(img.height - 800) > 100
+      ) {
+        toast.info(
+          `Image dimensions: ${img.width}x${img.height}px. (Recommended: 1800x800px for optimal presentation).`,
+        );
+      }
+    };
+
+    try {
+      setUploadingCover(true);
+      const fd = new FormData();
+      fd.append("cover_image", file);
+
+      await axiosInstance.post(
+        `/api/restaurants/v1/restaurants/${restaurantId}/upload-cover/`,
+        fd,
+        { headers: { "Content-Type": "multipart/form-data" } },
+      );
+
+      toast.success("Cover image updated successfully!");
+      queryClient.invalidateQueries({
+        queryKey: ["restaurantDetail", restaurantId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["publicRestaurants"],
+      });
+    } catch (err: any) {
+      toast.error(err?.response?.data?.message || "Failed to upload cover image");
+    } finally {
+      setUploadingCover(false);
+      if (coverFileInputRef.current) coverFileInputRef.current.value = "";
+    }
+  }
+
+  async function handleDpFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("Avatar image exceeds 5MB limit. Please select a smaller photo.");
+      if (dpFileInputRef.current) dpFileInputRef.current.value = "";
+      return;
+    }
+
+    const img = new Image();
+    img.src = URL.createObjectURL(file);
+    img.onload = () => {
+      URL.revokeObjectURL(img.src);
+      const diff = Math.abs(img.width - img.height);
+      if (diff > 50) {
+        toast.info(
+          `Selected logo is ${img.width}x${img.height}px. Square images (e.g. 400x400px) are recommended.`,
+        );
+      }
+    };
+
+    try {
+      setUploadingDp(true);
+      const fd = new FormData();
+      fd.append("dp_image", file);
+
+      await axiosInstance.post(
+        `/api/restaurants/v1/restaurants/${restaurantId}/upload-dp/`,
+        fd,
+        { headers: { "Content-Type": "multipart/form-data" } },
+      );
+
+      toast.success("Venue profile photo (DP) updated successfully!");
+      queryClient.invalidateQueries({
+        queryKey: ["restaurantDetail", restaurantId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["publicRestaurants"],
+      });
+    } catch (err: any) {
+      toast.error(err?.response?.data?.message || "Failed to upload venue profile picture");
+    } finally {
+      setUploadingDp(false);
+      if (dpFileInputRef.current) dpFileInputRef.current.value = "";
+    }
+  }
 
   const [sectionModalOpen, setSectionModalOpen] = useState(false);
   const [editSection, setEditSection] = useState<any>(null);
@@ -267,6 +408,7 @@ export default function RestaurantManagePanel({
       is_active: restaurant?.is_active ?? true,
     });
     setBannerBgFile(null);
+    setDpFile(null);
     setEditingRestaurant(true);
   }
 
@@ -281,6 +423,9 @@ export default function RestaurantManagePanel({
       if (bannerBgFile) {
         fd.append("banner_bg_image", bannerBgFile);
       }
+      if (dpFile) {
+        fd.append("dp_image", dpFile);
+      }
 
       await axiosInstance.patch(
         `/api/restaurants/v1/restaurants/${restaurantId}/detail/`,
@@ -291,6 +436,9 @@ export default function RestaurantManagePanel({
       setEditingRestaurant(false);
       queryClient.invalidateQueries({
         queryKey: ["restaurantDetail", restaurantId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["publicRestaurants"],
       });
     } catch (e: any) {
       toast.error(e?.response?.data?.message || "Layout update failed");
@@ -785,205 +933,327 @@ export default function RestaurantManagePanel({
       </div>
 
       {/* VENUE HERO CARD */}
-      <div className="relative overflow-hidden rounded-2xl border border-border/60 bg-card shadow-sm">
+      <div className="relative overflow-hidden rounded-2xl border border-border/80 bg-card shadow-sm transition-all duration-300">
         {/* Cover banner image */}
-        <div className="relative h-44 sm:h-52 w-full overflow-hidden bg-muted">
+        <div className="relative h-48 sm:h-60 w-full overflow-hidden bg-zinc-900 group/cover">
           <img
             src={heroImage}
             alt={restaurant?.name || "Venue Cover"}
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover/cover:scale-105"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-card via-card/65 to-transparent" />
+          {/* Subtle dark bottom gradient to elevate text without any washed out white shadow */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20 pointer-events-none" />
+
+          {/* Hidden Cover Image File Input */}
+          <input
+            type="file"
+            ref={coverFileInputRef}
+            onChange={handleCoverFileChange}
+            accept="image/*"
+            className="hidden"
+          />
+
+          {/* Picture Change / Upload icon on RIGHT TOP CORNER of cover image */}
+          <button
+            type="button"
+            onClick={() => coverFileInputRef.current?.click()}
+            disabled={uploadingCover}
+            className="absolute top-3.5 right-3.5 z-10 flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-black/60 hover:bg-black/80 text-white backdrop-blur-md text-xs font-medium border border-white/20 shadow-md transition-all duration-200 hover:scale-[1.02] cursor-pointer group disabled:opacity-60"
+            title="Change Cover Image (Recommended: 1800x800 px)"
+          >
+            {uploadingCover ? (
+              <Loader2 className="w-3.5 h-3.5 text-white animate-spin" />
+            ) : (
+              <Camera className="w-3.5 h-3.5 text-white/90 group-hover:text-white transition-colors" />
+            )}
+            <span className="hidden sm:inline text-xs font-medium">
+              {uploadingCover ? "Uploading..." : "Change Cover"}
+            </span>
+          </button>
         </div>
 
         {/* Hero Info Overlay */}
-        <div className="relative px-6 pb-6 pt-0 -mt-16 sm:-mt-12 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-          <div className="flex items-end gap-4">
-            {/* Venue Avatar */}
-            <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl border-4 border-card bg-primary/10 shadow-lg flex items-center justify-center shrink-0 overflow-hidden relative backdrop-blur-sm">
-              <span className="font-extrabold text-2xl sm:text-3xl text-primary font-mono">
-                {(restaurant?.name || "R").substring(0, 2).toUpperCase()}
-              </span>
-            </div>
+        <div className="relative px-6 pb-6 pt-0">
+          {/* Top row: Avatar overlapping banner (left) + Action buttons (right) */}
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 -mt-12 sm:-mt-14 mb-4">
+            {/* Hidden DP Image File Input */}
+            <input
+              type="file"
+              ref={dpFileInputRef}
+              onChange={handleDpFileChange}
+              accept="image/*"
+              className="hidden"
+            />
 
-            <div className="space-y-1">
-              <div className="flex flex-wrap items-center gap-2">
-                <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground font-[family-name:var(--font-heading)]">
-                  {restaurant?.name || "Loading Venue..."}
-                </h1>
-                {/* Status pill */}
-                <Badge
-                  variant={
-                    restaurant?.status === "open" ? "default" : "secondary"
-                  }
-                  className={
-                    restaurant?.status === "open"
-                      ? "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border-emerald-500/30 gap-1.5 font-medium"
-                      : "gap-1.5 font-medium"
-                  }
-                >
-                  <span
-                    className={`w-2 h-2 rounded-full ${
-                      restaurant?.status === "open"
-                        ? "bg-emerald-500 animate-pulse"
-                        : "bg-muted-foreground"
-                    }`}
+            {/* Venue Avatar & Upload Icon */}
+            <div className="relative group/avatar shrink-0 z-10 w-fit">
+              <div className="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl border-4 border-card bg-card shadow-xl flex items-center justify-center overflow-hidden relative">
+                {restaurant?.dp_image || restaurant?.logo ? (
+                  <img
+                    src={getMediaUrl(restaurant?.dp_image || restaurant?.logo)}
+                    alt={restaurant?.name || "Logo"}
+                    className="w-full h-full object-cover"
                   />
-                  {restaurant?.status === "open" ? "Open Now" : "Closed"}
-                </Badge>
-
-                {restaurant?.cuisine_type_name && (
-                  <Badge variant="outline" className="text-xs bg-card/60">
-                    {restaurant.cuisine_type_name}
-                  </Badge>
+                ) : (
+                  <div className="w-full h-full bg-primary/10 flex items-center justify-center">
+                    <span className="font-extrabold text-2xl sm:text-3xl text-primary font-mono">
+                      {(restaurant?.name || "R").substring(0, 2).toUpperCase()}
+                    </span>
+                  </div>
                 )}
               </div>
+              {/* Picture Change / Upload icon on RIGHT TOP CORNER of avatar */}
+              <button
+                type="button"
+                onClick={() => dpFileInputRef.current?.click()}
+                disabled={uploadingDp}
+                className="absolute -top-1.5 -right-1.5 z-20 w-7 h-7 rounded-full bg-card hover:bg-primary text-foreground hover:text-primary-foreground border-2 border-card shadow-md flex items-center justify-center transition-all duration-200 hover:scale-110 cursor-pointer group/cam disabled:opacity-60"
+                title="Change Logo / Avatar (Recommended: 400x400 px)"
+              >
+                {uploadingDp ? (
+                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                ) : (
+                  <Camera className="w-3.5 h-3.5 text-muted-foreground group-hover/cam:text-primary-foreground transition-colors" />
+                )}
+              </button>
+            </div>
 
-              <p className="text-xs text-muted-foreground line-clamp-1 max-w-xl">
-                {restaurant?.description ||
-                  restaurant?.slogan_1 ||
-                  "Fine Dining & Club Hospitality Management"}
-              </p>
+            {/* Quick Status Toggle & Actions */}
+            <div className="flex flex-wrap items-center gap-2.5 pt-1 sm:pt-0">
+              <div className="flex items-center gap-2 bg-muted/40 border border-border/80 rounded-xl px-3 py-1.5 shadow-xs">
+                <span className="text-xs font-medium text-muted-foreground">
+                  {restaurant?.status === "open"
+                    ? "Orders Active"
+                    : "Orders Paused"}
+                </span>
+                <Switch
+                  checked={restaurant?.status === "open"}
+                  disabled={togglingStatus}
+                  onCheckedChange={toggleVenueStatus}
+                />
+              </div>
+
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={startEditRestaurant}
+                className="gap-1.5 text-xs h-9 font-medium shadow-xs border-border/80 hover:border-primary/50"
+              >
+                <Pencil className="w-3.5 h-3.5 text-primary" /> Edit Venue
+              </Button>
+
+              <Link
+                href={`/restaurant/${restaurant?.slug || restaurant?.id || restaurantId}/menu`}
+                target="_blank"
+              >
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="gap-1.5 text-xs h-9 font-medium shadow-xs border-border/80 hover:border-primary/50"
+                  title="View Public Storefront"
+                >
+                  <ExternalLink className="w-3.5 h-3.5 text-muted-foreground" />
+                  <span className="hidden sm:inline">Storefront</span>
+                </Button>
+              </Link>
             </div>
           </div>
 
-          {/* Quick Status Toggle & Edit */}
-          <div className="flex items-center gap-3 shrink-0">
-            <div className="flex items-center gap-2 bg-muted/40 border border-border/50 rounded-xl px-3 py-1.5">
-              <span className="text-xs font-medium text-muted-foreground">
-                {restaurant?.status === "open"
-                  ? "Orders Active"
-                  : "Orders Paused"}
-              </span>
-              <Switch
-                checked={restaurant?.status === "open"}
-                disabled={togglingStatus}
-                onCheckedChange={toggleVenueStatus}
-              />
+          {/* Venue Details - Completely on card surface, fully readable in both light and dark mode */}
+          <div className="space-y-1.5">
+            <div className="flex flex-wrap items-center gap-2.5">
+              <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-foreground font-[family-name:var(--font-heading)]">
+                {restaurant?.name || "Loading Venue..."}
+              </h1>
+              {/* Status pill */}
+              <Badge
+                variant={
+                  restaurant?.status === "open" ? "default" : "secondary"
+                }
+                className={
+                  restaurant?.status === "open"
+                    ? "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border-emerald-500/30 gap-1.5 font-medium"
+                    : "gap-1.5 font-medium"
+                }
+              >
+                <span
+                  className={`w-2 h-2 rounded-full ${
+                    restaurant?.status === "open"
+                      ? "bg-emerald-500 animate-pulse"
+                      : "bg-muted-foreground"
+                  }`}
+                />
+                {restaurant?.status === "open" ? "Open Now" : "Closed"}
+              </Badge>
+
+              {restaurant?.cuisine_type_name && (
+                <Badge variant="outline" className="text-xs bg-muted/60 border-border/80 text-muted-foreground">
+                  {restaurant.cuisine_type_name}
+                </Badge>
+              )}
             </div>
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={startEditRestaurant}
-              className="gap-1.5 text-xs h-9 font-medium"
-            >
-              <Pencil className="w-3.5 h-3.5" /> Edit Venue
-            </Button>
+
+            <p className="text-xs sm:text-sm text-muted-foreground line-clamp-2 max-w-2xl font-medium">
+              {restaurant?.description ||
+                restaurant?.slogan_1 ||
+                "Fine Dining & Club Hospitality Management"}
+            </p>
+
+            {(restaurant?.city || restaurant?.address) && (
+              <div className="flex items-center gap-1.5 text-xs text-muted-foreground/80 pt-0.5">
+                <MapPin className="w-3.5 h-3.5 text-primary shrink-0" />
+                <span className="truncate">
+                  {[restaurant.address, restaurant.city].filter(Boolean).join(", ")}
+                </span>
+              </div>
+            )}
           </div>
         </div>
 
         {/* Telemetry Metrics Ribbon */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 divide-x divide-border/40 border-t border-border/40 bg-muted/20">
-          <div className="p-3.5 text-center sm:text-left sm:px-6">
-            <span className="text-[11px] font-medium text-muted-foreground flex items-center justify-center sm:justify-start gap-1">
-              <Users className="w-3 h-3 text-primary" /> Seating Capacity
-            </span>
-            <span className="text-base sm:text-lg font-bold text-foreground font-mono">
-              {restaurant?.capacity || 0} seats
-            </span>
+        <div className="grid grid-cols-2 sm:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-border/50 border-t border-border/60 bg-muted/20">
+          <div className="p-3.5 sm:px-6 flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-primary/10 border border-primary/20 text-primary flex items-center justify-center shrink-0">
+              <Users className="w-4 h-4" />
+            </div>
+            <div className="min-w-0">
+              <span className="text-[11px] font-medium text-muted-foreground block truncate">
+                Seating Capacity
+              </span>
+              <span className="text-base sm:text-lg font-bold text-foreground tracking-tight font-mono">
+                {restaurant?.capacity || 0} seats
+              </span>
+            </div>
           </div>
-          <div className="p-3.5 text-center sm:text-left sm:px-6">
-            <span className="text-[11px] font-medium text-muted-foreground flex items-center justify-center sm:justify-start gap-1">
-              <Clock className="w-3 h-3 text-blue-500" /> Operating Hours
-            </span>
-            <span className="text-xs font-semibold text-foreground truncate block">
-              {restaurant?.operating_hours ||
-                (restaurant?.opening_time && restaurant?.closing_time
-                  ? `${restaurant.opening_time} - ${restaurant.closing_time}`
-                  : "10:00 AM - 11:00 PM")}
-            </span>
+
+          <div className="p-3.5 sm:px-6 flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-500 flex items-center justify-center shrink-0">
+              <Clock className="w-4 h-4" />
+            </div>
+            <div className="min-w-0">
+              <span className="text-[11px] font-medium text-muted-foreground block truncate">
+                Operating Schedule
+              </span>
+              <span className="text-xs sm:text-sm font-bold text-foreground truncate block">
+                {restaurant?.opening_time && restaurant?.closing_time
+                  ? `${restaurant.opening_time.slice(0, 5)} - ${restaurant.closing_time.slice(0, 5)}`
+                  : restaurant?.operating_hours
+                  ? `${restaurant.operating_hours} hrs / day`
+                  : "08:30 - 22:00"}
+              </span>
+            </div>
           </div>
-          <div className="p-3.5 text-center sm:text-left sm:px-6">
-            <span className="text-[11px] font-medium text-muted-foreground flex items-center justify-center sm:justify-start gap-1">
-              <UtensilsCrossed className="w-3 h-3 text-amber-500" /> Menu Catalog
-            </span>
-            <span className="text-base sm:text-lg font-bold text-foreground font-mono">
-              {items.length} items
-            </span>
+
+          <div className="p-3.5 sm:px-6 flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-500 flex items-center justify-center shrink-0">
+              <UtensilsCrossed className="w-4 h-4" />
+            </div>
+            <div className="min-w-0">
+              <span className="text-[11px] font-medium text-muted-foreground block truncate">
+                Menu Catalog
+              </span>
+              <span className="text-base sm:text-lg font-bold text-foreground tracking-tight font-mono">
+                {items.length} items
+              </span>
+            </div>
           </div>
-          <div className="p-3.5 text-center sm:text-left sm:px-6">
-            <span className="text-[11px] font-medium text-muted-foreground flex items-center justify-center sm:justify-start gap-1">
-              <MessageSquare className="w-3 h-3 text-purple-500" /> Reviews
-            </span>
-            <span className="text-base sm:text-lg font-bold text-foreground font-mono">
-              {reviews.length} reviews
-            </span>
+
+          <div className="p-3.5 sm:px-6 flex items-center gap-3">
+            <div className="w-9 h-9 rounded-xl bg-purple-500/10 border border-purple-500/20 text-purple-500 flex items-center justify-center shrink-0">
+              <MessageSquare className="w-4 h-4" />
+            </div>
+            <div className="min-w-0">
+              <span className="text-[11px] font-medium text-muted-foreground block truncate">
+                Customer Reviews
+              </span>
+              <span className="text-base sm:text-lg font-bold text-foreground tracking-tight font-mono">
+                {reviews.length} reviews
+              </span>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Navigation Tabs */}
-      <div className="flex border-b border-border/60 gap-1 overflow-x-auto pb-px">
-        <button
-          onClick={() => setActiveTab("overview")}
-          className={`flex items-center gap-2 px-4 py-2.5 font-medium text-xs sm:text-sm transition-all border-b-2 whitespace-nowrap -mb-[2px] ${
-            activeTab === "overview"
-              ? "border-primary text-primary font-semibold"
-              : "border-transparent text-muted-foreground hover:text-foreground"
-          }`}
+      {/* Navigation Tabs with Sleek Controls */}
+      <div className="relative group/tabs flex items-center w-full">
+        {canScrollLeft && (
+          <button
+            type="button"
+            onClick={() => scrollTabs("left")}
+            className="absolute -left-2 sm:-left-3 z-30 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-card/95 hover:bg-card border border-border/80 shadow-md flex items-center justify-center text-foreground hover:text-primary transition-all duration-200 cursor-pointer hover:scale-105 active:scale-95"
+            aria-label="Scroll left"
+            title="Scroll left"
+          >
+            <ChevronLeft className="w-4 h-4" />
+          </button>
+        )}
+
+        <div
+          ref={tabsContainerRef}
+          onScroll={checkTabsScroll}
+          className="w-full bg-card border border-border/80 p-1.5 rounded-2xl shadow-xs flex items-center gap-1 sm:gap-1.5 overflow-x-auto no-scrollbar scroll-smooth"
+          style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
-          <Settings className="w-4 h-4" /> Overview & Settings
-        </button>
-        <button
-          onClick={() => setActiveTab("kitchen")}
-          className={`flex items-center gap-2 px-4 py-2.5 font-medium text-xs sm:text-sm transition-all border-b-2 whitespace-nowrap -mb-[2px] ${
-            activeTab === "kitchen"
-              ? "border-primary text-primary font-semibold"
-              : "border-transparent text-muted-foreground hover:text-foreground"
-          }`}
-        >
-          <ChefHat className="w-4 h-4 text-amber-500" /> Kitchen Orders
-          <span className="w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
-        </button>
-        <button
-          onClick={() => setActiveTab("menu")}
-          className={`flex items-center gap-2 px-4 py-2.5 font-medium text-xs sm:text-sm transition-all border-b-2 whitespace-nowrap -mb-[2px] ${
-            activeTab === "menu"
-              ? "border-primary text-primary font-semibold"
-              : "border-transparent text-muted-foreground hover:text-foreground"
-          }`}
-        >
-          <ListCollapse className="w-4 h-4" /> Sections & Items
-          <Badge variant="secondary" className="text-[10px] px-1.5 py-0 h-4">
-            {items.length}
-          </Badge>
-        </button>
-        <button
-          onClick={() => setActiveTab("testimonials")}
-          className={`flex items-center gap-2 px-4 py-2.5 font-medium text-xs sm:text-sm transition-all border-b-2 whitespace-nowrap -mb-[2px] ${
-            activeTab === "testimonials"
-              ? "border-primary text-primary font-semibold"
-              : "border-transparent text-muted-foreground hover:text-foreground"
-          }`}
-        >
-          <UserCheck className="w-4 h-4" /> Testimonials
-          <Badge variant="secondary" className="text-[10px] px-1.5 py-0 h-4">
-            {testimonials.length}
-          </Badge>
-        </button>
-        <button
-          onClick={() => setActiveTab("reviews")}
-          className={`flex items-center gap-2 px-4 py-2.5 font-medium text-xs sm:text-sm transition-all border-b-2 whitespace-nowrap -mb-[2px] ${
-            activeTab === "reviews"
-              ? "border-primary text-primary font-semibold"
-              : "border-transparent text-muted-foreground hover:text-foreground"
-          }`}
-        >
-          <MessageSquare className="w-4 h-4" /> Reviews Moderation
-          <Badge variant="secondary" className="text-[10px] px-1.5 py-0 h-4">
-            {reviews.length}
-          </Badge>
-        </button>
-        <button
-          onClick={() => setActiveTab("footer")}
-          className={`flex items-center gap-2 px-4 py-2.5 font-medium text-xs sm:text-sm transition-all border-b-2 whitespace-nowrap -mb-[2px] ${
-            activeTab === "footer"
-              ? "border-primary text-primary font-semibold"
-              : "border-transparent text-muted-foreground hover:text-foreground"
-          }`}
-        >
-          <ImageIcon className="w-4 h-4" /> Footer Configuration
-        </button>
+          {[
+            { id: "overview", label: "Overview & Settings", icon: Settings },
+            { id: "kitchen", label: "Kitchen Orders", icon: ChefHat, pulse: true },
+            { id: "menu", label: "Sections & Items", icon: ListCollapse, badge: items.length },
+            { id: "testimonials", label: "Testimonials", icon: UserCheck, badge: testimonials.length },
+            { id: "reviews", label: "Reviews Moderation", icon: MessageSquare, badge: reviews.length },
+            { id: "footer", label: "Footer Configuration", icon: ImageIcon },
+          ].map((tab) => {
+            const isActive = activeTab === tab.id;
+            const Icon = tab.icon;
+            return (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id as any)}
+                className={`flex items-center gap-1.5 sm:gap-2 px-3 py-1.5 sm:px-3.5 sm:py-2 rounded-xl text-xs font-semibold whitespace-nowrap transition-all duration-200 shrink-0 cursor-pointer ${
+                  isActive
+                    ? "bg-primary text-primary-foreground shadow-sm shadow-primary/25"
+                    : "text-muted-foreground hover:text-foreground hover:bg-muted/60"
+                }`}
+              >
+                <Icon
+                  className={`w-3.5 h-3.5 ${
+                    isActive ? "text-primary-foreground" : "text-muted-foreground"
+                  }`}
+                />
+                <span>{tab.label}</span>
+                {tab.badge !== undefined && (
+                  <span
+                    className={`px-1.5 py-0.5 rounded-full text-[10px] font-bold ${
+                      isActive
+                        ? "bg-primary-foreground/20 text-primary-foreground"
+                        : "bg-muted text-muted-foreground border border-border/60"
+                    }`}
+                  >
+                    {tab.badge}
+                  </span>
+                )}
+                {tab.pulse && (
+                  <span
+                    className={`w-2 h-2 rounded-full ${
+                      isActive ? "bg-amber-300" : "bg-amber-500"
+                    } animate-pulse`}
+                  />
+                )}
+              </button>
+            );
+          })}
+        </div>
+
+        {canScrollRight && (
+          <button
+            type="button"
+            onClick={() => scrollTabs("right")}
+            className="absolute -right-2 sm:-right-3 z-30 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-card/95 hover:bg-card border border-border/80 shadow-md flex items-center justify-center text-foreground hover:text-primary transition-all duration-200 cursor-pointer hover:scale-105 active:scale-95"
+            aria-label="Scroll right"
+            title="Scroll right"
+          >
+            <ChevronRight className="w-4 h-4" />
+          </button>
+        )}
       </div>
 
       {/* KITCHEN DISPLAY TAB */}
@@ -1005,156 +1275,252 @@ export default function RestaurantManagePanel({
 
       {/* OVERVIEW TAB */}
       {activeTab === "overview" && (
-        <div className="p-6 bg-card rounded-xl border border-border/50 shadow-sm">
-          <div className="flex items-start justify-between">
-            <div>
-              <h2 className="text-xl font-semibold">
-                Restaurant Details & Layout Configuration
-              </h2>
-              <p className="text-xs text-muted-foreground mt-0.5">
-                Configure banners, SEO tags, and page content
+        <div className="space-y-6">
+          {/* Section Header Card */}
+          <div className="p-5 sm:p-6 bg-card rounded-2xl border border-border/80 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="space-y-1">
+              <div className="flex items-center gap-2.5">
+                <div className="w-8 h-8 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0">
+                  <Building2 className="w-4 h-4" />
+                </div>
+                <h2 className="text-lg sm:text-xl font-bold tracking-tight text-foreground font-[family-name:var(--font-heading)]">
+                  Restaurant Details & Layout Configuration
+                </h2>
+              </div>
+              <p className="text-xs text-muted-foreground ml-10">
+                Manage venue identity, SEO tags, and dynamic banners displayed on the guest menu page.
               </p>
             </div>
             <Button
               variant="outline"
               size="sm"
               onClick={startEditRestaurant}
-              className="gap-2"
+              className="gap-2 text-xs font-semibold h-9 shadow-xs border-border/80 hover:border-primary/50 self-start sm:self-auto shrink-0"
             >
-              <Pencil className="w-4 h-4" /> Edit Configuration
+              <Pencil className="w-3.5 h-3.5 text-primary" /> Edit Configuration
             </Button>
           </div>
+
           {loadingDetail ? (
-            <LoadingDots />
+            <div className="p-12 text-center bg-card rounded-2xl border border-border/80 shadow-xs">
+              <LoadingDots />
+            </div>
           ) : restaurant ? (
-            <div className="grid gap-4 md:grid-cols-2 mt-6 text-sm">
-              <div className="border border-border/40 p-4 rounded-lg space-y-2">
-                <h3 className="font-semibold text-primary">
-                  Core Configuration
-                </h3>
-                <div>
-                  <span className="text-muted-foreground">Name:</span>{" "}
-                  {restaurant.name}
-                </div>
-                <div>
-                  <span className="text-muted-foreground">Slug (URL):</span>{" "}
-                  {restaurant.slug || (
-                    <span className="text-red-500 font-mono">missing</span>
-                  )}
-                </div>
-                <div>
-                  <span className="text-muted-foreground">Status:</span>{" "}
-                  <Badge
-                    variant={
-                      restaurant.status === "open" ? "default" : "secondary"
-                    }
-                  >
-                    {restaurant.status}
-                  </Badge>
-                </div>
-                <div>
-                  <span className="text-muted-foreground">
-                    City / Capacity:
-                  </span>{" "}
-                  {restaurant.city} ({restaurant.capacity} seats)
-                </div>
-                <div>
-                  <span className="text-muted-foreground">Phone:</span>{" "}
-                  {restaurant.phone}
-                </div>
-                <div>
-                  <span className="text-muted-foreground">Slogan 1:</span>{" "}
-                  {restaurant.slogan_1 || "N/A"}
-                </div>
-                <div>
-                  <span className="text-muted-foreground">Slogan 2:</span>{" "}
-                  {restaurant.slogan_2 || "N/A"}
-                </div>
-              </div>
-
-              <div className="border border-border/40 p-4 rounded-lg space-y-2">
-                <h3 className="font-semibold text-primary">
-                  Hero Banner & Images
-                </h3>
-                <div>
-                  <span className="text-muted-foreground">Banner Title:</span>{" "}
-                  {restaurant.banner_title || "N/A"}
-                </div>
-                <div>
-                  <span className="text-muted-foreground">
-                    Banner Background:
-                  </span>{" "}
-                  {restaurant.banner_bg_image ? (
-                    <a
-                      href={restaurant.banner_bg_image}
-                      target="_blank"
-                      rel="noreferrer"
-                      className="text-blue-500 hover:underline break-all"
-                    >
-                      View Image
-                    </a>
-                  ) : (
-                    "None"
-                  )}
-                </div>
-                <h3 className="font-semibold text-primary pt-2">
-                  SEO Meta Fields
-                </h3>
-                <div>
-                  <span className="text-muted-foreground">Meta Title:</span>{" "}
-                  {restaurant.meta_title || "N/A"}
-                </div>
-                <div>
-                  <span className="text-muted-foreground">
-                    Meta Description:
-                  </span>{" "}
-                  {restaurant.meta_description || "N/A"}
-                </div>
-              </div>
-
-              <div className="border border-border/40 p-4 rounded-lg space-y-2 md:col-span-2">
-                <h3 className="font-semibold text-primary">
-                  Dynamic Page Banners
-                </h3>
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div className="space-y-1">
-                    <h4 className="font-medium text-xs">
-                      Delivery Banner Settings
-                    </h4>
-                    <div className="text-xs">
-                      <span className="font-semibold">Title:</span>{" "}
-                      {restaurant.delivery_banner_title || "N/A"}
+            <div className="grid gap-6 md:grid-cols-2">
+              {/* Card 1: Core Configuration */}
+              <div className="bg-card rounded-2xl border border-border/80 p-5 sm:p-6 shadow-xs space-y-4">
+                <div className="flex items-center justify-between pb-3 border-b border-border/60">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-7 h-7 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0">
+                      <Store className="w-3.5 h-3.5" />
                     </div>
-                    <div className="text-xs text-muted-foreground">
-                      {restaurant.delivery_banner_text || "N/A"}
+                    <div>
+                      <h3 className="font-bold text-sm text-foreground">
+                        Core Identity
+                      </h3>
+                      <p className="text-[11px] text-muted-foreground">
+                        Basic profile & operational parameters
+                      </p>
                     </div>
                   </div>
-                  <div className="space-y-1">
-                    <h4 className="font-medium text-xs">
-                      Reservation Banner Settings
-                    </h4>
-                    <div className="text-xs">
-                      <span className="font-semibold">Title:</span>{" "}
-                      {restaurant.reservation_banner_title || "N/A"}
+                  <Badge
+                    variant={restaurant.status === "open" ? "default" : "secondary"}
+                    className={
+                      restaurant.status === "open"
+                        ? "bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border-emerald-500/30 gap-1.5 font-semibold text-[11px]"
+                        : "gap-1.5 text-[11px]"
+                    }
+                  >
+                    <span
+                      className={`w-1.5 h-1.5 rounded-full ${
+                        restaurant.status === "open" ? "bg-emerald-500 animate-pulse" : "bg-muted-foreground"
+                      }`}
+                    />
+                    {restaurant.status === "open" ? "Open Now" : "Closed"}
+                  </Badge>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-1 text-xs">
+                  <div className="p-3 bg-muted/30 border border-border/50 rounded-xl space-y-1">
+                    <span className="text-[11px] text-muted-foreground font-medium flex items-center gap-1.5">
+                      <Building2 className="w-3 h-3 text-primary" /> Venue Name
+                    </span>
+                    <p className="font-semibold text-foreground text-sm truncate">
+                      {restaurant.name}
+                    </p>
+                  </div>
+
+                  <div className="p-3 bg-muted/30 border border-border/50 rounded-xl space-y-1">
+                    <span className="text-[11px] text-muted-foreground font-medium flex items-center gap-1.5">
+                      <Globe className="w-3 h-3 text-sky-500" /> Storefront Slug
+                    </span>
+                    <p className="font-semibold text-foreground text-sm font-mono truncate">
+                      {restaurant.slug ? (
+                        <span className="text-primary font-mono">/{restaurant.slug}</span>
+                      ) : (
+                        <span className="text-rose-500 font-mono">missing</span>
+                      )}
+                    </p>
+                  </div>
+
+                  <div className="p-3 bg-muted/30 border border-border/50 rounded-xl space-y-1">
+                    <span className="text-[11px] text-muted-foreground font-medium flex items-center gap-1.5">
+                      <MapPin className="w-3 h-3 text-emerald-500" /> Location & Capacity
+                    </span>
+                    <p className="font-semibold text-foreground truncate">
+                      {restaurant.city || "Dhaka"} • {restaurant.capacity || 0} seats
+                    </p>
+                  </div>
+
+                  <div className="p-3 bg-muted/30 border border-border/50 rounded-xl space-y-1">
+                    <span className="text-[11px] text-muted-foreground font-medium flex items-center gap-1.5">
+                      <Phone className="w-3 h-3 text-amber-500" /> Contact Phone
+                    </span>
+                    <p className="font-semibold text-foreground font-mono truncate">
+                      {restaurant.phone || "Not configured"}
+                    </p>
+                  </div>
+
+                  <div className="p-3 bg-muted/30 border border-border/50 rounded-xl space-y-1 sm:col-span-2">
+                    <span className="text-[11px] text-muted-foreground font-medium flex items-center gap-1.5">
+                      <FileText className="w-3 h-3 text-purple-500" /> Promotional Slogans
+                    </span>
+                    <p className="text-xs text-foreground font-medium">
+                      <span className="text-muted-foreground font-normal">Slogan 1:</span> {restaurant.slogan_1 || "N/A"}
+                    </p>
+                    {restaurant.slogan_2 && (
+                      <p className="text-xs text-foreground font-medium">
+                        <span className="text-muted-foreground font-normal">Slogan 2:</span> {restaurant.slogan_2}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Card 2: Hero Banner & SEO Meta */}
+              <div className="bg-card rounded-2xl border border-border/80 p-5 sm:p-6 shadow-xs space-y-4">
+                <div className="flex items-center justify-between pb-3 border-b border-border/60">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-7 h-7 rounded-lg bg-sky-500/10 text-sky-500 flex items-center justify-center shrink-0">
+                      <ImageIcon className="w-3.5 h-3.5" />
                     </div>
-                    <div className="text-xs text-muted-foreground">
-                      {restaurant.reservation_banner_text || "N/A"}
+                    <div>
+                      <h3 className="font-bold text-sm text-foreground">
+                        Hero Banner & SEO
+                      </h3>
+                      <p className="text-[11px] text-muted-foreground">
+                        Storefront header visuals and search meta tags
+                      </p>
                     </div>
-                    <div className="text-xs">
-                      <span className="font-semibold">Launch stats:</span>{" "}
-                      {restaurant.reservation_banner_launch_menu || "N/A"}
+                  </div>
+                </div>
+
+                <div className="space-y-3.5 text-xs">
+                  <div className="p-3 bg-muted/30 border border-border/50 rounded-xl space-y-1.5">
+                    <span className="text-[11px] text-muted-foreground font-medium block">
+                      Banner Headline
+                    </span>
+                    <p className="font-semibold text-foreground text-sm">
+                      {restaurant.banner_title || "N/A"}
+                    </p>
+                    {restaurant.banner_bg_image && (
+                      <div className="pt-1 flex items-center gap-2">
+                        <a
+                          href={getMediaUrl(restaurant.banner_bg_image)}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="inline-flex items-center gap-1.5 text-xs font-semibold text-primary hover:underline"
+                        >
+                          <ExternalLink className="w-3 h-3" /> View Banner Image
+                        </a>
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="p-3 bg-muted/30 border border-border/50 rounded-xl space-y-1.5">
+                    <span className="text-[11px] text-muted-foreground font-medium block">
+                      SEO Meta Title
+                    </span>
+                    <p className="font-semibold text-foreground text-xs">
+                      {restaurant.meta_title || "N/A"}
+                    </p>
+                  </div>
+
+                  <div className="p-3 bg-muted/30 border border-border/50 rounded-xl space-y-1.5">
+                    <span className="text-[11px] text-muted-foreground font-medium block">
+                      SEO Meta Description
+                    </span>
+                    <p className="text-xs text-muted-foreground leading-relaxed">
+                      {restaurant.meta_description || "N/A"}
+                    </p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Card 3: Dynamic Page Banners (Spans 2 columns) */}
+              <div className="bg-card rounded-2xl border border-border/80 p-5 sm:p-6 shadow-xs space-y-4 md:col-span-2">
+                <div className="flex items-center justify-between pb-3 border-b border-border/60">
+                  <div className="flex items-center gap-2.5">
+                    <div className="w-7 h-7 rounded-lg bg-amber-500/10 text-amber-500 flex items-center justify-center shrink-0">
+                      <Sparkles className="w-3.5 h-3.5" />
                     </div>
-                    <div className="text-xs">
-                      <span className="font-semibold">Dinner stats:</span>{" "}
-                      {restaurant.reservation_banner_dinner_menu || "N/A"}
+                    <div>
+                      <h3 className="font-bold text-sm text-foreground">
+                        Dynamic Storefront Banners
+                      </h3>
+                      <p className="text-[11px] text-muted-foreground">
+                        Highlight banners rendered across the guest menu experience
+                      </p>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="grid md:grid-cols-2 gap-4">
+                  {/* Delivery Banner */}
+                  <div className="p-4 bg-muted/30 border border-border/50 rounded-xl space-y-2 relative overflow-hidden">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-bold text-foreground flex items-center gap-1.5">
+                        <Clock className="w-3.5 h-3.5 text-primary" /> Delivery Highlight Banner
+                      </span>
+                      <Badge variant="outline" className="text-[10px] bg-background">Active</Badge>
+                    </div>
+                    <div className="text-xs font-semibold text-foreground pt-1">
+                      {restaurant.delivery_banner_title || "30 Minutes Delivery!"}
+                    </div>
+                    <p className="text-xs text-muted-foreground leading-relaxed">
+                      {restaurant.delivery_banner_text || "Fast delivery directly to your table or private cabin."}
+                    </p>
+                  </div>
+
+                  {/* Reservation Banner */}
+                  <div className="p-4 bg-muted/30 border border-border/50 rounded-xl space-y-2 relative overflow-hidden">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-bold text-foreground flex items-center gap-1.5">
+                        <Users className="w-3.5 h-3.5 text-amber-500" /> Private Table Reservation
+                      </span>
+                      <Badge variant="outline" className="text-[10px] bg-background">Active</Badge>
+                    </div>
+                    <div className="text-xs font-semibold text-foreground pt-1">
+                      {restaurant.reservation_banner_title || "Reservation Your Favorite Private Table"}
+                    </div>
+                    <p className="text-xs text-muted-foreground leading-relaxed">
+                      {restaurant.reservation_banner_text || "Reserve private dining spaces for members & guests."}
+                    </p>
+                    <div className="flex items-center gap-3 pt-2 text-[11px] border-t border-border/40">
+                      <span className="text-muted-foreground">
+                        Launch: <strong className="text-foreground">{restaurant.reservation_banner_launch_menu || "30+ items"}</strong>
+                      </span>
+                      <span className="text-muted-foreground">
+                        Dinner: <strong className="text-foreground">{restaurant.reservation_banner_dinner_menu || "50+ items"}</strong>
+                      </span>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
           ) : (
-            <p className="text-muted-foreground mt-4">
-              Could not load restaurant.
+            <p className="text-muted-foreground text-center py-8">
+              Could not load restaurant configuration.
             </p>
           )}
         </div>
@@ -1164,7 +1530,7 @@ export default function RestaurantManagePanel({
       {activeTab === "menu" && (
         <div className="grid lg:grid-cols-12 gap-6">
           {/* Menu Sections (Left column) */}
-          <div className="p-6 bg-card rounded-xl border border-border/50 shadow-sm lg:col-span-4 space-y-4">
+          <div className="p-5 sm:p-6 bg-card rounded-2xl border border-border/80 shadow-xs lg:col-span-4 space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="font-semibold text-base">Menu Sections</h3>
               <Button
@@ -1229,7 +1595,7 @@ export default function RestaurantManagePanel({
           </div>
 
           {/* Food Items (Right column) */}
-          <div className="p-6 bg-card rounded-xl border border-border/50 shadow-sm lg:col-span-8 space-y-4">
+          <div className="p-5 sm:p-6 bg-card rounded-2xl border border-border/80 shadow-xs lg:col-span-8 space-y-4">
             <div className="flex items-center justify-between">
               <h3 className="font-semibold text-base">Food Items</h3>
               <Button size="sm" onClick={startAddItem} className="h-8 gap-1">
@@ -1344,7 +1710,7 @@ export default function RestaurantManagePanel({
 
       {/* TESTIMONIALS TAB */}
       {activeTab === "testimonials" && (
-        <div className="p-6 bg-card rounded-xl border border-border/50 shadow-sm space-y-4">
+        <div className="p-5 sm:p-6 bg-card rounded-2xl border border-border/80 shadow-xs space-y-4">
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-xl font-semibold">Customer Testimonials</h2>
@@ -1443,7 +1809,7 @@ export default function RestaurantManagePanel({
 
       {/* REVIEWS TAB */}
       {activeTab === "reviews" && (
-        <div className="p-6 bg-card rounded-xl border border-border/50 shadow-sm space-y-4">
+        <div className="p-5 sm:p-6 bg-card rounded-2xl border border-border/80 shadow-xs space-y-4">
           <div className="flex items-center justify-between">
             <div>
               <h2 className="text-xl font-semibold">Reviews Moderation</h2>
@@ -1548,7 +1914,7 @@ export default function RestaurantManagePanel({
 
       {/* FOOTER CONFIGURATION TAB */}
       {activeTab === "footer" && (
-        <div className="p-6 bg-card rounded-xl border border-border/50 shadow-sm space-y-6">
+        <div className="p-5 sm:p-6 bg-card rounded-2xl border border-border/80 shadow-xs space-y-6">
           <div>
             <h2 className="text-xl font-semibold">Footer Section Configuration</h2>
             <p className="text-xs text-muted-foreground mt-0.5">
@@ -1558,7 +1924,7 @@ export default function RestaurantManagePanel({
 
           <div className="grid gap-6 md:grid-cols-2">
             {/* About Us & Newsletter */}
-            <div className="space-y-4 border border-border/40 p-4 rounded-lg">
+            <div className="space-y-4 border border-border/60 bg-muted/20 p-5 rounded-2xl">
               <h3 className="font-semibold text-sm text-primary uppercase tracking-wide">
                 About Us & Newsletter
               </h3>
@@ -1622,7 +1988,7 @@ export default function RestaurantManagePanel({
             </div>
 
             {/* Contact Info & Explore */}
-            <div className="space-y-4 border border-border/40 p-4 rounded-lg">
+            <div className="space-y-4 border border-border/60 bg-muted/20 p-5 rounded-2xl">
               <h3 className="font-semibold text-sm text-primary uppercase tracking-wide">
                 Contact Info
               </h3>
@@ -1820,7 +2186,38 @@ export default function RestaurantManagePanel({
                   }
                 />
               </div>
-              <div className="md:col-span-2">
+              <div>
+                <label className="text-[11px] text-muted-foreground font-medium block">
+                  Venue Logo / Profile Picture (DP){" "}
+                  <span className="text-[10px] text-primary">
+                    (Recommended: 400x400 px)
+                  </span>
+                </label>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => {
+                    const file = e.target.files?.[0];
+                    if (file) {
+                      const img = new Image();
+                      img.src = URL.createObjectURL(file);
+                      img.onload = () => {
+                        URL.revokeObjectURL(img.src);
+                        if (Math.abs(img.width - img.height) > 50) {
+                          toast.warning(
+                            `Image aspect warning: selected logo is ${img.width}x${img.height}px. Square images (e.g. 400x400px) are best for the venue logo.`,
+                          );
+                        }
+                      };
+                      setDpFile(file);
+                    } else {
+                      setDpFile(null);
+                    }
+                  }}
+                  className="mt-1 block text-xs"
+                />
+              </div>
+              <div>
                 <label className="text-[11px] text-muted-foreground font-medium block">
                   Hero Banner Background Image File{" "}
                   <span className="text-[10px] text-primary">

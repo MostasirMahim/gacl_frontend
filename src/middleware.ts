@@ -35,10 +35,30 @@ export async function middleware(req: NextRequest) {
     return NextResponse.next();
   }
 
+  const isPortalPath =
+    pathname === "/portal" || pathname.startsWith("/portal/");
+
+  const isProtectedInnerRoute =
+    isPortalPath ||
+    protected_routes.some(
+      (route) =>
+        route.path !== "/" &&
+        (pathname === route.path || pathname.startsWith(`${route.path}/`)),
+    );
+
   const token = req.cookies.get("access_token")?.value;
 
   if (!token) {
-    url.pathname = "/login";
+    if (pathname === "/") {
+      url.pathname = "/restaurant";
+      return NextResponse.redirect(url);
+    }
+    if (isProtectedInnerRoute) {
+      url.pathname = "/login";
+      return NextResponse.redirect(url);
+    }
+    // Guest accessing unknown/other non-protected routes goes to restaurant landing
+    url.pathname = "/restaurant";
     return NextResponse.redirect(url);
   }
 
@@ -80,10 +100,12 @@ export async function middleware(req: NextRequest) {
       );
 
       const json = await apiRes.json();
-      console.log("Middleware auth check response:", JSON.stringify(json));
       if (json.code !== 200) {
-        url.pathname = "/login";
-        return NextResponse.redirect(url);
+        url.pathname = pathname === "/" ? "/restaurant" : "/login";
+        const redirectRes = NextResponse.redirect(url);
+        redirectRes.cookies.delete("access_token");
+        redirectRes.cookies.delete("refresh_token");
+        return redirectRes;
       }
 
       const data = json.data[0];
@@ -98,9 +120,12 @@ export async function middleware(req: NextRequest) {
         mustChangePassword,
       });
     } catch (err) {
-      console.log("Middleware fetch error:", err);
-      url.pathname = "/login";
-      return NextResponse.redirect(url);
+      console.error("Middleware fetch error:", err);
+      url.pathname = pathname === "/" ? "/restaurant" : "/login";
+      const redirectRes = NextResponse.redirect(url);
+      redirectRes.cookies.delete("access_token");
+      redirectRes.cookies.delete("refresh_token");
+      return redirectRes;
     }
   }
 
@@ -118,8 +143,6 @@ export async function middleware(req: NextRequest) {
   // A club member is confined to the /portal area. Any attempt to reach the
   // admin dashboard is redirected to their portal. Conversely, staff/admin
   // hitting /portal are sent to the admin dashboard.
-  const isPortalPath =
-    pathname === "/portal" || pathname.startsWith("/portal/");
   const isMemberRole = role === "MEMBER";
   if (isMemberRole) {
     if (!isPortalPath) {
@@ -152,6 +175,6 @@ export async function middleware(req: NextRequest) {
 
 export const config = {
   matcher: [
-    "/((?!_next/static|_next/image|favicon.ico|robots.txt|assets|login|forget-password|restaurant).*)",
+    "/((?!_next/static|_next/image|favicon.ico|robots.txt|assets|login|forget-password).*)",
   ],
 };

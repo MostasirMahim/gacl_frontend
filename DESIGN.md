@@ -150,37 +150,54 @@ import { AnimatedNumber } from "@/components/DashBoard/ui/DashAtoms"
 
 ## 4. Component Patterns
 
-### 4.1 KpiCard
+### 4.1 KpiCard & Metric Cards
 **File**: `src/components/DashBoard/ui/KpiCard.tsx`
 ```
-┌──────────────────────────────────┐
-│ [HexIcon]      [TrendBadge ↑4%] │
-│                                  │
-│  3,421                           │  ← AnimatedNumber (2xl bold)
-│  Total Members                   │  ← label (xs muted)
-│  Sub-note if any                 │  ← sub (xs muted/60)
-│──────────────────  ←border-l-primary
-└──────────────────────────────────┘
+┌──────────────────────────────────────────┐
+│ ▌ [HexIcon]            [TrendBadge ↑4%] │  ← ▌ short glowing accent bar at top-left
+│                                          │
+│   3,421                                  │  ← AnimatedNumber (2xl bold)
+│   Total Members                          │  ← label (xs muted)
+│   Sub-note if any                        │  ← sub (xs muted/60)
+└──────────────────────────────────────────┘
 ```
-- `border-l-2 border-l-primary` — always on left
-- Glow orb: `absolute -right-4 -top-4 w-20 h-20 bg-primary/5 rounded-full blur-xl`
-- On hover: orb becomes `bg-primary/10`
+- **Left Accent Pattern (CRITICAL)**: **NEVER** use a full-height `border-l-2/4` running down the entire card.
+- **Top-Side Glowing Bar**: Use a short, glowing rounded pill at the top-left edge:
+  `absolute top-3.5 left-0 w-1.5 h-8 bg-primary rounded-r-full shadow-[0_0_12px_hsl(var(--primary))]`
+- **Card Shell**: `border border-border/80 rounded-2xl shadow-xs hover:shadow-sm transition-all duration-300`
+- **Glow orb**: `absolute -right-4 -top-4 w-20 h-20 bg-primary/5 rounded-full blur-xl pointer-events-none group-hover:bg-primary/10 transition-colors duration-500`
+- **HexIcon**: `<HexIcon size={40}><Icon size={16} /></HexIcon>`
 
 ### 4.2 MockupKpiCard (Overview Top Row)
 **File**: `src/components/DashBoard/sections/OverviewSectionPanel.tsx`
 ```
-┌──────────────────────────────────┐
-│ [HexIcon]               [⋯ menu]│
-│  Label text                      │
-│  $12,450       [TrendingUp +8%] │
-│  ← 3px glowing primary bar      │
-└──────────────────────────────────┘
+┌──────────────────────────────────────────┐
+│ ▌ [HexIcon]                     [⋯ menu]│  ← ▌ short glowing accent bar at top-left
+│   Label text                             │
+│   $12,450              [TrendingUp +8%] │
+└──────────────────────────────────────────┘
 ```
 - `border border-border/80 shadow-sm hover:shadow-md rounded-2xl`
-- Glow bar: `absolute top-3 left-0 w-1.5 h-8 bg-primary rounded-r-full shadow-[0_0_12px_hsl(var(--primary))]`
+- Glow bar: `absolute top-3.5 left-0 w-1.5 h-8 bg-primary rounded-r-full shadow-[0_0_12px_hsl(var(--primary))]`
 - `⋯ DropdownMenu` with contextual navigation links
 
-### 4.3 DashCard (Section Content Shell)
+### 4.3 Filter & Action Toolbars (Laptop & Enterprise Responsiveness)
+**File**: e.g., `src/components/restaurant/ui/RestaurantFilterBar.tsx`
+```
+┌────────────────────────────────────────────────────────────────────────────────────────┐
+│ [🔍 Search venues by name, cuisine, address...  ✕] [All Cuisines ▾] [All Status ▾]  │  [⊞ Grid | ☰ Table] │ [⟳] [🍳] [＋]│
+└────────────────────────────────────────────────────────────────────────────────────────┘
+```
+- **Height Scale**: Standardize toolbar inputs, dropdown triggers, and buttons to compact `h-8.5` (`text-xs font-medium`).
+- **Serial Two-Zone Layout**:
+  - **Left Zone (Query & Refine)**: Search (`min-w-[180px] max-w-md flex-1` with instant clear `✕` button), Cuisine Select (`w-28 sm:w-32 xl:w-36`), Status Select (`w-24 sm:w-28`).
+  - **Right Zone (View & Actions)**: Segmented View Mode Toggle (`h-8.5`), vertical divider (`h-4 w-px bg-border/70`), and sleek **icon-only action buttons** (`h-8.5 w-8.5` with descriptive tooltips/labels):
+    - `[⟳]` Refresh button (`size="icon" title="Refresh venues"`)
+    - `[🍳]` Kitchen Display button (`size="icon" title="Kitchen Display Orders"`)
+    - `[＋]` Primary Add button (`size="icon" title="Register New Dining Venue"`)
+- **Space Efficiency**: Removing redundant button text from the right-hand action trio frees up ~150px+, allowing the search box to expand generously without wrapping even on compact laptop resolutions (1024px–1366px).
+
+### 4.4 DashCard (Section Content Shell)
 ```tsx
 <DashCard className="p-4" accent={false}>
   <SectionTitle title="..." subtitle="..." action={...} />
@@ -189,7 +206,7 @@ import { AnimatedNumber } from "@/components/DashBoard/ui/DashAtoms"
 - Base: `bg-card border border-border rounded-xl overflow-hidden`
 - `accent`: adds `border-l-2 border-l-primary`
 
-### 4.4 SectionTitle
+### 4.5 SectionTitle
 ```tsx
 <SectionTitle
   title="Pending Approvals"
@@ -198,7 +215,7 @@ import { AnimatedNumber } from "@/components/DashBoard/ui/DashAtoms"
 />
 ```
 
-### 4.5 HexIcon (Icon Container)
+### 4.6 HexIcon (Icon Container)
 ```tsx
 <HexIcon size={44}><Icon size={18} /></HexIcon>
 ```
@@ -213,7 +230,7 @@ import { AnimatedNumber } from "@/components/DashBoard/ui/DashAtoms"
 </div>
 ```
 
-### 4.6 Status Atoms
+### 4.7 Status Atoms
 ```tsx
 <StatusDot status="active" />    // green
 <StatusDot status="pending" />   // amber
@@ -225,7 +242,7 @@ import { AnimatedNumber } from "@/components/DashBoard/ui/DashAtoms"
 <EmptyState message="No data available" />
 ```
 
-### 4.7 Skeleton Loading
+### 4.8 Skeleton Loading
 ```tsx
 {isLoading ? (
   <div className="grid grid-cols-4 gap-3">
