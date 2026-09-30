@@ -69,7 +69,7 @@ import axiosInstance from "@/lib/axiosInstance"
 
 import Sidebar from "./Sidebar"
 import { filterNavigationByPermissions } from "../utils/Navigation_functions"
-import { LoadingDots } from "../ui/loading"
+import { LoadingDots, LoadingPage } from "../ui/loading"
 import { SidebarProvider } from "@/context/SidebarContext"
 import Navbar from "./Navbar"
 
@@ -635,7 +635,7 @@ function DashboardLayout({ children }: { children: React.ReactNode }) {
     return null
   }
 
-  if (isPending) return <LoadingDots />
+  if (isPending) return <LoadingPage text="Closing secure session and signing out…" />
   return (
     <SidebarProvider>
       <div className="min-h-screen flex bg-muted/30 mx-auto">

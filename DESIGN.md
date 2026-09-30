@@ -718,14 +718,10 @@ Feedback toasts are a primary interaction channel across 170+ modules. Never use
 - **Glassmorphic Surface**:
   - `bg-card/94` with `backdrop-filter: blur(20px) saturate(180%)`, framed in `border border-border/85` and `rounded-2xl` (16px).
   - Enhanced elevation shadow: `box-shadow: 0 14px 38px -6px rgba(0, 0, 0, 0.16)`.
-- **Status Accent Pillars**:
-  - A 4px vertical pill on the left border with outer glow:
-    - **Success**: `#10b981` (Emerald) + `box-shadow: 0 0 10px rgba(16, 185, 129, 0.5)`
-    - **Error**: `#ef4444` (Destructive Red) + `box-shadow: 0 0 10px rgba(239, 68, 68, 0.5)`
-    - **Warning**: `#f59e0b` (Amber) + `box-shadow: 0 0 10px rgba(245, 158, 11, 0.5)`
-    - **Info**: `#0ea5e9` (Sky Blue) + `box-shadow: 0 0 10px rgba(14, 165, 233, 0.5)`
+- **Symmetrical Status-Tinted Borders**:
+  - The card features a clean, symmetrical 1px outer border matching the status at subtle opacity (`rgba(16, 185, 129, 0.28)`, etc.) without heavy left vertical bars, maintaining a clean, modern card aesthetic.
 - **Icon Halos**:
-  - Icons are encapsulated in a 32×32px `rounded-xl` halo with tinted background and matching border ring.
+  - Icons are encapsulated in a 30×30px `rounded-lg` halo with tinted background and matching border ring.
 - **Animation & Transitions**:
   - Smooth horizontal `Slide` transition (`transition={Slide}`) replacing the outdated `Bounce`.
   - Max visible limit: `limit={4}` with `autoClose={3500}`.
@@ -786,5 +782,74 @@ Icons must strictly reflect the enterprise business function rather than develop
 ---
 
 *GACL v2 Enterprise Dashboard — Design System v2.0 | 2026-09-30*
+
+---
+
+### 18.9 Enterprise Loading & Loader UI/UX Standards (v2)
+
+All loading states are provided by `@/components/ui/loading` (`loading.tsx`). Never use plain browser spinners, raw `border-t animate-spin` patterns, or large bouncing primary balls. All animations use inline CSS keyframes and HSL CSS custom property tokens — pure CSS for zero hydration lag, maximum performance, and multi-theme fidelity.
+
+#### 🔄 Component Reference
+
+| Component | When to Use | Visual Architecture |
+|---|---|---|
+| `<Loading />` | Inline — inside buttons, table action cells, form fields | Fluid dual-ring orbital spinner (`xs: 14px`, `sm: 16px`, `default: 20px`, `lg: 32px`, `xl: 44px`). Supports `primary`, `foreground`, `white`, `muted` variants. |
+| `<LoadingPage />` | Full-screen — route transitions, boot authorization, and secure sign-out | Floating glassmorphic console (`backdrop-blur-2xl`) featuring a 3-tier kinetic orbital engine (outer laser sweep, counter-rotating middle ring, rapid inner gyro, and radiating breathing core), live emerald runtime ping, and laser progress sweeper. |
+| `<LoadingDots />` | In-page / In-modal / Tab panels — data queries and table fetches | **Kinetic Dual-Orbital Gyroscope**: Outer sweeping primary arc + inner counter-spinning orbital ring + living breathing energy core with sequential animated micro-dots. Fluid, unmistakable active loader motion with zero static bars. Context-aware height (`min-h-[200px] py-10`). |
+| `<LoadingCard />` | Card-level — data loading inside a dashboard widget or panel | Compact dual-orbital gyro with pulsing core + laser wireframe sweeper simulating arriving records. |
+| `<LoadingSkeleton />` | Placeholder shape — table rows, avatars, stat cards before data arrives | Shimmer bar with primary-tinted light sweep (`hsl(var(--primary)/0.08)`). |
+
+#### 📐 Usage Patterns
+
+**Full-page boot / logout loader** (DashboardLayout):
+```tsx
+// Full-screen session exit transition
+if (isPending) return <LoadingPage text="Closing secure session and signing out…" />
+```
+
+**Route-level loading boundary** (`(dashboard)/loading.tsx`):
+```tsx
+import { LoadingDots } from "@/components/ui/loading";
+
+export default function DashboardLoading() {
+  return <LoadingDots className="min-h-[50vh]" />;
+}
+```
+
+**Inline spinner in a button**:
+```tsx
+<Button disabled={isPending}>
+  {isPending && <Loading size="sm" variant="white" className="mr-2" />}
+  Save Changes
+</Button>
+```
+
+**Card-level data loading**:
+```tsx
+{isLoading ? <LoadingCard text="Fetching financial ledger…" /> : <DataTable data={rows} />}
+```
+
+**In-modal or table loading**:
+```tsx
+{isLoading ? <LoadingDots text="Retrieving member records" /> : <MemberList items={members} />}
+```
+
+**Skeleton placeholders** (compose for any shape):
+```tsx
+{/* Avatar placeholder */}
+<LoadingSkeleton className="w-10 h-10 rounded-full" />
+{/* Text row */}
+<LoadingSkeleton className="w-48 h-3 mt-2" />
+{/* Table row */}
+<LoadingSkeleton className="w-full h-10" />
+```
+
+#### 🎨 Design Principles
+- **Theme-aware tokens only**: All colors use `hsl(var(--primary))` and semantic tokens — zero hardcoded hex values. Flawless in light and dark modes.
+- **Zero Framer Motion overhead in loaders**: Loaders execute before dynamic JS chunks load, guaranteeing instantaneous rendering without layout shift or hydration mismatch.
+- **Context-aware sizing**: `<LoadingDots />` adapts to its parent container cleanly without hardcoded `100vh` breaking modal dialogs or embedded tabs.
+- **Laser sweeper & orbital aesthetics**: Delivers the visual identity of a mission-critical, high-availability enterprise operating platform.
+
+
 
 
